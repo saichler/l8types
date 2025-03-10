@@ -1,2 +1,2 @@
 # types
-Base types &amp; security interface for layer8
+Base types &amp; interfaces for layer8
