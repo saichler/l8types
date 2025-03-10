@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/saichler/shared/go/types"
+	"github.com/saichler/types/go/types"
 	"reflect"
 )
 
