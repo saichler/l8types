@@ -17,7 +17,7 @@ type IResources interface {
 	AddTopic(int32, string)
 }
 
-func AddTopic(config *types.VNicConfig, vlan int32, topic string) {
+func AddTopic(config *types.VNicConfig, vlan int32, topic string, repCount ...int32) {
 	if config == nil {
 		return
 	}
@@ -33,10 +33,15 @@ func AddTopic(config *types.VNicConfig, vlan int32, topic string) {
 	vlans := config.Topics.TopicToVlan[topic]
 	if vlans == nil {
 		config.Topics.TopicToVlan[topic] = &types.Vlans{}
-		config.Topics.TopicToVlan[topic].Vlans = make(map[int32]bool)
+		config.Topics.TopicToVlan[topic].Vlans = make(map[int32]int32)
 		vlans = config.Topics.TopicToVlan[topic]
 	}
-	vlans.Vlans[vlan] = true
+	if repCount == nil {
+		vlans.Vlans[vlan] = 0
+	} else {
+		vlans.Vlans[vlan] = repCount[0]
+	}
+
 }
 
 func NewUuid() string {
