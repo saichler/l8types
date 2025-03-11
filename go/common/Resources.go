@@ -1,9 +1,9 @@
 package common
 
 import (
+	"github.com/google/uuid"
 	"github.com/saichler/types/go/types"
 )
-import "github.com/google/uuid"
 
 type IResources interface {
 	Registry() IRegistry
