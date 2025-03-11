@@ -11,10 +11,9 @@ import (
 )
 
 type ISecurityProvider interface {
-	Init(IResources)
 	CanDial(string, uint32) (net.Conn, error)
 	CanAccept(net.Conn) error
-	ValidateConnection(net.Conn) error
+	ValidateConnection(net.Conn, types.VNicConfig) error
 
 	Encrypt([]byte) (string, error)
 	Decrypt(string) ([]byte, error)
