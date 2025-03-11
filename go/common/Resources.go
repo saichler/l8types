@@ -26,6 +26,8 @@ func AddTopic(config *types.VNicConfig, vlan int32, topic string) {
 	}
 	if config.Topics == nil {
 		config.Topics = &types.Topics{}
+	}
+	if config.Topics.TopicToVlan == nil {
 		config.Topics.TopicToVlan = make(map[string]*types.Vlans)
 	}
 	vlans := config.Topics.TopicToVlan[topic]
