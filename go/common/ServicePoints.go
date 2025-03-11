@@ -24,4 +24,7 @@ type IServicePointHandler interface {
 	EndPoint() string
 	Topic() string
 	Transactional() bool
+
+	ReplicationCount() int
+	ReplicationScore() int
 }

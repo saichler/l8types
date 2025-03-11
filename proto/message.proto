@@ -135,7 +135,7 @@ message Topics {
 }
 
 message Vlans {
-  map<int32, bool> vlans = 1;
+  map<int32, int32> vlans = 1;
 }
 
 enum HealthState {
