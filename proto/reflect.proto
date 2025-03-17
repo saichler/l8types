@@ -26,6 +26,8 @@ message RNode {
   string cached_key = 8;
   //Decorators
   map<int32, string> decorators = 9;
+  // If the attribute is struct or map/slice to struct.
+  bool is_struct = 10;
 }
 
 message TableView {
