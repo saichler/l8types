@@ -9,9 +9,10 @@ type IVirtualNetworkInterface interface {
 	Shutdown()
 	Name() string
 	SendMessage([]byte) error
-	Unicast(types.Action, string, interface{}) error
+	Unicast(types.Action, string, string, interface{}) error
+	UnicastRequest(types.Action, string, string, interface{}) (interface{}, error)
+	MulticastRequest(types.CastMode, types.Action, int32, string, interface{}) (interface{}, error)
 	Multicast(types.CastMode, types.Action, int32, string, interface{}) error
-	Request(types.CastMode, types.Action, int32, string, interface{}) (interface{}, error)
 	Reply(*types.Message, interface{}) error
 	Transaction(types.Action, int32, string, interface{}) (interface{}, error)
 	Forward(*types.Message, string) (interface{}, error)
