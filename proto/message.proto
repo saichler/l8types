@@ -61,7 +61,7 @@ message Message {
   // The protobuf marshaled data, encoded to base64 string
   string data = 8;
   // The type name of the serialized data
-  string type = 9;
+  string proto_type = 9;
   // Action to invoke with this data on the service point
   Action action = 10;
   // timeout when request/reply
