@@ -21,6 +21,7 @@ type IServicePointHandler interface {
 	GetCopy(proto.Message, IResources) (proto.Message, error)
 	Get(proto.Message, IResources) (proto.Message, error)
 	Failed(proto.Message, IResources, *types.Message) (proto.Message, error)
+	SupportedProto() proto.Message
 	EndPoint() string
 	Multicast() string
 	Transactional() bool
