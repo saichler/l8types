@@ -134,8 +134,8 @@ message VNicConfig {
   int64 keep_alive_interval_seconds = 12;
 }
 
-message Topics {
-  map<string, Vlans> topic_to_vlan = 1;
+message Multicasts {
+  map<string, Vlans> multicast_to_vlan = 1;
 }
 
 message Vlans {
@@ -153,7 +153,7 @@ message HealthPoint {
   string a_uuid = 1;
   string z_uuid = 2;
   string alias = 3;
-  Topics topics = 4;
+  Multicasts multicast_groups = 4;
   HealthState status = 5;
   HealthPointStats stats = 6;
   int64 start_time = 7;
