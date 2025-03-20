@@ -7,7 +7,7 @@ import (
 
 // Add a bool for transaction
 type IServicePoints interface {
-	RegisterServicePoint(string, int32, proto.Message, IServicePointHandler) error
+	RegisterServicePoint(string, int32, IServicePointHandler) error
 	Handle(proto.Message, types.Action, IVirtualNetworkInterface, *types.Message, bool) (proto.Message, error)
 	Notify(proto.Message, types.Action, IVirtualNetworkInterface, *types.Message, bool) (proto.Message, error)
 	ServicePointHandler(string) (IServicePointHandler, bool)
