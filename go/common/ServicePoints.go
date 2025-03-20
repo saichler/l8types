@@ -7,7 +7,7 @@ import (
 
 // Add a bool for transaction
 type IServicePoints interface {
-	RegisterServicePoint(int32, proto.Message, IServicePointHandler) error
+	RegisterServicePoint(string, int32, proto.Message, IServicePointHandler) error
 	Handle(proto.Message, types.Action, IVirtualNetworkInterface, *types.Message, bool) (proto.Message, error)
 	Notify(proto.Message, types.Action, IVirtualNetworkInterface, *types.Message, bool) (proto.Message, error)
 	ServicePointHandler(string) (IServicePointHandler, bool)
@@ -22,7 +22,7 @@ type IServicePointHandler interface {
 	Get(proto.Message, IResources) (proto.Message, error)
 	Failed(proto.Message, IResources, *types.Message) (proto.Message, error)
 	EndPoint() string
-	Topic() string
+	Multicast() string
 	Transactional() bool
 
 	ReplicationCount() int
