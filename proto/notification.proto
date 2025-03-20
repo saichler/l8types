@@ -19,9 +19,10 @@ message NotificationSet {
   string source = 1;
   int64 time = 2;
   uint32 sequence = 3;
-  string type_name = 4;
-  NotificationType type = 5;
-  repeated Notification notification_list = 6;
+  string multicast_group = 4;
+  string proto_type = 5;
+  NotificationType type = 6;
+  repeated Notification notification_list = 7;
 }
 
 message Notification {
