@@ -48,28 +48,32 @@ message Message {
   string source_uuid = 1;
   // The source uuid identifier of the message sender switch
   string source_vnet_uuid = 2;
+  // The Destination Uuid
+  string destination_uuid = 3;
   // The vlan of the message
-  int32 vlan = 3;
-  // The topic of the multicast
-  string topic = 4;
+  int32 vlan = 4;
+  // The multicast group, if multicast
+  string multicast_group = 5;
   // To uniquely identify the source message, the sender process maintain a sequence number.
-  int32 sequence = 5;
+  int32 sequence = 6;
   // Priority of this Message for the handler callback.
-  Priority priority = 6;
+  Priority priority = 7;
   // The protobuf marshaled data, encoded to base64 string
-  string data = 7;
+  string data = 8;
   // The type name of the serialized data
-  string type = 8;
+  string type = 9;
   // Action to invoke with this data on the service point
-  Action action = 9;
+  Action action = 10;
   // timeout when request/reply
-  int64 timeout = 10;
-  //If this a fail notification, what is the failing info
-  string fail_msg = 11;
-  //If this message needs a reply message
-  bool is_request = 12;
-  bool is_reply = 13;
-  Transaction tr = 14;
+  int64 timeout = 11;
+  // If this a fail notification, what is the failing info
+  string fail_msg = 12;
+  // If this message needs a sync request
+  bool is_request = 13;
+  // If this message a reply for a sync request
+  bool is_reply = 14;
+  // If this message part of a vnet transaction, the transaction data
+  Transaction tr = 15;
 }
 
 enum TransactionState {
