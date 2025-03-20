@@ -3,6 +3,7 @@ package common
 import (
 	"github.com/saichler/types/go/types"
 	"google.golang.org/protobuf/proto"
+	"reflect"
 )
 
 // Add a bool for transaction
@@ -21,7 +22,7 @@ type IServicePointHandler interface {
 	GetCopy(proto.Message, IResources) (proto.Message, error)
 	Get(proto.Message, IResources) (proto.Message, error)
 	Failed(proto.Message, IResources, *types.Message) (proto.Message, error)
-	CheckProto(message proto.Message) bool
+	SupportedType() reflect.Type
 	EndPoint() string
 	Multicast() string
 	Transactional() bool
