@@ -18,20 +18,20 @@ type IVirtualNetworkInterface interface {
 	Name() string
 	SendMessage([]byte) error
 	// Unicast a message without expecting response
-	Unicast(types.Action, string, string, int32, interface{}) error
+	Unicast(string, string, int32, types.Action, interface{}) error
 	// Unicast a message expecting response
-	Request(types.Action, string, string, int32, interface{}) (interface{}, error)
+	Request(string, string, int32, types.Action, interface{}) (interface{}, error)
 	// Reply to a Request
 	Reply(*types.Message, interface{}) error
 	// Multicast a message to all service name listeners, without expecting a response
-	Multicast(types.Action, string, int32, interface{}) error
+	Multicast(string, int32, types.Action, interface{}) error
 	// Single a message to ONLY ONE service provider of the group,
 	// not expecting a response. Provider is chosen by residency to the requester.
-	Single(types.Action, string, int32, interface{}) error
+	Single(string, int32, types.Action, interface{}) error
 	// SingleRequest same as single but expecting a response
-	SingleRequest(types.Action, string, int32, interface{}) (interface{}, error)
+	SingleRequest(string, int32, types.Action, interface{}) (interface{}, error)
 	// Leader Same as SingleRequest but sending always to the leader.
-	Leader(types.Action, string, int32, interface{}) (interface{}, error)
+	Leader(string, int32, types.Action, interface{}) (interface{}, error)
 	Forward(*types.Message, string) (interface{}, error)
 	API(int32) API
 	Resources() IResources
