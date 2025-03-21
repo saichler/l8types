@@ -17,26 +17,25 @@ type IResources interface {
 	AddTopic(int32, string)
 }
 
-func AddTopic(config *types.VNicConfig, vlan int32, topic string) {
+func AddService(config *types.VNicConfig, serviceName string, serviceArea int32) {
 	if config == nil {
 		return
 	}
 	if config.LocalUuid == "" {
 		config.LocalUuid = NewUuid()
 	}
-	if config.Topics == nil {
-		config.Topics = &types.Topics{}
+	if config.Services == nil {
+		config.Services = &types.Services{}
 	}
-	if config.Topics.TopicToVlan == nil {
-		config.Topics.TopicToVlan = make(map[string]*types.Vlans)
+	if config.Services.ServiceToAreas == nil {
+		config.Services.ServiceToAreas = make(map[string]*types.ServiceAreas)
 	}
-	vlans := config.Topics.TopicToVlan[topic]
-	if vlans == nil {
-		config.Topics.TopicToVlan[topic] = &types.Vlans{}
-		config.Topics.TopicToVlan[topic].Vlans = make(map[int32]int32)
-		vlans = config.Topics.TopicToVlan[topic]
+	_, ok := config.Services.ServiceToAreas[serviceName]
+	if !ok {
+		config.Services.ServiceToAreas[serviceName] = &types.ServiceAreas{}
+		config.Services.ServiceToAreas[serviceName].Areas = make(map[int32]int32)
 	}
-	vlans.Vlans[vlan] = 0
+	config.Services.ServiceToAreas[serviceName].Areas[serviceArea] = 0
 }
 
 func NewUuid() string {
