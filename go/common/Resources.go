@@ -14,7 +14,7 @@ type IResources interface {
 	Logger() ILogger
 	Config() *types.VNicConfig
 	Introspector() IIntrospector
-	AddTopic(int32, string)
+	AddService(string, int32)
 }
 
 func AddService(config *types.VNicConfig, serviceName string, serviceArea int32) {
