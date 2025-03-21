@@ -4,17 +4,34 @@ import (
 	"github.com/saichler/types/go/types"
 )
 
+/* Cast mode
+enum CastMode {
+Invalid_Cast_mode = 0;
+All = 1;
+Single = 2;
+Leader = 3;
+}*/
+
 type IVirtualNetworkInterface interface {
 	Start()
 	Shutdown()
 	Name() string
 	SendMessage([]byte) error
+	// Unicast a message without expecting response
 	Unicast(types.Action, string, string, interface{}) error
-	UnicastRequest(types.Action, string, string, interface{}) (interface{}, error)
-	MulticastRequest(types.CastMode, types.Action, int32, string, interface{}) (interface{}, error)
-	Multicast(types.CastMode, types.Action, int32, string, interface{}) error
+	// Unicast a message expecting response
+	Request(types.Action, string, string, interface{}) (interface{}, error)
+	// Reply to a Request
 	Reply(*types.Message, interface{}) error
-	Transaction(types.Action, int32, string, interface{}) (interface{}, error)
+	// Multicast a message to all service name listeners, without expecting a response
+	Multicast(types.Action, string, int32, interface{}) error
+	// Single a message to ONLY ONE service provider of the group,
+	// not expecting a response. Provider is chosen by residency to the requester.
+	Single(types.Action, string, int32, interface{}) error
+	// SingleRequest same as single but expecting a response
+	SingleRequest(types.Action, string, int32, interface{}) (interface{}, error)
+	// Leader Same as SingleRequest but sending always to the leader.
+	Leader(types.Action, int32, string, interface{}) (interface{}, error)
 	Forward(*types.Message, string) (interface{}, error)
 	API(int32) API
 	Resources() IResources

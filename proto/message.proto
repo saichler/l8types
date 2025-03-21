@@ -21,22 +21,14 @@ enum Action {
 
 // The priority of the message
 enum Priority {
-  P0 = 0;
-  P1 = 1;
-  P2 = 2;
-  P3 = 3;
+  P8 = 0;
+  P7 = 1;
+  P6 = 2;
+  P5 = 3;
   P4 = 4;
-  P5 = 5;
-  P6 = 6;
-  P7 = 7;
-}
-
-// Cast mode
-enum CastMode {
-  Invalid_Cast_mode = 0;
-  All = 1;
-  Single = 2;
-  Leader = 3;
+  P3 = 5;
+  P2 = 6;
+  P1 = 7;
 }
 
 /*
@@ -45,16 +37,16 @@ enum CastMode {
  */
 message Message {
   // The source uuid identifier of the message sender
-  string source_uuid = 1;
-  // The source uuid identifier of the message sender switch
-  string source_vnet_uuid = 2;
+  string source = 1;
+  // The source uuid identifier of the message sender vnet
+  string source_vnet = 2;
   // The Destination Uuid
-  string destination_uuid = 3;
-  // The vlan of the message
-  int32 vlan = 4;
-  // The multicast group, if multicast
-  string multicast_group = 5;
-  // To uniquely identify the source message, the sender process maintain a sequence number.
+  string destination = 3;
+  // The attn service name (e.g. topic)
+  string service_name = 4;
+  // The service area of the message, like ospf area
+  int32 service_area = 5;
+  // To uniquely identify the source message, sequence + source = unique message id.
   int32 sequence = 6;
   // Priority of this Message for the handler callback.
   Priority priority = 7;
@@ -128,18 +120,18 @@ message VNicConfig {
   string local_alias = 9;
   // Custom remote alias for this vnic
   string remote_alias = 10;
-  // Service Topics
-  Topics topics = 11;
+  // Provided services
+  Services services = 11;
   //Keep Alive interval in Seconds
   int64 keep_alive_interval_seconds = 12;
 }
 
-message Multicasts {
-  map<string, Vlans> multicast_to_vlan = 1;
+message Services {
+  map<string, ServiceAreas> service_to_areas = 1;
 }
 
-message Vlans {
-  map<int32, int32> vlans = 1;
+message ServiceAreas {
+  map<int32, int32> areas = 1;
 }
 
 enum HealthState {
@@ -153,7 +145,7 @@ message HealthPoint {
   string a_uuid = 1;
   string z_uuid = 2;
   string alias = 3;
-  Multicasts multicast_groups = 4;
+  Services services = 4;
   HealthState status = 5;
   HealthPointStats stats = 6;
   int64 start_time = 7;
