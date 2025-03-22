@@ -7,9 +7,13 @@ import (
 
 // Add a bool for transaction
 type IServicePoints interface {
+	// Register A Service Point, handler + service area
 	RegisterServicePoint(IServicePointHandler, int32) error
+	// Handle a message and forward to the handler
 	Handle(proto.Message, types.Action, IVirtualNetworkInterface, *types.Message, bool) (proto.Message, error)
+	// Handle a notification message, massage it to a change set and forward to the handler
 	Notify(proto.Message, IVirtualNetworkInterface, *types.Message, bool) (proto.Message, error)
+	// Return the service point handler for the service name and area
 	ServicePointHandler(string, int32) (IServicePointHandler, bool)
 }
 
