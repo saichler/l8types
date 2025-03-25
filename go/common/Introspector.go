@@ -15,8 +15,11 @@ type IIntrospector interface {
 	Registry() IRegistry
 	Kind(*types.RNode) reflect.Kind
 	Clone(interface{}) interface{}
-	AddDecorator(types.DecoratorType, interface{}, *types.RNode)
-	DecoratorOf(types.DecoratorType, *types.RNode) interface{}
 	TableView(string) (*types.TableView, bool)
 	TableViews() []*types.TableView
+
+	AddPrimaryKeyDecorator(*types.RNode, ...string)
+	PrimaryKeyDecorator(*types.RNode)
+	AddDeepDecorator(*types.RNode)
+	DeepDecorator(*types.RNode)
 }

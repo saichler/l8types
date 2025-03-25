@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.shared.types";
+option go_package = "./types";
+
+enum HealthState {
+  Invalid_State = 0;
+  Up = 1;
+  Down = 2;
+  Unreachable = 3;
+}
+
+message HealthPoint {
+  string a_uuid = 1;
+  string z_uuid = 2;
+  string alias = 3;
+  Services services = 4;
+  HealthState status = 5;
+  HealthPointStats stats = 6;
+  int64 start_time = 7;
+  bool is_vnet = 8;
+}
+
+message HealthPointStats {
+  int64 last_msg_time = 1;
+  int64 tx_msg_count = 2;
+  int64 tx_data_count = 3;
+  int64 rx_msg_count = 4;
+  int64 rx_data_cont = 5;
+  uint64 memory_usage = 6;
+  double cpu_usage = 7;
+}
