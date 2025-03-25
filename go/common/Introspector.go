@@ -17,9 +17,4 @@ type IIntrospector interface {
 	Clone(interface{}) interface{}
 	TableView(string) (*types.TableView, bool)
 	TableViews() []*types.TableView
-
-	AddPrimaryKeyDecorator(*types.RNode, ...string)
-	PrimaryKeyDecorator(*types.RNode) interface{}
-	AddDeepDecorator(*types.RNode)
-	DeepDecorator(*types.RNode) interface{}
 }
