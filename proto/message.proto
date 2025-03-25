@@ -131,7 +131,11 @@ message Services {
 }
 
 message ServiceAreas {
-  map<int32, int32> areas = 1;
+  map<int32, ServiceAreaInfo> areas = 1;
+}
+
+message ServiceAreaInfo {
+  int32 score = 1;
 }
 
 enum HealthState {
