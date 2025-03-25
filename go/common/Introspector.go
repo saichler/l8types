@@ -19,7 +19,7 @@ type IIntrospector interface {
 	TableViews() []*types.TableView
 
 	AddPrimaryKeyDecorator(*types.RNode, ...string)
-	PrimaryKeyDecorator(*types.RNode)
+	PrimaryKeyDecorator(*types.RNode) interface{}
 	AddDeepDecorator(*types.RNode)
-	DeepDecorator(*types.RNode)
+	DeepDecorator(*types.RNode) interface{}
 }
