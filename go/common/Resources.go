@@ -33,9 +33,9 @@ func AddService(config *types.VNicConfig, serviceName string, serviceArea int32)
 	_, ok := config.Services.ServiceToAreas[serviceName]
 	if !ok {
 		config.Services.ServiceToAreas[serviceName] = &types.ServiceAreas{}
-		config.Services.ServiceToAreas[serviceName].Areas = make(map[int32]int32)
+		config.Services.ServiceToAreas[serviceName].Areas = make(map[int32]*types.ServiceAreaInfo)
 	}
-	config.Services.ServiceToAreas[serviceName].Areas[serviceArea] = 0
+	config.Services.ServiceToAreas[serviceName].Areas[serviceArea] = &types.ServiceAreaInfo{Score: 0}
 }
 
 func NewUuid() string {
