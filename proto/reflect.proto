@@ -43,7 +43,7 @@ enum DecoratorType {
   NonUnique = 3;
   Title = 4;
   Editor = 5;
-  Deep = 6;
+  NoDeep = 6;
   Ignore = 7;
   IgnoreAttr = 8;
 }
