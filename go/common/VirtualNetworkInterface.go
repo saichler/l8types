@@ -12,7 +12,7 @@ type IVirtualNetworkInterface interface {
 	// Unicast a message without expecting response
 	Unicast(string, string, int32, types.Action, interface{}) error
 	// Unicast a message expecting response
-	Request(string, string, int32, types.Action, interface{}) Response
+	Request(string, string, int32, types.Action, interface{}) IResponse
 	// Reply to a Request
 	Reply(*types.Message, interface{}) error
 	// Multicast a message to all service name listeners, without expecting a response
@@ -21,20 +21,20 @@ type IVirtualNetworkInterface interface {
 	// not expecting a response. Provider is chosen by residency to the requester.
 	Single(string, int32, types.Action, interface{}) error
 	// SingleRequest same as single but expecting a response
-	SingleRequest(string, int32, types.Action, interface{}) Response
+	SingleRequest(string, int32, types.Action, interface{}) IResponse
 	// Leader Same as SingleRequest but sending always to the leader.
-	Leader(string, int32, types.Action, interface{}) Response
-	Forward(*types.Message, string) Response
+	Leader(string, int32, types.Action, interface{}) IResponse
+	Forward(*types.Message, string) IResponse
 	API(string, int32) API
 	Resources() IResources
 }
 
 type API interface {
-	Post(interface{}) Response
-	Put(interface{}) Response
-	Patch(interface{}) Response
-	Delete(interface{}) Response
-	Get(string) Response
+	Post(interface{}) IResponse
+	Put(interface{}) IResponse
+	Patch(interface{}) IResponse
+	Delete(interface{}) IResponse
+	Get(string) IResponse
 }
 
 type IDatatListener interface {
@@ -43,11 +43,9 @@ type IDatatListener interface {
 	Failed([]byte, IVirtualNetworkInterface, string)
 }
 
-type Response interface {
+type IResponse interface {
 	List() []interface{}
 	Error() error
-	Page() int
-	TotalPages() int
 }
 
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.VNicConfig {
