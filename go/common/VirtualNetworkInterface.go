@@ -46,6 +46,7 @@ type IDatatListener interface {
 type IResponse interface {
 	List() []interface{}
 	Error() error
+	ToProto() types.Response
 }
 
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.VNicConfig {
