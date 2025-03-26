@@ -25,7 +25,7 @@ type IVirtualNetworkInterface interface {
 	// Leader Same as SingleRequest but sending always to the leader.
 	Leader(string, int32, types.Action, interface{}) Response
 	Forward(*types.Message, string) Response
-	API(int32) API
+	API(string, int32) API
 	Resources() IResources
 }
 
