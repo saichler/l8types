@@ -92,8 +92,9 @@ message Transaction {
   int64 start_time = 4;
 }
 
-message Error {
-  string err_message = 1;
+message Response {
+  repeated bytes list = 1;
+  string errMsg = 2;
 }
 
 message GSQL {

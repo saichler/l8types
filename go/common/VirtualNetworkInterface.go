@@ -4,14 +4,6 @@ import (
 	"github.com/saichler/types/go/types"
 )
 
-/* Cast mode
-enum CastMode {
-Invalid_Cast_mode = 0;
-All = 1;
-Single = 2;
-Leader = 3;
-}*/
-
 type IVirtualNetworkInterface interface {
 	Start()
 	Shutdown()
@@ -20,7 +12,7 @@ type IVirtualNetworkInterface interface {
 	// Unicast a message without expecting response
 	Unicast(string, string, int32, types.Action, interface{}) error
 	// Unicast a message expecting response
-	Request(string, string, int32, types.Action, interface{}) (interface{}, error)
+	Request(string, string, int32, types.Action, interface{}) Response
 	// Reply to a Request
 	Reply(*types.Message, interface{}) error
 	// Multicast a message to all service name listeners, without expecting a response
@@ -29,26 +21,33 @@ type IVirtualNetworkInterface interface {
 	// not expecting a response. Provider is chosen by residency to the requester.
 	Single(string, int32, types.Action, interface{}) error
 	// SingleRequest same as single but expecting a response
-	SingleRequest(string, int32, types.Action, interface{}) (interface{}, error)
+	SingleRequest(string, int32, types.Action, interface{}) Response
 	// Leader Same as SingleRequest but sending always to the leader.
-	Leader(string, int32, types.Action, interface{}) (interface{}, error)
-	Forward(*types.Message, string) (interface{}, error)
+	Leader(string, int32, types.Action, interface{}) Response
+	Forward(*types.Message, string) Response
 	API(int32) API
 	Resources() IResources
 }
 
 type API interface {
-	Post(interface{}) (interface{}, error)
-	Put(interface{}) (interface{}, error)
-	Patch(interface{}) (interface{}, error)
-	Delete(interface{}) (interface{}, error)
-	Get(string) (interface{}, error)
+	Post(interface{}) Response
+	Put(interface{}) Response
+	Patch(interface{}) Response
+	Delete(interface{}) Response
+	Get(string) Response
 }
 
 type IDatatListener interface {
 	ShutdownVNic(IVirtualNetworkInterface)
 	HandleData([]byte, IVirtualNetworkInterface)
 	Failed([]byte, IVirtualNetworkInterface, string)
+}
+
+type Response interface {
+	List() []interface{}
+	Error() error
+	Page() int
+	TotalPages() int
 }
 
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.VNicConfig {
