@@ -14,7 +14,7 @@ type IVirtualNetworkInterface interface {
 	// Unicast a message expecting response
 	Request(string, string, int32, types.Action, interface{}) IResponse
 	// Reply to a Request
-	Reply(*types.Message, interface{}) error
+	Reply(*types.Message, IResponse) error
 	// Multicast a message to all service name listeners, without expecting a response
 	Multicast(string, int32, types.Action, interface{}) error
 	// Single a message to ONLY ONE service provider of the group,
