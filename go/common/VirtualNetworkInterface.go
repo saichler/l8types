@@ -50,8 +50,8 @@ type IMObjects interface {
 	Element() interface{}
 	Key() interface{}
 	Error() error
-	Serialize() *types.MObject
-	Deserialize(*types.MObject, IRegistry)
+	Serialize() *types.MObjects
+	Deserialize(*types.MObjects, IRegistry)
 }
 
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.VNicConfig {
