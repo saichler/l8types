@@ -50,22 +50,20 @@ message Message {
   int32 sequence = 6;
   // Priority of this Message for the handler callback.
   Priority priority = 7;
-  // The protobuf marshaled data, encoded to base64 string
+  // The protobuf marshaled data, encrypted & encoded to base64 string
   string data = 8;
-  // The type name of the serialized data
-  string proto_type = 9;
   // Action to invoke with this data on the service point
-  Action action = 10;
+  Action action = 9;
   // timeout when request/reply
-  int64 timeout = 11;
+  int64 timeout = 10;
   // If this a fail notification, what is the failing info
-  string fail_msg = 12;
+  string fail_msg = 11;
   // If this message needs a sync request
-  bool is_request = 13;
+  bool is_request = 12;
   // If this message a reply for a sync request
-  bool is_reply = 14;
+  bool is_reply = 13;
   // If this message part of a vnet transaction, the transaction data
-  Transaction tr = 15;
+  Transaction tr = 14;
 }
 
 enum TransactionState {
@@ -92,9 +90,14 @@ message Transaction {
   int64 start_time = 4;
 }
 
-message Response {
-  repeated bytes elems = 1;
-  string errMsg = 2;
+message MObjects {
+  repeated MObject objects = 1;
+}
+
+message MObject {
+  bytes data = 1;
+  bytes key = 2;
+  string error_message = 3;
 }
 
 message GSQL {

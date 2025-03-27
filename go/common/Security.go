@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"github.com/saichler/types/go/types"
-	"google.golang.org/protobuf/proto"
 	"net"
 	"os"
 	"plugin"
@@ -18,8 +17,8 @@ type ISecurityProvider interface {
 	Encrypt([]byte) (string, error)
 	Decrypt(string) ([]byte, error)
 
-	CanDoAction(types.Action, proto.Message, string, string, ...string) error
-	ScopeView(proto.Message, string, string, ...string) (proto.Message, error)
+	CanDoAction(types.Action, IMObjects, string, string, ...string) error
+	ScopeView(IMObjects, string, string, ...string) (IMObjects, error)
 	Authenticate(string, string, ...string) string
 }
 
