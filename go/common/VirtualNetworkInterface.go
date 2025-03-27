@@ -48,7 +48,7 @@ type IResponse interface {
 	SetError(error)
 	Elems() []interface{}
 	Elem() interface{}
-	Err() error
+	Error() error
 	ToProto() *types.Response
 }
 
