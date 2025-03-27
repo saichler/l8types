@@ -44,7 +44,6 @@ type IDatatListener interface {
 }
 
 type IMObjects interface {
-	Add(interface{}, interface{}, string)
 	Elements() []interface{}
 	Keys() []interface{}
 	Errors() []error
@@ -52,7 +51,7 @@ type IMObjects interface {
 	Key() interface{}
 	Error() error
 	Serialize() *types.MObject
-	Deserialize(*types.MObject)
+	Deserialize(*types.MObject, IRegistry)
 }
 
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.VNicConfig {
