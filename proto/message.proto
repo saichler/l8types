@@ -93,7 +93,7 @@ message Transaction {
 }
 
 message Response {
-  repeated bytes list = 1;
+  repeated bytes elems = 1;
   string errMsg = 2;
 }
 

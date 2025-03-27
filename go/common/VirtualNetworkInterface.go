@@ -44,8 +44,11 @@ type IDatatListener interface {
 }
 
 type IResponse interface {
-	List() []interface{}
-	Error() error
+	Add(interface{})
+	SetError(error)
+	Elems() []interface{}
+	Elem() interface{}
+	Err() error
 	ToProto() *types.Response
 }
 
