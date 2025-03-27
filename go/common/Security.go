@@ -18,7 +18,7 @@ type ISecurityProvider interface {
 	Decrypt(string) ([]byte, error)
 
 	CanDoAction(types.Action, IMObjects, string, string, ...string) error
-	ScopeView(IMObjects, string, string, ...string) (IMObjects, error)
+	ScopeView(IMObjects, string, string, ...string) IMObjects
 	Authenticate(string, string, ...string) string
 }
 
