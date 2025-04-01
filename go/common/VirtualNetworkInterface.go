@@ -43,21 +43,6 @@ type IDatatListener interface {
 	Failed([]byte, IVirtualNetworkInterface, string)
 }
 
-type IElements interface {
-	Elements() []interface{}
-	Keys() []interface{}
-	Errors() []error
-	Element() interface{}
-	Query() IQuery
-	Key() interface{}
-	Error() error
-	Serialize() ([]byte, error)
-	Deserialize([]byte, IRegistry) error
-}
-
-type IQuery interface {
-}
-
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.SysConfig {
 	mc := &types.SysConfig{
 		MaxDataSize: maxDataSize,
