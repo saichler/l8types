@@ -48,10 +48,14 @@ type IElements interface {
 	Keys() []interface{}
 	Errors() []error
 	Element() interface{}
+	Query() IQuery
 	Key() interface{}
 	Error() error
 	Serialize() (*types.Elements, error)
 	Deserialize(*types.Elements, IRegistry) error
+}
+
+type IQuery interface {
 }
 
 func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.SysConfig {
