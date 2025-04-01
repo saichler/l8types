@@ -51,8 +51,8 @@ type IElements interface {
 	Query() IQuery
 	Key() interface{}
 	Error() error
-	Serialize() (*types.Elements, error)
-	Deserialize(*types.Elements, IRegistry) error
+	Serialize() ([]byte, error)
+	Deserialize([]byte, IRegistry) error
 }
 
 type IQuery interface {
