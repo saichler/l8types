@@ -7,7 +7,7 @@ type IElements interface {
 	Keys() []interface{}
 	Errors() []error
 	Element() interface{}
-	Query(IResources) IQuery
+	Query(IResources) (IQuery, error)
 	Key() interface{}
 	Error() error
 	Serialize() ([]byte, error)
