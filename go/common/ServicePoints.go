@@ -22,7 +22,7 @@ type IServicePointHandler interface {
 	Patch(IElements, IResources) IElements
 	Delete(IElements, IResources) IElements
 	GetCopy(IElements, IResources) IElements
-	Get(string, IResources) IElements
+	Get(IElements, IResources) IElements
 	Failed(IElements, IResources, *types.Message) IElements
 	ServiceName() string
 	ServiceModel() IElements
