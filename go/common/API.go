@@ -20,7 +20,7 @@ type IQuery interface {
 }
 
 type IProperty interface {
-	PropertyId() string
+	PropertyId() (string, error)
 	Get(interface{}) (interface{}, error)
 	Set(interface{}, interface{}) (interface{}, interface{}, error)
 }
