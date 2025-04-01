@@ -12,30 +12,30 @@ type IResources interface {
 	DataListener() IDatatListener
 	Serializer(SerializerMode) ISerializer
 	Logger() ILogger
-	Config() *types.VNicConfig
+	SysConfig() *types.SysConfig
 	Introspector() IIntrospector
 	AddService(string, int32)
 }
 
-func AddService(config *types.VNicConfig, serviceName string, serviceArea int32) {
-	if config == nil {
+func AddService(sysConfig *types.SysConfig, serviceName string, serviceArea int32) {
+	if sysConfig == nil {
 		return
 	}
-	if config.LocalUuid == "" {
-		config.LocalUuid = NewUuid()
+	if sysConfig.LocalUuid == "" {
+		sysConfig.LocalUuid = NewUuid()
 	}
-	if config.Services == nil {
-		config.Services = &types.Services{}
+	if sysConfig.Services == nil {
+		sysConfig.Services = &types.Services{}
 	}
-	if config.Services.ServiceToAreas == nil {
-		config.Services.ServiceToAreas = make(map[string]*types.ServiceAreas)
+	if sysConfig.Services.ServiceToAreas == nil {
+		sysConfig.Services.ServiceToAreas = make(map[string]*types.ServiceAreas)
 	}
-	_, ok := config.Services.ServiceToAreas[serviceName]
+	_, ok := sysConfig.Services.ServiceToAreas[serviceName]
 	if !ok {
-		config.Services.ServiceToAreas[serviceName] = &types.ServiceAreas{}
-		config.Services.ServiceToAreas[serviceName].Areas = make(map[int32]*types.ServiceAreaInfo)
+		sysConfig.Services.ServiceToAreas[serviceName] = &types.ServiceAreas{}
+		sysConfig.Services.ServiceToAreas[serviceName].Areas = make(map[int32]*types.ServiceAreaInfo)
 	}
-	config.Services.ServiceToAreas[serviceName].Areas[serviceArea] = &types.ServiceAreaInfo{Score: 0}
+	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = &types.ServiceAreaInfo{Score: 0}
 }
 
 func NewUuid() string {

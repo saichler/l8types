@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.types.types";
+option go_package = "./types";
+
+message Elements {
+  repeated Element element_list = 1;
+  Query criteria = 2;
+}
+
+message Element {
+  bytes data = 1;
+  bytes key = 2;
+  string error_message = 3;
+}
+
+message Query {
+  string text = 1;
+  string rootType = 2;
+  repeated string properties = 3;
+  Expression criteria = 4;
+  string sort_by = 5;
+  bool descending = 6;
+  int32 limit = 7;
+  int32 page = 8;
+  bool match_case = 9;
+}
+
+message Expression {
+  Condition condition = 1;
+  string and_or = 2;
+  Expression next = 3;
+  Expression child = 4;
+}
+
+message Condition {
+  Comparator comparator = 1;
+  string oper = 2;
+  Condition next = 3;
+}
+
+message Comparator {
+  string left = 1;
+  string oper = 2;
+  string right = 3;
+}

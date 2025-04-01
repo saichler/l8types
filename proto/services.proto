@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.types.types";
+option go_package = "./types";
+
+message Services {
+  map<string, ServiceAreas> service_to_areas = 1;
+}
+
+message ServiceAreas {
+  map<int32, ServiceAreaInfo> areas = 1;
+}
+
+message ServiceAreaInfo {
+  int32 score = 1;
+}

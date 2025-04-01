@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.types.types";
+option go_package = "./types";
+
+import "services.proto";
+
+// A config for the messages limitation and data size
+message SysConfig {
+  // The maximum data size for a message
+  uint64 max_data_size = 1;
+  // The transmit message queue size
+  uint64 tx_queue_size = 2;
+  // The received message queue size
+  uint64 rx_queue_size = 3;
+  // What is the switch port for this configuration
+  uint32 vnet_port = 4;
+  // The local uuid
+  string local_uuid = 5;
+  // The remote uuid
+  string remote_uuid = 6;
+  // The address of the connection initiator, regardless of the side.
+  string address = 7;
+  // force external mode in case two switches are on the same machine
+  // woth different ports
+  bool force_external = 8;
+  // Custom local alias for this vnic
+  string local_alias = 9;
+  // Custom remote alias for this vnic
+  string remote_alias = 10;
+  // Provided services
+  Services services = 11;
+  //Keep Alive interval in Seconds
+  int64 keep_alive_interval_seconds = 12;
+}

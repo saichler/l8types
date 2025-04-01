@@ -7,7 +7,7 @@ import (
 	"net"
 )
 
-func ExecuteProtocol(conn net.Conn, config *types.VNicConfig, security common.ISecurityProvider) error {
+func ExecuteProtocol(conn net.Conn, config *types.SysConfig, security common.ISecurityProvider) error {
 	err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security)
 	if err != nil {
 		conn.Close()

@@ -9,7 +9,7 @@ import (
 )
 
 // Read data from socket
-func Read(conn net.Conn, config *types.VNicConfig) ([]byte, error) {
+func Read(conn net.Conn, config *types.SysConfig) ([]byte, error) {
 	// If the connection is nil, return an error
 	if conn == nil {
 		return nil, errors.New("no Connection Available")
@@ -36,7 +36,7 @@ func Read(conn net.Conn, config *types.VNicConfig) ([]byte, error) {
 	return data, err
 }
 
-func ReadSize(size int, conn net.Conn, config *types.VNicConfig) ([]byte, error) {
+func ReadSize(size int, conn net.Conn, config *types.SysConfig) ([]byte, error) {
 	data := make([]byte, size)
 	n, e := conn.Read(data)
 	if e != nil {
@@ -57,7 +57,7 @@ func ReadSize(size int, conn net.Conn, config *types.VNicConfig) ([]byte, error)
 	return data, nil
 }
 
-func ReadEncryptedBytes(conn net.Conn, config *types.VNicConfig,
+func ReadEncryptedBytes(conn net.Conn, config *types.SysConfig,
 	securityProvider common.ISecurityProvider) ([]byte, error) {
 	inData, err := Read(conn, config)
 	if err != nil {
@@ -73,7 +73,7 @@ func ReadEncryptedBytes(conn net.Conn, config *types.VNicConfig,
 	return decData, nil
 }
 
-func ReadEncrypted(conn net.Conn, config *types.VNicConfig,
+func ReadEncrypted(conn net.Conn, config *types.SysConfig,
 	securityProvider common.ISecurityProvider) (string, error) {
 	data, err := ReadEncryptedBytes(conn, config, securityProvider)
 	return string(data), err
