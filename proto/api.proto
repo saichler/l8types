@@ -17,6 +17,7 @@ message Query {
   int32 limit = 7;
   int32 page = 8;
   bool match_case = 9;
+  string schema = 10;
 }
 
 message Expression {
