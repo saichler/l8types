@@ -41,6 +41,8 @@ type ICondition interface {
 
 type IComparator interface {
 	Left() string
+	LeftProperty() IProperty
 	Right() string
+	RightProperty() IProperty
 	Operator() string
 }
