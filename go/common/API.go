@@ -17,10 +17,30 @@ type IElements interface {
 type IQuery interface {
 	RootType() *types.RNode
 	Properties() []IProperty
+	Criteria() IExpression
 }
 
 type IProperty interface {
 	PropertyId() (string, error)
 	Get(interface{}) (interface{}, error)
 	Set(interface{}, interface{}) (interface{}, interface{}, error)
+}
+
+type IExpression interface {
+	Condition() ICondition
+	Operator() string
+	Next() IExpression
+	Child() IExpression
+}
+
+type ICondition interface {
+	Comparator() IComparator
+	Operator() string
+	Next() ICondition
+}
+
+type IComparator interface {
+	Left() string
+	Right() string
+	Operator() string
 }
