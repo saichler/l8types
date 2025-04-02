@@ -16,7 +16,7 @@ type IElements interface {
 
 type IQuery interface {
 	RootType() *types.RNode
-	Properties() map[string]IProperty
+	Properties() []IProperty
 }
 
 type IProperty interface {
