@@ -26,6 +26,7 @@ type IProperty interface {
 	Set(interface{}, interface{}) (interface{}, interface{}, error)
 	Node() *types.RNode
 	Parent() IProperty
+	IsString() bool
 }
 
 type IExpression interface {
