@@ -24,6 +24,8 @@ type IProperty interface {
 	PropertyId() (string, error)
 	Get(interface{}) (interface{}, error)
 	Set(interface{}, interface{}) (interface{}, interface{}, error)
+	Node() *types.RNode
+	Parent() IProperty
 }
 
 type IExpression interface {
