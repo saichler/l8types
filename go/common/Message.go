@@ -43,6 +43,38 @@ const (
 	Errored    TransactionState = 13
 )
 
+func (t TransactionState) String() string {
+	switch t {
+	case Create:
+		return "Create"
+	case Created:
+		return "Created"
+	case Start:
+		return "Start"
+	case Lock:
+		return "Lock"
+	case Locked:
+		return "Locked"
+	case LockFailed:
+		return "LockFailed"
+	case Commit:
+		return "Commit"
+	case Commited:
+		return "Commited"
+	case Rollback:
+		return "Rollback"
+	case Rollbacked:
+		return "Rollbacked"
+	case Finish:
+		return "Finish"
+	case Finished:
+		return "Finished"
+	case Errored:
+		return "Errored"
+	}
+	return "Unknown"
+}
+
 type IMessage interface {
 	Source() string
 	Vnet() string
