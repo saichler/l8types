@@ -66,6 +66,8 @@ type IMessage interface {
 type ITransaction interface {
 	Id() string
 	State() TransactionState
+	SetState(TransactionState)
 	ErrorMessage() string
+	SetErrorMessage(string)
 	StartTime() int64
 }
