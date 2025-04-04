@@ -1,5 +1,7 @@
 package common
 
+import "reflect"
+
 type Priority byte
 
 const (
@@ -102,4 +104,18 @@ type ITransaction interface {
 	ErrorMessage() string
 	SetErrorMessage(string)
 	StartTime() int64
+}
+
+func IsNil(any interface{}) bool {
+	if any == nil {
+		return true
+	}
+	v := reflect.ValueOf(any)
+	isNil := v.IsNil()
+	if !isNil {
+		if v.Kind() == reflect.Func {
+			panic("Trying to check nil on a function!")
+		}
+	}
+	return isNil
 }
