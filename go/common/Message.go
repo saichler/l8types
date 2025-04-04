@@ -84,6 +84,7 @@ type IMessage interface {
 	Sequence() uint32
 	Priority() Priority
 	Action() Action
+	SetAction(Action)
 	Timeout() uint16
 	Request() bool
 	Reply() bool
