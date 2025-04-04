@@ -93,7 +93,6 @@ type IMessage interface {
 	SetData(string)
 	Tr() ITransaction
 	SetTr(transaction ITransaction)
-	Serialize() []byte
 }
 
 type ITransaction interface {
