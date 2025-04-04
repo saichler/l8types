@@ -56,7 +56,7 @@ type IMessage interface {
 	Request() bool
 	Reply() bool
 	FailMessage() string
-	Data() []byte
+	Data() string
 	Tr() ITransaction
 }
 
