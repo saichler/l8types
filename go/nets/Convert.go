@@ -41,3 +41,59 @@ func Int2Bytes(s int32) []byte {
 	size[0] = byte(s >> 24)
 	return size
 }
+
+func Bytes2UInt16(data []byte) uint16 {
+	v1 := uint16(data[0]) << 8
+	v2 := uint16(data[1])
+	return v1 + v2
+}
+
+func UInt162Bytes(s uint16) []byte {
+	size := make([]byte, 2)
+	size[1] = byte(s)
+	size[0] = byte(s >> 8)
+	return size
+}
+
+func Bytes2UInt32(data []byte) uint32 {
+	v1 := uint32(data[0]) << 24
+	v2 := uint32(data[1]) << 16
+	v3 := uint32(data[2]) << 8
+	v4 := uint32(data[3])
+	return v1 + v2 + v3 + v4
+}
+
+func UInt322Bytes(s uint32) []byte {
+	size := make([]byte, 4)
+	size[3] = byte(s)
+	size[2] = byte(s >> 8)
+	size[1] = byte(s >> 16)
+	size[0] = byte(s >> 24)
+	return size
+}
+
+func ByteOf(request, reply bool) byte {
+	if !request && !reply {
+		return 0
+	} else if request && !reply {
+		return 1
+	} else if !request {
+		return 2
+	} else {
+		return 3
+	}
+}
+
+func BoolOf(b byte) (bool, bool) {
+	switch b {
+	case 0:
+		return false, false
+	case 1:
+		return true, false
+	case 2:
+		return false, true
+	case 3:
+		return true, true
+	}
+	panic("Unexpected " + string(b+48))
+}

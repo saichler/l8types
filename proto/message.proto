@@ -6,7 +6,7 @@ option java_multiple_files = true;
 option java_outer_classname = "Types";
 option java_package = "com.types.types";
 option go_package = "./types";
-
+/*
 // The action the message will invoke on the handler
 enum Action {
   Invalid_Action = 0;
@@ -29,12 +29,13 @@ enum Priority {
   P3 = 5;
   P2 = 6;
   P1 = 7;
-}
+}*/
 
 /*
   Message is to transmit a piece of data, securely, from one process to one or more processes via
   Publish/Subscribe or Reuest/Reply
  */
+/*
 message Message {
   // The source uuid identifier of the message sender
   string source = 1;

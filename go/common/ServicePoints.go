@@ -1,17 +1,13 @@
 package common
 
-import (
-	"github.com/saichler/types/go/types"
-)
-
 // Add a bool for transaction
 type IServicePoints interface {
 	// Register A Service Point, handler + service area
 	RegisterServicePoint(IServicePointHandler, int32) error
 	// Handle a message and forward to the handler
-	Handle(IElements, types.Action, IVirtualNetworkInterface, *types.Message, bool) IElements
+	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
-	Notify(IElements, IVirtualNetworkInterface, *types.Message, bool) IElements
+	Notify(IElements, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
 	ServicePointHandler(string, int32) (IServicePointHandler, bool)
 }
@@ -23,7 +19,7 @@ type IServicePointHandler interface {
 	Delete(IElements, IResources) IElements
 	GetCopy(IElements, IResources) IElements
 	Get(IElements, IResources) IElements
-	Failed(IElements, IResources, *types.Message) IElements
+	Failed(IElements, IResources, IMessage) IElements
 	ServiceName() string
 	ServiceModel() IElements
 	EndPoint() string

@@ -17,7 +17,7 @@ type ISecurityProvider interface {
 	Encrypt([]byte) (string, error)
 	Decrypt(string) ([]byte, error)
 
-	CanDoAction(types.Action, IElements, string, string, ...string) error
+	CanDoAction(Action, IElements, string, string, ...string) error
 	ScopeView(IElements, string, string, ...string) IElements
 	Authenticate(string, string, ...string) string
 }
