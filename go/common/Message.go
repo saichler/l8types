@@ -57,6 +57,7 @@ type IMessage interface {
 	Reply() bool
 	FailMessage() string
 	Data() string
+	SetData(string)
 	Tr() ITransaction
 	Serialize() []byte
 }
