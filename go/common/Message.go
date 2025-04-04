@@ -58,6 +58,7 @@ type IMessage interface {
 	FailMessage() string
 	Data() string
 	Tr() ITransaction
+	Serialize() []byte
 }
 
 type ITransaction interface {
