@@ -10,22 +10,22 @@ type IVirtualNetworkInterface interface {
 	Name() string
 	SendMessage([]byte) error
 	// Unicast a message without expecting response
-	Unicast(string, string, int32, Action, interface{}) error
+	Unicast(string, string, uint16, Action, interface{}) error
 	// Unicast a message expecting response
-	Request(string, string, int32, Action, interface{}) IElements
+	Request(string, string, uint16, Action, interface{}) IElements
 	// Reply to a Request
 	Reply(IMessage, IElements) error
 	// Multicast a message to all service name listeners, without expecting a response
-	Multicast(string, int32, Action, interface{}) error
+	Multicast(string, uint16, Action, interface{}) error
 	// Single a message to ONLY ONE service provider of the group,
 	// not expecting a response. Provider is chosen by residency to the requester.
-	Single(string, int32, Action, interface{}) error
+	Single(string, uint16, Action, interface{}) error
 	// SingleRequest same as single but expecting a response
-	SingleRequest(string, int32, Action, interface{}) IElements
+	SingleRequest(string, uint16, Action, interface{}) IElements
 	// Leader Same as SingleRequest but sending always to the leader.
-	Leader(string, int32, Action, interface{}) IElements
+	Leader(string, uint16, Action, interface{}) IElements
 	Forward(IMessage, string) IElements
-	API(string, int32) API
+	API(string, uint16) API
 	Resources() IResources
 }
 
