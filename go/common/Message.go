@@ -59,6 +59,7 @@ type IMessage interface {
 	Data() string
 	SetData(string)
 	Tr() ITransaction
+	SetTr(transaction ITransaction)
 	Serialize() []byte
 }
 
