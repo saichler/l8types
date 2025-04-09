@@ -3,7 +3,6 @@ package common
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"github.com/saichler/types/go/types"
 	"net"
 	"os"
@@ -44,10 +43,7 @@ func LoadSecurityProvider(soFileName, dir string) (ISecurityProvider, error) {
 }
 
 func SeekResource(path string, filename string) string {
-	fmt.Println("Running stat on ", path)
 	fileInfo, err := os.Stat(path)
-	fmt.Println("End stat on ", path)
-	panic("")
 	if err != nil {
 		return ""
 	}
