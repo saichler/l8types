@@ -3,6 +3,7 @@ package common
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"github.com/saichler/types/go/types"
 	"net"
 	"os"
@@ -22,8 +23,8 @@ type ISecurityProvider interface {
 	Authenticate(string, string, ...string) string
 }
 
-func LoadSecurityProvider(soFileName string) (ISecurityProvider, error) {
-	path := SeekResource("./../../", soFileName)
+func LoadSecurityProvider(soFileName, dir string) (ISecurityProvider, error) {
+	path := SeekResource(dir, soFileName)
 	if path == "" {
 		panic("Could not find " + soFileName)
 	}
@@ -44,6 +45,7 @@ func LoadSecurityProvider(soFileName string) (ISecurityProvider, error) {
 
 func SeekResource(path string, filename string) string {
 	fileInfo, err := os.Stat(path)
+	fmt.Println("b ")
 	if err != nil {
 		return ""
 	}
