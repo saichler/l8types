@@ -44,8 +44,9 @@ func LoadSecurityProvider(soFileName, dir string) (ISecurityProvider, error) {
 }
 
 func SeekResource(path string, filename string) string {
+	fmt.Println("Running stat on ", path)
 	fileInfo, err := os.Stat(path)
-	fmt.Println("b ")
+	fmt.Println("End stat on ", path)
 	if err != nil {
 		return ""
 	}
