@@ -4,11 +4,15 @@ import (
 	"github.com/saichler/types/go/types"
 )
 
+type NetworkMode int
+
 const (
-	NETWORK_NATIVE = 1
-	NETWORK_DOCKER = 2
-	NETWORK_K8s    = 3
+	NETWORK_NATIVE NetworkMode = 1
+	NETWORK_DOCKER NetworkMode = 2
+	NETWORK_K8s    NetworkMode = 3
 )
+
+var NetMode NetworkMode = NETWORK_NATIVE
 
 type IVirtualNetworkInterface interface {
 	Start()
