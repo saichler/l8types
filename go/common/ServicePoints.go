@@ -1,10 +1,12 @@
 package common
 
+import "github.com/saichler/types/go/types"
+
 // Add a bool for transaction
 type IServicePoints interface {
 	// Register A Service Point, handler + service area
 	RegisterServicePoint(IServicePointHandler) error
-	Activate(string, uint16, IVirtualNetworkInterface) error
+	Activate(string, uint16, IServicePointCacheListener) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
@@ -27,4 +29,8 @@ type IServicePointHandler interface {
 	Transactional() bool
 	ReplicationCount() int
 	ReplicationScore() int
+}
+
+type IServicePointCacheListener interface {
+	PropertyChangeNotification(*types.NotificationSet)
 }
