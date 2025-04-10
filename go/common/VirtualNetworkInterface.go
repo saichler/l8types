@@ -4,6 +4,12 @@ import (
 	"github.com/saichler/types/go/types"
 )
 
+const (
+	NETWORK_NATIVE = 1
+	NETWORK_DOCKER = 2
+	NETWORK_K8s    = 3
+)
+
 type IVirtualNetworkInterface interface {
 	Start()
 	Shutdown()
