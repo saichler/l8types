@@ -12,7 +12,23 @@ const (
 	NETWORK_K8s    NetworkMode = 3
 )
 
-var NetMode NetworkMode = NETWORK_NATIVE
+var networkMode NetworkMode = NETWORK_NATIVE
+
+func SetNetworkMode(mode NetworkMode) {
+	networkMode = mode
+}
+
+func NetworkMode_Native() bool {
+	return networkMode == NETWORK_NATIVE
+}
+
+func NetworkMode_DOCKER() bool {
+	return networkMode == NETWORK_DOCKER
+}
+
+func NetworkMode_K8s() bool {
+	return networkMode == NETWORK_K8s
+}
 
 type IVirtualNetworkInterface interface {
 	Start()
