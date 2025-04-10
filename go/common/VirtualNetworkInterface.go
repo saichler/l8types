@@ -53,6 +53,7 @@ type IVirtualNetworkInterface interface {
 	Forward(IMessage, string) IElements
 	API(string, uint16) API
 	Resources() IResources
+	NotifyServiceAdded() error
 }
 
 type API interface {

@@ -6,7 +6,7 @@ import "github.com/saichler/types/go/types"
 type IServicePoints interface {
 	// Register A Service Point, handler + service area
 	RegisterServicePoint(IServicePointHandler)
-	Activate(string, uint16, IServicePointHandler) error
+	Activate(string, uint16, IServicePointHandler, IVirtualNetworkInterface) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
