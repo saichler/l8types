@@ -13,7 +13,6 @@ type IServicePoints interface {
 	Notify(IElements, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
 	ActiveServicePointHandler(string, uint16) (IServicePointHandler, bool)
-	ServicePointOf(string) (IServicePointHandler, bool)
 }
 
 type IServicePointHandler interface {
