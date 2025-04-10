@@ -10,7 +10,7 @@ type IServicePoints interface {
 	// Handle a notification message, massage it to a change set and forward to the handler
 	Notify(IElements, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
-	ServicePointHandler(string, uint16) (IServicePointHandler, bool)
+	ActiveServicePointHandler(string, uint16) (IServicePointHandler, bool)
 }
 
 type IServicePointHandler interface {
