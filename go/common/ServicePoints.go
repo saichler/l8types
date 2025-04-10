@@ -5,7 +5,7 @@ import "github.com/saichler/types/go/types"
 // Add a bool for transaction
 type IServicePoints interface {
 	// Register A Service Point, handler + service area
-	RegisterServicePoint(IServicePointHandler)
+	RegisterServicePoint(IServicePointHandler) error
 	Activate(string, uint16, IServicePointHandler, IVirtualNetworkInterface) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
