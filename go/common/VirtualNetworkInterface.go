@@ -54,6 +54,7 @@ type IVirtualNetworkInterface interface {
 	API(string, uint16) API
 	Resources() IResources
 	NotifyServiceAdded() error
+	PropertyChangeNotification(*types.NotificationSet)
 }
 
 type API interface {
