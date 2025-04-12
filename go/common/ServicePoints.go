@@ -5,9 +5,9 @@ import "github.com/saichler/types/go/types"
 // Add a bool for transaction
 type IServicePoints interface {
 	// Add a service point type so compiling will pull the code for it
-	AddServicePoint(IServicePointHandler)
+	AddServicePointType(IServicePointHandler)
 	// Activate a service point
-	Activate(string, uint16, IResources, IServicePointCacheListener) error
+	Activate(string, string, uint16, IResources, IServicePointCacheListener) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
