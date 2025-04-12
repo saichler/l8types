@@ -7,7 +7,7 @@ type IServicePoints interface {
 	// Add a service point type so compiling will pull the code for it
 	AddServicePointType(IServicePointHandler)
 	// Activate a service point
-	Activate(string, string, uint16, IResources, IServicePointCacheListener, ...string) (IServicePointHandler, error)
+	Activate(string, string, uint16, IResources, IServicePointCacheListener, ...interface{}) (IServicePointHandler, error)
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
@@ -17,7 +17,7 @@ type IServicePoints interface {
 }
 
 type IServicePointHandler interface {
-	Activate(string, uint16, IResources, IServicePointCacheListener, ...string) error
+	Activate(string, uint16, IResources, IServicePointCacheListener, ...interface{}) error
 	Post(IElements, IResources) IElements
 	Put(IElements, IResources) IElements
 	Patch(IElements, IResources) IElements
