@@ -4,8 +4,10 @@ import "github.com/saichler/types/go/types"
 
 // Add a bool for transaction
 type IServicePoints interface {
-	//Register a service point at an area and notify all listeners if the vnic is not nil
-	RegisterServicePoint(IServicePointHandler, uint16, IVirtualNetworkInterface) error
+	// Add a service point type so compiling will pull the code for it
+	AddServicePoint(IServicePointHandler)
+	// Activate a service point
+	Activate(string, uint16, IResources) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
@@ -15,6 +17,7 @@ type IServicePoints interface {
 }
 
 type IServicePointHandler interface {
+	Activate(string, uint16, IResources)
 	Post(IElements, IResources) IElements
 	Put(IElements, IResources) IElements
 	Patch(IElements, IResources) IElements
@@ -22,8 +25,6 @@ type IServicePointHandler interface {
 	GetCopy(IElements, IResources) IElements
 	Get(IElements, IResources) IElements
 	Failed(IElements, IResources, IMessage) IElements
-	ServiceName() string
-	ServiceModel() IElements
 	EndPoint() string
 	Transactional() bool
 	ReplicationCount() int
