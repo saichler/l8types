@@ -25,7 +25,6 @@ type IServicePointHandler interface {
 	GetCopy(IElements, IResources) IElements
 	Get(IElements, IResources) IElements
 	Failed(IElements, IResources, IMessage) IElements
-	EndPoint() string
 	Transactional() bool
 	ReplicationCount() int
 	ReplicationScore() int
