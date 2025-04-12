@@ -17,7 +17,7 @@ type IServicePoints interface {
 }
 
 type IServicePointHandler interface {
-	Activate(string, uint16, IResources, IServicePointCacheListener) error
+	Activate(string, uint16, IResources, IServicePointCacheListener, ...string) error
 	Post(IElements, IResources) IElements
 	Put(IElements, IResources) IElements
 	Patch(IElements, IResources) IElements
