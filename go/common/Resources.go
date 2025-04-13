@@ -38,6 +38,29 @@ func AddService(sysConfig *types.SysConfig, serviceName string, serviceArea int3
 	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = &types.ServiceAreaInfo{Score: 0}
 }
 
+func RemoveService(sysConfig *types.SysConfig, serviceName string, serviceArea int32) {
+	if sysConfig == nil {
+		return
+	}
+	if sysConfig.LocalUuid == "" {
+		sysConfig.LocalUuid = NewUuid()
+	}
+	if sysConfig.Services == nil {
+		sysConfig.Services = &types.Services{}
+	}
+	if sysConfig.Services.ServiceToAreas == nil {
+		sysConfig.Services.ServiceToAreas = make(map[string]*types.ServiceAreas)
+	}
+	_, ok := sysConfig.Services.ServiceToAreas[serviceName]
+	if !ok {
+		return
+	}
+	delete(sysConfig.Services.ServiceToAreas[serviceName].Areas, serviceArea)
+	if len(sysConfig.Services.ServiceToAreas[serviceName].Areas) == 0 {
+		delete(sysConfig.Services.ServiceToAreas, serviceName)
+	}
+}
+
 func NewUuid() string {
 	return uuid.New().String()
 }
