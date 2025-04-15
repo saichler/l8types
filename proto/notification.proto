@@ -22,8 +22,9 @@ message NotificationSet {
   string service_name = 4;
   int32 service_area = 5;
   string model_type = 6;
-  NotificationType type = 7;
-  repeated Notification notification_list = 8;
+  string model_key = 7;
+  NotificationType type = 8;
+  repeated Notification notification_list = 9;
 }
 
 message Notification {
