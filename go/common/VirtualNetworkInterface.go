@@ -45,7 +45,7 @@ type IVirtualNetworkInterface interface {
 	Multicast(string, uint16, Action, interface{}) error
 	// Single a message to ONLY ONE service provider of the group,
 	// not expecting a response. Provider is chosen by residency to the requester.
-	Single(string, uint16, Action, interface{}) error
+	Single(string, uint16, Action, interface{}) (string, error)
 	// SingleRequest same as single but expecting a response
 	SingleRequest(string, uint16, Action, interface{}) IElements
 	// Leader Same as SingleRequest but sending always to the leader.
