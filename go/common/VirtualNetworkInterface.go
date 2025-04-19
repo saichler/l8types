@@ -56,6 +56,7 @@ type IVirtualNetworkInterface interface {
 	NotifyServiceAdded() error
 	NotifyServiceRemoved(string, uint16) error
 	PropertyChangeNotification(*types.NotificationSet)
+	WaitForConnection()
 }
 
 type API interface {
