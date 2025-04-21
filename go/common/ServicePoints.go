@@ -40,4 +40,5 @@ type IDistributedCache interface {
 	Put(string, interface{}, ...bool) (*types.NotificationSet, error)
 	Update(string, interface{}, ...bool) (*types.NotificationSet, error)
 	Delete(string, ...bool) (*types.NotificationSet, error)
+	Get(k string) interface{}
 }
