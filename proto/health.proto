@@ -36,3 +36,7 @@ message HealthPointStats {
   uint64 memory_usage = 6;
   double cpu_usage = 7;
 }
+
+message Top {
+  map<string, HealthPoint> health_points = 1;
+}
