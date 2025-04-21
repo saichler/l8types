@@ -41,4 +41,5 @@ type IDistributedCache interface {
 	Update(string, interface{}, ...bool) (*types.NotificationSet, error)
 	Delete(string, ...bool) (*types.NotificationSet, error)
 	Get(k string) interface{}
+	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 }
