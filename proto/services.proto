@@ -12,9 +12,20 @@ message Services {
 }
 
 message ServiceAreas {
-  map<int32, ServiceAreaInfo> areas = 1;
+  map<sint32, bool> areas = 1;
 }
 
-message ServiceAreaInfo {
-  int32 score = 1;
+message ReplicationIndex {
+  string service_name = 1;
+  sint32 service_area = 2;
+  map<string, ReplicationKey> keys = 3;
+  map<string, ReplicationEndPoint> end_points = 4;
+}
+
+message ReplicationKey {
+  map<string, int64> location = 1;
+}
+
+message ReplicationEndPoint {
+  int64 score = 1;
 }
