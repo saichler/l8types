@@ -27,9 +27,7 @@ type IServicePointHandler interface {
 	GetCopy(IElements, IResources) IElements
 	Get(IElements, IResources) IElements
 	Failed(IElements, IResources, IMessage) IElements
-	Transactional() bool
-	ReplicationCount() int
-	ReplicationScore() int
+	TransactionMethod() ITransactionMethod
 }
 
 type IServicePointCacheListener interface {
@@ -42,4 +40,9 @@ type IDistributedCache interface {
 	Delete(string, ...bool) (*types.NotificationSet, error)
 	Get(k string) interface{}
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
+}
+
+type ITransactionMethod interface {
+	Replication() bool
+	ReplicationCount() int
 }

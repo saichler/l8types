@@ -33,9 +33,9 @@ func AddService(sysConfig *types.SysConfig, serviceName string, serviceArea int3
 	_, ok := sysConfig.Services.ServiceToAreas[serviceName]
 	if !ok {
 		sysConfig.Services.ServiceToAreas[serviceName] = &types.ServiceAreas{}
-		sysConfig.Services.ServiceToAreas[serviceName].Areas = make(map[int32]*types.ServiceAreaInfo)
+		sysConfig.Services.ServiceToAreas[serviceName].Areas = make(map[int32]bool)
 	}
-	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = &types.ServiceAreaInfo{Score: 0}
+	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = true
 }
 
 func RemoveService(services *types.Services, serviceName string, serviceArea int32) {
