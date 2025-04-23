@@ -25,6 +25,7 @@ const (
 	GET    Action = 5
 	Reply  Action = 6
 	Notify Action = 7
+	Sync   Action = 8
 )
 
 type TransactionState uint8

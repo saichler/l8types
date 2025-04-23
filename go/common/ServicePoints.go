@@ -15,6 +15,10 @@ type IServicePoints interface {
 	Notify(IElements, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
 	ServicePointHandler(string, uint16) (IServicePointHandler, bool)
+	// Register a distributed cache
+	RegisterDistributedCache(cache IDistributedCache)
+	// Sync Distributed Caches
+	SyncDistributedCaches()
 }
 
 type IServicePointHandler interface {
@@ -40,6 +44,9 @@ type IDistributedCache interface {
 	Delete(string, ...bool) (*types.NotificationSet, error)
 	Get(k string) interface{}
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
+	ServiceName() string
+	ServiceArea() uint16
+	Sync()
 }
 
 type ITransactionMethod interface {
