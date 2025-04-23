@@ -45,5 +45,5 @@ type IDistributedCache interface {
 type ITransactionMethod interface {
 	Replication() bool
 	ReplicationCount() int
-	KeyOf(interface{}) string
+	KeyOf(IElements) string
 }
