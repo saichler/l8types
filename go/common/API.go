@@ -2,6 +2,10 @@ package common
 
 import "github.com/saichler/types/go/types"
 
+const (
+	Deleted_Entry = "__DD__"
+)
+
 type IElements interface {
 	Elements() []interface{}
 	Keys() []interface{}
