@@ -13,6 +13,7 @@ enum NotificationType {
   Replace = 2;
   Update = 3;
   Delete = 4;
+  Sync = 5;
 }
 
 message NotificationSet {
