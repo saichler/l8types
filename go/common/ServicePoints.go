@@ -11,7 +11,7 @@ type IServicePoints interface {
 	DeActivate(string, uint16, IResources, IServicePointCacheListener) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVirtualNetworkInterface, IMessage) IElements
-	TransactionHandle(IServicePointHandler, IElements, Action, IVirtualNetworkInterface) IElements
+	TransactionHandle(IElements, Action, IVirtualNetworkInterface, IMessage) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
 	Notify(IElements, IVirtualNetworkInterface, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
