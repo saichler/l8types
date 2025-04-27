@@ -23,6 +23,7 @@ type IQuery interface {
 	RootType() *types.RNode
 	Properties() []IProperty
 	Criteria() IExpression
+	KeyOf() string
 }
 
 type IProperty interface {
