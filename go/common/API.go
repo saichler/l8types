@@ -16,7 +16,8 @@ type IElements interface {
 	Error() error
 	Serialize() ([]byte, error)
 	Deserialize([]byte, IRegistry) error
-	IsNotification() bool
+	Notification() bool
+	ReplicasRequest() bool
 }
 
 type IQuery interface {
