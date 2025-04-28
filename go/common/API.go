@@ -18,6 +18,7 @@ type IElements interface {
 	Deserialize([]byte, IRegistry) error
 	Notification() bool
 	ReplicasRequest() bool
+	Append(IElements)
 }
 
 type IQuery interface {
