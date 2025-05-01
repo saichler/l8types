@@ -53,7 +53,7 @@ type IVirtualNetworkInterface interface {
 	Forward(IMessage, string) IElements
 	API(string, uint16) API
 	Resources() IResources
-	NotifyServiceAdded() error
+	NotifyServiceAdded([]string, uint16) error
 	NotifyServiceRemoved(string, uint16) error
 	PropertyChangeNotification(*types.NotificationSet)
 	WaitForConnection()
