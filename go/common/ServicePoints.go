@@ -18,8 +18,6 @@ type IServicePoints interface {
 	ServicePointHandler(string, uint16) (IServicePointHandler, bool)
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
-	// Sync Distributed Caches
-	SyncDistributedCaches()
 }
 
 type IServicePointHandler interface {
