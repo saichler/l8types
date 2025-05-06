@@ -1,11 +1,9 @@
 package common
 
 import (
-	"bytes"
 	"errors"
 	"github.com/saichler/types/go/types"
 	"net"
-	"os"
 	"plugin"
 )
 
@@ -22,53 +20,23 @@ type ISecurityProvider interface {
 	Authenticate(string, string, ...string) string
 }
 
-func LoadSecurityProvider(soFileName, dir string) (ISecurityProvider, error) {
-	path := SeekResource(dir, soFileName)
-	if path == "" {
-		panic("Could not find " + soFileName)
-	}
-	securityProviderPlugin, err := plugin.Open(path)
+type ISecurityProviderLoader interface {
+	LoadSecurityProvider() (ISecurityProvider, error)
+}
+
+func LoadSecurityProvider() (ISecurityProvider, error) {
+	loaderFile, err := plugin.Open("./loader.so")
 	if err != nil {
-		return nil, errors.New("failed to load security provider plugin #1 " + path + " " + err.Error())
+		return nil, errors.New("failed to load security provider error #1")
 	}
-	securityProvider, err := securityProviderPlugin.Lookup("SecurityProvider")
+	loader, err := loaderFile.Lookup("Loader")
 	if err != nil {
 		return nil, errors.New("failed to load security provider plugin #2")
 	}
-	if securityProvider == nil {
+	if loader == nil {
 		return nil, errors.New("failed to load security provider plugin #3")
 	}
-	providerInterface := *securityProvider.(*ISecurityProvider)
-	return providerInterface.(ISecurityProvider), nil
-}
-
-func SeekResource(path string, filename string) string {
-	fileInfo, err := os.Stat(path)
-	if err != nil {
-		return ""
-	}
-	if fileInfo.Name() == filename {
-		return path
-	}
-	if fileInfo.IsDir() {
-		files, err := os.ReadDir(path)
-		if err != nil {
-			return ""
-		}
-		for _, file := range files {
-			found := SeekResource(pathOf(path, file), filename)
-			if found != "" {
-				return found
-			}
-		}
-	}
-	return ""
-}
-
-func pathOf(path string, file os.DirEntry) string {
-	buff := bytes.Buffer{}
-	buff.WriteString(path)
-	buff.WriteString("/")
-	buff.WriteString(file.Name())
-	return buff.String()
+	loaderInterface := *loader.(*ISecurityProviderLoader)
+	securityLoader := loaderInterface.(ISecurityProviderLoader).(ISecurityProviderLoader)
+	return securityLoader.LoadSecurityProvider()
 }
