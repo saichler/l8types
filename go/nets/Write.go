@@ -2,8 +2,8 @@ package nets
 
 import (
 	"errors"
-	"github.com/saichler/types/go/ifs"
-	"github.com/saichler/types/go/types"
+	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8types/go/types"
 	"net"
 )
 
