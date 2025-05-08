@@ -1,4 +1,4 @@
-package common
+package ifs
 
 import (
 	"errors"

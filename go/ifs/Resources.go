@@ -1,4 +1,4 @@
-package common
+package ifs
 
 import (
 	"github.com/google/uuid"
@@ -7,7 +7,7 @@ import (
 
 type IResources interface {
 	Registry() IRegistry
-	ServicePoints() IServicePoints
+	Services() IServices
 	Security() ISecurityProvider
 	DataListener() IDatatListener
 	Serializer(SerializerMode) ISerializer

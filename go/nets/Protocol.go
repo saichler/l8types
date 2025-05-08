@@ -1,14 +1,14 @@
 package nets
 
 import (
-	"github.com/saichler/types/go/common"
+	"github.com/saichler/types/go/ifs"
 	"github.com/saichler/types/go/types"
 	"google.golang.org/protobuf/proto"
 
 	"net"
 )
 
-func ExecuteProtocol(conn net.Conn, config *types.SysConfig, security common.ISecurityProvider) error {
+func ExecuteProtocol(conn net.Conn, config *types.SysConfig, security ifs.ISecurityProvider) error {
 	err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security)
 	if err != nil {
 		conn.Close()

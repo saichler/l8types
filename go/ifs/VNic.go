@@ -1,4 +1,4 @@
-package common
+package ifs
 
 import (
 	"github.com/saichler/types/go/types"
@@ -30,7 +30,7 @@ func NetworkMode_K8s() bool {
 	return networkMode == NETWORK_K8s
 }
 
-type IVirtualNetworkInterface interface {
+type IVNic interface {
 	Start()
 	Shutdown()
 	Name() string
@@ -51,7 +51,7 @@ type IVirtualNetworkInterface interface {
 	// Leader Same as SingleRequest but sending always to the leader.
 	Leader(string, uint16, Action, interface{}) IElements
 	Forward(IMessage, string) IElements
-	API(string, uint16) API
+	ServiceAPI(string, uint16) ServiceAPI
 	Resources() IResources
 	NotifyServiceAdded([]string, uint16) error
 	NotifyServiceRemoved(string, uint16) error
@@ -59,7 +59,7 @@ type IVirtualNetworkInterface interface {
 	WaitForConnection()
 }
 
-type API interface {
+type ServiceAPI interface {
 	Post(interface{}) IElements
 	Put(interface{}) IElements
 	Patch(interface{}) IElements
@@ -68,17 +68,7 @@ type API interface {
 }
 
 type IDatatListener interface {
-	ShutdownVNic(IVirtualNetworkInterface)
-	HandleData([]byte, IVirtualNetworkInterface)
-	Failed([]byte, IVirtualNetworkInterface, string)
-}
-
-func NewVNicConfig(maxDataSize uint64, txQueueSize, rxQueueSize uint64, vNetPort uint32) *types.SysConfig {
-	mc := &types.SysConfig{
-		MaxDataSize: maxDataSize,
-		TxQueueSize: txQueueSize,
-		RxQueueSize: rxQueueSize,
-		VnetPort:    vNetPort,
-	}
-	return mc
+	ShutdownVNic(nic IVNic)
+	HandleData([]byte, IVNic)
+	Failed([]byte, IVNic, string)
 }

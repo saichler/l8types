@@ -2,7 +2,7 @@ package nets
 
 import (
 	"errors"
-	"github.com/saichler/types/go/common"
+	"github.com/saichler/types/go/ifs"
 	"github.com/saichler/types/go/types"
 	"net"
 	"time"
@@ -58,7 +58,7 @@ func ReadSize(size int, conn net.Conn, config *types.SysConfig) ([]byte, error) 
 }
 
 func ReadEncryptedBytes(conn net.Conn, config *types.SysConfig,
-	securityProvider common.ISecurityProvider) ([]byte, error) {
+	securityProvider ifs.ISecurityProvider) ([]byte, error) {
 	inData, err := Read(conn, config)
 	if err != nil {
 		conn.Close()
@@ -74,7 +74,7 @@ func ReadEncryptedBytes(conn net.Conn, config *types.SysConfig,
 }
 
 func ReadEncrypted(conn net.Conn, config *types.SysConfig,
-	securityProvider common.ISecurityProvider) (string, error) {
+	securityProvider ifs.ISecurityProvider) (string, error) {
 	data, err := ReadEncryptedBytes(conn, config, securityProvider)
 	return string(data), err
 }

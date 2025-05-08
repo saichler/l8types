@@ -1,27 +1,27 @@
-package common
+package ifs
 
 import "github.com/saichler/types/go/types"
 
 // Add a bool for transaction
-type IServicePoints interface {
+type IServices interface {
 	// Add a service point type so compiling will pull the code for it
-	AddServicePointType(IServicePointHandler)
+	RegisterServiceHandlerType(IServiceHandler)
 	// Activate a service point
-	Activate(string, string, uint16, IResources, IServicePointCacheListener, ...interface{}) (IServicePointHandler, error)
-	DeActivate(string, uint16, IResources, IServicePointCacheListener) error
+	Activate(string, string, uint16, IResources, IServiceCacheListener, ...interface{}) (IServiceHandler, error)
+	DeActivate(string, uint16, IResources, IServiceCacheListener) error
 	// Handle a message and forward to the handler
-	Handle(IElements, Action, IVirtualNetworkInterface, IMessage) IElements
-	TransactionHandle(IElements, Action, IVirtualNetworkInterface, IMessage) IElements
+	Handle(IElements, Action, IVNic, IMessage) IElements
+	TransactionHandle(IElements, Action, IVNic, IMessage) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
-	Notify(IElements, IVirtualNetworkInterface, IMessage, bool) IElements
+	Notify(IElements, IVNic, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
-	ServicePointHandler(string, uint16) (IServicePointHandler, bool)
+	ServicePointHandler(string, uint16) (IServiceHandler, bool)
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
 }
 
-type IServicePointHandler interface {
-	Activate(string, uint16, IResources, IServicePointCacheListener, ...interface{}) error
+type IServiceHandler interface {
+	Activate(string, uint16, IResources, IServiceCacheListener, ...interface{}) error
 	DeActivate() error
 	Post(IElements, IResources) IElements
 	Put(IElements, IResources) IElements
@@ -33,7 +33,7 @@ type IServicePointHandler interface {
 	TransactionMethod() ITransactionMethod
 }
 
-type IServicePointCacheListener interface {
+type IServiceCacheListener interface {
 	PropertyChangeNotification(*types.NotificationSet)
 }
 

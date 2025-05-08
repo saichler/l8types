@@ -2,7 +2,7 @@ package nets
 
 import (
 	"errors"
-	"github.com/saichler/types/go/common"
+	"github.com/saichler/types/go/ifs"
 	"github.com/saichler/types/go/types"
 	"net"
 )
@@ -35,7 +35,7 @@ func Write(data []byte, conn net.Conn, config *types.SysConfig) error {
 }
 
 func WriteEncrypted(conn net.Conn, data []byte, config *types.SysConfig,
-	securityProvider common.ISecurityProvider) error {
+	securityProvider ifs.ISecurityProvider) error {
 	encData, err := securityProvider.Encrypt(data)
 	if err != nil {
 		return err
