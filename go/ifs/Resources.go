@@ -2,7 +2,7 @@ package ifs
 
 import (
 	"github.com/google/uuid"
-	"github.com/saichler/types/go/types"
+	"github.com/saichler/l8types/go/types"
 )
 
 type IResources interface {
