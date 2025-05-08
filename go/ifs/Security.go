@@ -2,7 +2,7 @@ package ifs
 
 import (
 	"errors"
-	"github.com/saichler/types/go/types"
+	"github.com/saichler/l8types/go/types"
 	"net"
 	"plugin"
 )
