@@ -1,7 +1,7 @@
 package ifs
 
 import (
-	"github.com/saichler/types/go/types"
+	"github.com/saichler/l8types/go/types"
 )
 
 type NetworkMode int

@@ -1,6 +1,6 @@
 package ifs
 
-import "github.com/saichler/types/go/types"
+import "github.com/saichler/l8types/go/types"
 
 // Add a bool for transaction
 type IServices interface {
