@@ -15,7 +15,7 @@ type IServices interface {
 	// Handle a notification message, massage it to a change set and forward to the handler
 	Notify(IElements, IVNic, IMessage, bool) IElements
 	// Return the service point handler for the service name and area
-	ServicePointHandler(string, uint16) (IServiceHandler, bool)
+	ServiceHandler(string, uint16) (IServiceHandler, bool)
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
 }
