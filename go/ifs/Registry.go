@@ -19,6 +19,7 @@ type IRegistry interface {
 	RegisterEnums(map[string]int32)
 	//Get int32 value of an enum
 	Enum(string) int32
+	InstallTypes()
 }
 
 type IInfo interface {
