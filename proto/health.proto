@@ -16,18 +16,18 @@ enum HealthState {
   Unreachable = 3;
 }
 
-message HealthPoint {
+message Health {
   string a_uuid = 1;
   string z_uuid = 2;
   string alias = 3;
   Services services = 4;
   HealthState status = 5;
-  HealthPointStats stats = 6;
+  HealthStats stats = 6;
   int64 start_time = 7;
   bool is_vnet = 8;
 }
 
-message HealthPointStats {
+message HealthStats {
   int64 last_msg_time = 1;
   int64 tx_msg_count = 2;
   int64 tx_data_count = 3;
@@ -38,5 +38,5 @@ message HealthPointStats {
 }
 
 message Top {
-  map<string, HealthPoint> health_points = 1;
+  map<string, Health> healths = 1;
 }
