@@ -19,6 +19,10 @@ type IRegistry interface {
 	RegisterEnums(map[string]int32)
 	//Get int32 value of an enum
 	Enum(string) int32
+	//Unregister an instance
+	UnRegister(interface{}) (bool, error)
+	//Unregister a type
+	UnRegisterType(string) (bool, error)
 }
 
 type IInfo interface {

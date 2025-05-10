@@ -17,4 +17,5 @@ type IIntrospector interface {
 	Clone(interface{}) interface{}
 	TableView(string) (*types.TableView, bool)
 	TableViews() []*types.TableView
+	Clean(string)
 }
