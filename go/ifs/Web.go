@@ -8,7 +8,7 @@ type IWebServer interface {
 
 type IWebServiceHandler interface {
 	ServiceName() string
-	ServiceArea() uint32
+	ServiceArea() uint16
 	PostBodyResponse(body proto.Message, resp proto.Message)
 	PutBodyResponse(body proto.Message, resp proto.Message)
 	PatchBodyResponse(body proto.Message, resp proto.Message)
