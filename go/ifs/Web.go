@@ -4,6 +4,7 @@ import "google.golang.org/protobuf/proto"
 
 type IWebServer interface {
 	NewWebServiceHandler(string, uint16, IVNic) IWebServiceHandler
+	Start() error
 }
 
 type IWebServiceHandler interface {
