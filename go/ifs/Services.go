@@ -23,13 +23,13 @@ type IServices interface {
 type IServiceHandler interface {
 	Activate(string, uint16, IResources, IServiceCacheListener, ...interface{}) error
 	DeActivate() error
-	Post(IElements, IResources) IElements
-	Put(IElements, IResources) IElements
-	Patch(IElements, IResources) IElements
-	Delete(IElements, IResources) IElements
-	GetCopy(IElements, IResources) IElements
-	Get(IElements, IResources) IElements
-	Failed(IElements, IResources, IMessage) IElements
+	Post(IElements, IVNic) IElements
+	Put(IElements, IVNic) IElements
+	Patch(IElements, IVNic) IElements
+	Delete(IElements, IVNic) IElements
+	GetCopy(IElements, IVNic) IElements
+	Get(IElements, IVNic) IElements
+	Failed(IElements, IVNic, IMessage) IElements
 	TransactionMethod() ITransactionMethod
 }
 
