@@ -9,4 +9,6 @@ option go_package = "./types";
 
 message Plugin {
   string data = 1;
+  bool install_registry = 2;
+  bool install_service = 3;
 }
