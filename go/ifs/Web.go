@@ -3,7 +3,7 @@ package ifs
 import "github.com/saichler/l8types/go/types"
 
 type IWebServer interface {
-	RegisterWebService(IWebService)
+	RegisterWebService(IWebService, IVNic)
 	Start() error
 }
 
