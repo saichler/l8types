@@ -23,8 +23,6 @@ type IWebService interface {
 
 	GetBodyType() string
 	GetRespType() string
-
-	Plugin() IPlugin
 }
 
 type IPlugin interface {
