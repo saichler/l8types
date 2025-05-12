@@ -9,20 +9,20 @@ type IWebService interface {
 	ServiceName() string
 	ServiceArea() uint16
 
-	PostBodyType() string
-	PostRespType() string
+	PostBody() string
+	PostResp() string
 
-	PutBodyType() string
-	PutRespType() string
+	PutBody() string
+	PutResp() string
 
-	PatchBodyType() string
-	PatchRespType() string
+	PatchBody() string
+	PatchResp() string
 
-	DeleteBodyType() string
-	DeleteRespType() string
+	DeleteBody() string
+	DeleteResp() string
 
-	GetBodyType() string
-	GetRespType() string
+	GetBody() string
+	GetResp() string
 }
 
 type IPlugin interface {
