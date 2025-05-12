@@ -31,6 +31,7 @@ type IServiceHandler interface {
 	Get(IElements, IVNic) IElements
 	Failed(IElements, IVNic, IMessage) IElements
 	TransactionMethod() ITransactionMethod
+	WebService() IWebService
 }
 
 type IServiceCacheListener interface {

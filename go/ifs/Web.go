@@ -1,23 +1,32 @@
 package ifs
 
-import "google.golang.org/protobuf/proto"
-
 type IWebServer interface {
-	NewWebServiceHandler(string, uint16, IVNic) IWebServiceHandler
+	RegisterWebService(IWebService)
 	Start() error
 }
 
-type IWebServiceHandler interface {
+type IWebService interface {
 	ServiceName() string
 	ServiceArea() uint16
-	PostBodyResponse(body proto.Message, resp proto.Message)
-	PutBodyResponse(body proto.Message, resp proto.Message)
-	PatchBodyResponse(body proto.Message, resp proto.Message)
-	DeleteBodyResponse(body proto.Message, resp proto.Message)
-	GetBodyResponse(body proto.Message, resp proto.Message)
+
+	PostBodyType() string
+	PostRespType() string
+
+	PutBodyType() string
+	PutRespType() string
+
+	PatchBodyType() string
+	PatchRespType() string
+
+	DeleteBodyType() string
+	DeleteRespType() string
+
+	GetBodyType() string
+	GetRespType() string
+
+	Plugin() IPlugin
 }
 
-type IServicePlugin interface {
-	InstallRegistry(IVNic) error
-	InstallServices(IVNic) error
+type IPlugin interface {
+	Install(IVNic) error
 }

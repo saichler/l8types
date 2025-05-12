@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.types.types";
+option go_package = "./types";
+
+
+message WebServiceHandler {
+  string service_name = 1;
+  int32 service_area = 2;
+  string post_body_type = 3;
+  string post_resp_type = 4;
+  string put_body_type = 5;
+  string put_resp_type = 6;
+  string patch_body_type = 7;
+  string patch_resp_type = 8;
+  string delete_body_type = 9;
+  string delete_resp_type = 10;
+  string get_body_type = 11;
+  string get_resp_type = 12;
+  Plugin plugin = 13;
+}
+
+message Plugin {
+  string data = 1;
+}
