@@ -1,5 +1,7 @@
 package ifs
 
+import "github.com/saichler/l8types/go/types"
+
 type IWebServer interface {
 	RegisterWebService(IWebService)
 	Start() error
@@ -23,6 +25,9 @@ type IWebService interface {
 
 	GetBody() string
 	GetResp() string
+
+	Serialize() *types.WebService
+	DeSerialize(*types.WebService)
 }
 
 type IPlugin interface {
