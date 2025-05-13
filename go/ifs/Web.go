@@ -28,6 +28,8 @@ type IWebService interface {
 
 	Serialize() *types.WebService
 	DeSerialize(*types.WebService)
+
+	Plugin() string
 }
 
 type IPlugin interface {
