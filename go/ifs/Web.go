@@ -5,6 +5,7 @@ import "github.com/saichler/l8types/go/types"
 type IWebServer interface {
 	RegisterWebService(IWebService, IVNic)
 	Start() error
+	Stop()
 }
 
 type IWebService interface {
