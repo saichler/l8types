@@ -18,14 +18,15 @@ const (
 type Action byte
 
 const (
-	POST   Action = 1
-	PUT    Action = 2
-	PATCH  Action = 3
-	DELETE Action = 4
-	GET    Action = 5
-	Reply  Action = 6
-	Notify Action = 7
-	Sync   Action = 8
+	POST      Action = 1
+	PUT       Action = 2
+	PATCH     Action = 3
+	DELETE    Action = 4
+	GET       Action = 5
+	Reply     Action = 6
+	Notify    Action = 7
+	Sync      Action = 8
+	EndPoints Action = 9
 )
 
 type TransactionState uint8
