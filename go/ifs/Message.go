@@ -80,8 +80,8 @@ func (t TransactionState) String() string {
 }
 
 const (
-	DESTINATION_Single = "signle"
-	DESTINATION_Leader = "leader"
+	DESTINATION_Single = "signleXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	DESTINATION_Leader = "leaderXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 )
 
 type IMessage interface {
