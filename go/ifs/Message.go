@@ -79,6 +79,11 @@ func (t TransactionState) String() string {
 	return "Unknown"
 }
 
+const (
+	DESTINATION_Single = "signle"
+	DESTINATION_Leader = "leader"
+)
+
 type IMessage interface {
 	Source() string
 	Vnet() string
