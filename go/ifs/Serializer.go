@@ -10,6 +10,6 @@ const (
 
 type ISerializer interface {
 	Mode() SerializerMode
-	Marshal(interface{}, IRegistry) ([]byte, error)
-	Unmarshal([]byte, IRegistry) (interface{}, error)
+	Marshal(interface{}, IResources) ([]byte, error)
+	Unmarshal([]byte, IResources) (interface{}, error)
 }

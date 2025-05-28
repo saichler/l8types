@@ -15,6 +15,8 @@ type IResources interface {
 	SysConfig() *types.SysConfig
 	Introspector() IIntrospector
 	AddService(string, int32)
+	Set(interface{})
+	Copy(IResources)
 }
 
 func AddService(sysConfig *types.SysConfig, serviceName string, serviceArea int32) {

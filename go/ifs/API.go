@@ -35,7 +35,7 @@ type IProperty interface {
 	Node() *types.RNode
 	Parent() IProperty
 	IsString() bool
-	Introspector() IIntrospector
+	Resources() IResources
 }
 
 type IExpression interface {

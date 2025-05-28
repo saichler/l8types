@@ -90,6 +90,8 @@ type IMessage interface {
 	Destination() string
 	ServiceArea() uint16
 	ServiceName() string
+
+	AAAId() string
 	Sequence() uint32
 	Priority() Priority
 	Action() Action
