@@ -27,3 +27,5 @@ message WebService {
 message Plugin {
   string data = 1;
 }
+
+message Empty{}
