@@ -8,6 +8,9 @@ import (
 )
 
 type ISecurityProvider interface {
+	Authenticate(string, string) string
+	Message(string) *Message
+
 	CanDial(string, uint32) (net.Conn, error)
 	CanAccept(net.Conn) error
 	ValidateConnection(net.Conn, *types.SysConfig) error
@@ -17,14 +20,13 @@ type ISecurityProvider interface {
 
 	CanDoAction(Action, IElements, string, string, ...string) error
 	ScopeView(IElements, string, string, ...string) IElements
-	Authenticate(string, string, ...string) string
 }
 
 type ISecurityProviderLoader interface {
-	LoadSecurityProvider() (ISecurityProvider, error)
+	LoadSecurityProvider(IResources) (ISecurityProvider, error)
 }
 
-func LoadSecurityProvider() (ISecurityProvider, error) {
+func LoadSecurityProvider(resources IResources) (ISecurityProvider, error) {
 	loaderFile, err := plugin.Open("./loader.so")
 	if err != nil {
 		return nil, errors.New("failed to load security provider error #1")
@@ -38,5 +40,5 @@ func LoadSecurityProvider() (ISecurityProvider, error) {
 	}
 	loaderInterface := *loader.(*ISecurityProviderLoader)
 	securityLoader := loaderInterface.(ISecurityProviderLoader).(ISecurityProviderLoader)
-	return securityLoader.LoadSecurityProvider()
+	return securityLoader.LoadSecurityProvider(resources)
 }

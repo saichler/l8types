@@ -25,7 +25,7 @@ func Write(data []byte, conn net.Conn, config *types.SysConfig) error {
 		return errors.New("data is larger than MAX size allowed")
 	}
 	// Write the size of the data
-	_, e := conn.Write(Long2Bytes(int64(len(data))))
+	_, e := conn.Write(ifs.Long2Bytes(int64(len(data))))
 	if e != nil {
 		return e
 	}

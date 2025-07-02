@@ -29,3 +29,10 @@ message ReplicationKey {
 message ReplicationEndPoint {
   int64 score = 1;
 }
+
+message Transaction {
+  int32 State = 1;
+  string id = 2;
+  string err_msg = 3;
+  int64 start_time = 4;
+}

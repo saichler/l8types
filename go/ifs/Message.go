@@ -1,130 +1,193 @@
 package ifs
 
-import "reflect"
+type Message struct {
+	source      string
+	vnet        string
+	destination string
+	serviceName string
+	serviceArea byte
+	priority    Priority
+	action      Action
+	tr_state    TransactionState
 
-type Priority byte
+	aaaId       string
+	sequence    uint32
+	timeout     uint16
+	request     bool
+	reply       bool
+	failMessage string
+	data        string
 
-const (
-	P8 Priority = 0
-	P7 Priority = 1
-	P6 Priority = 2
-	P5 Priority = 3
-	P4 Priority = 4
-	P3 Priority = 5
-	P2 Priority = 6
-	P1 Priority = 7
-)
-
-type Action byte
-
-const (
-	POST      Action = 1
-	PUT       Action = 2
-	PATCH     Action = 3
-	DELETE    Action = 4
-	GET       Action = 5
-	Reply     Action = 6
-	Notify    Action = 7
-	Sync      Action = 8
-	EndPoints Action = 9
-)
-
-type TransactionState uint8
-
-const (
-	Create     TransactionState = 1
-	Created    TransactionState = 2
-	Start      TransactionState = 3
-	Lock       TransactionState = 4
-	Locked     TransactionState = 5
-	LockFailed TransactionState = 6
-	Commit     TransactionState = 7
-	Commited   TransactionState = 8
-	Rollback   TransactionState = 9
-	Rollbacked TransactionState = 10
-	Finish     TransactionState = 11
-	Finished   TransactionState = 12
-	Errored    TransactionState = 13
-)
-
-func (t TransactionState) String() string {
-	switch t {
-	case Create:
-		return "Create"
-	case Created:
-		return "Created"
-	case Start:
-		return "Start"
-	case Lock:
-		return "Lock"
-	case Locked:
-		return "Locked"
-	case LockFailed:
-		return "LockFailed"
-	case Commit:
-		return "Commit"
-	case Commited:
-		return "Commited"
-	case Rollback:
-		return "Rollback"
-	case Rollbacked:
-		return "Rollbacked"
-	case Finish:
-		return "Finish"
-	case Finished:
-		return "Finished"
-	case Errored:
-		return "Errored"
-	}
-	return "Unknown"
+	tr_id        string
+	tr_errMsg    string
+	tr_startTime int64
 }
 
-const (
-	DESTINATION_Single = "signleXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-	DESTINATION_Leader = "leaderXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-)
+func NewMessage(destination, serviceName string, serviceArea byte,
+	priority Priority, action Action, source, vnet string, data string,
+	isRequest, isReply bool, msgNum uint32,
+	tr_state TransactionState, tr_id, tr_errMsg string, tr_start int64) *Message {
 
-type IMessage interface {
-	Source() string
-	Vnet() string
-	Destination() string
-	ServiceArea() uint16
-	ServiceName() string
-
-	AAAId() string
-	Sequence() uint32
-	Priority() Priority
-	Action() Action
-	SetAction(Action)
-	Timeout() uint16
-	Request() bool
-	Reply() bool
-	FailMessage() string
-	Data() string
-	SetData(string)
-	Tr() ITransaction
-	SetTr(transaction ITransaction)
+	return &Message{
+		destination:  destination,
+		serviceName:  serviceName,
+		serviceArea:  serviceArea,
+		priority:     priority,
+		action:       action,
+		source:       source,
+		vnet:         vnet,
+		data:         data,
+		request:      isRequest,
+		reply:        isReply,
+		sequence:     msgNum,
+		tr_state:     tr_state,
+		tr_id:        tr_id,
+		tr_errMsg:    tr_errMsg,
+		tr_startTime: tr_start,
+	}
 }
 
-type ITransaction interface {
-	Id() string
-	State() TransactionState
-	SetState(TransactionState)
-	ErrorMessage() string
-	SetErrorMessage(string)
-	StartTime() int64
+//Getters
+
+func (this *Message) Source() string {
+	return this.source
 }
 
-func IsNil(any interface{}) bool {
-	if any == nil {
-		return true
-	}
-	v := reflect.ValueOf(any)
-	isNil := v.IsNil()
-	if !isNil {
-		if v.Kind() == reflect.Func {
-			panic("Trying to check nil on a function!")
-		}
-	}
-	return isNil
+func (this *Message) Vnet() string {
+	return this.vnet
+}
+
+func (this *Message) Destination() string {
+	return this.destination
+}
+
+func (this *Message) ServiceName() string {
+	return this.serviceName
+}
+
+func (this *Message) ServiceArea() byte {
+	return this.serviceArea
+}
+
+func (this *Message) Sequence() uint32 {
+	return this.sequence
+}
+
+func (this *Message) Priority() Priority {
+	return this.priority
+}
+
+func (this *Message) Action() Action {
+	return this.action
+}
+
+func (this *Message) Timeout() uint16 {
+	return this.timeout
+}
+
+func (this *Message) Request() bool {
+	return this.request
+}
+
+func (this *Message) Reply() bool {
+	return this.reply
+}
+
+func (this *Message) FailMessage() string {
+	return this.failMessage
+}
+
+func (this *Message) Data() string {
+	return this.data
+}
+
+func (this *Message) AAAId() string {
+	return this.aaaId
+}
+
+func (this *Message) Tr_State() TransactionState {
+	return this.tr_state
+}
+
+func (this *Message) Tr_Id() string {
+	return this.tr_id
+}
+
+func (this *Message) Tr_ErrMsg() string {
+	return this.tr_errMsg
+}
+
+func (this *Message) Tr_StartTime() int64 {
+	return this.tr_startTime
+}
+
+//Setters
+
+func (this *Message) SetSource(source string) {
+	this.source = source
+}
+
+func (this *Message) SetVnet(vnet string) {
+	this.vnet = vnet
+}
+
+func (this *Message) SetDestination(destination string) {
+	this.destination = destination
+}
+
+func (this *Message) SetServiceName(serviceName string) {
+	this.serviceName = serviceName
+}
+
+func (this *Message) SetServiceArea(serviceArea byte) {
+	this.serviceArea = serviceArea
+}
+
+func (this *Message) SetSequence(sequence uint32) {
+	this.sequence = sequence
+}
+
+func (this *Message) SetPriority(priority Priority) {
+	this.priority = priority
+}
+
+func (this *Message) SetAction(action Action) {
+	this.action = action
+}
+
+func (this *Message) SetTimeout(timeout uint16) {
+	this.timeout = timeout
+}
+
+func (this *Message) SetRequestReply(request, reply bool) {
+	this.request = request
+	this.reply = reply
+}
+
+func (this *Message) SetFailMessage(failMessage string) {
+	this.failMessage = failMessage
+}
+
+func (this *Message) SetAAAId(aaaId string) {
+	this.aaaId = aaaId
+}
+
+func (this *Message) SetData(data string) {
+	this.data = data
+}
+
+func (this *Message) SetTr_State(trstate TransactionState) {
+	this.tr_state = trstate
+}
+
+func (this *Message) SetTr_Id(trid string) {
+	this.tr_id = trid
+}
+
+func (this *Message) SetTr_ErrMsg(errMsg string) {
+	this.tr_errMsg = errMsg
+}
+
+func (this *Message) SetTr_StartTime(trStartTime int64) {
+	this.tr_startTime = trStartTime
 }

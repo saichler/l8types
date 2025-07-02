@@ -7,21 +7,21 @@ type IServices interface {
 	// Add a service point type so compiling will pull the code for it
 	RegisterServiceHandlerType(IServiceHandler)
 	// Activate a service point
-	Activate(string, string, uint16, IResources, IServiceCacheListener, ...interface{}) (IServiceHandler, error)
-	DeActivate(string, uint16, IResources, IServiceCacheListener) error
+	Activate(string, string, byte, IResources, IServiceCacheListener, ...interface{}) (IServiceHandler, error)
+	DeActivate(string, byte, IResources, IServiceCacheListener) error
 	// Handle a message and forward to the handler
-	Handle(IElements, Action, IVNic, IMessage) IElements
-	TransactionHandle(IElements, Action, IVNic, IMessage) IElements
+	Handle(IElements, Action, IVNic, *Message) IElements
+	TransactionHandle(IElements, Action, IVNic, *Message) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
-	Notify(IElements, IVNic, IMessage, bool) IElements
+	Notify(IElements, IVNic, *Message, bool) IElements
 	// Return the service point handler for the service name and area
-	ServiceHandler(string, uint16) (IServiceHandler, bool)
+	ServiceHandler(string, byte) (IServiceHandler, bool)
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
 }
 
 type IServiceHandler interface {
-	Activate(string, uint16, IResources, IServiceCacheListener, ...interface{}) error
+	Activate(string, byte, IResources, IServiceCacheListener, ...interface{}) error
 	DeActivate() error
 	Post(IElements, IVNic) IElements
 	Put(IElements, IVNic) IElements
@@ -29,7 +29,7 @@ type IServiceHandler interface {
 	Delete(IElements, IVNic) IElements
 	GetCopy(IElements, IVNic) IElements
 	Get(IElements, IVNic) IElements
-	Failed(IElements, IVNic, IMessage) IElements
+	Failed(IElements, IVNic, *Message) IElements
 	TransactionMethod() ITransactionMethod
 	WebService() IWebService
 }
@@ -45,7 +45,7 @@ type IDistributedCache interface {
 	Get(k string) interface{}
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 	ServiceName() string
-	ServiceArea() uint16
+	ServiceArea() byte
 	Sync()
 }
 

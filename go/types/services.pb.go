@@ -279,6 +279,77 @@ func (x *ReplicationEndPoint) GetScore() int64 {
 	return 0
 }
 
+type Transaction struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	State     int32  `protobuf:"varint,1,opt,name=State,proto3" json:"State,omitempty"`
+	Id        string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	ErrMsg    string `protobuf:"bytes,3,opt,name=err_msg,json=errMsg,proto3" json:"err_msg,omitempty"`
+	StartTime int64  `protobuf:"varint,4,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+}
+
+func (x *Transaction) Reset() {
+	*x = Transaction{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Transaction) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Transaction) ProtoMessage() {}
+
+func (x *Transaction) ProtoReflect() protoreflect.Message {
+	mi := &file_services_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Transaction.ProtoReflect.Descriptor instead.
+func (*Transaction) Descriptor() ([]byte, []int) {
+	return file_services_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Transaction) GetState() int32 {
+	if x != nil {
+		return x.State
+	}
+	return 0
+}
+
+func (x *Transaction) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Transaction) GetErrMsg() string {
+	if x != nil {
+		return x.ErrMsg
+	}
+	return ""
+}
+
+func (x *Transaction) GetStartTime() int64 {
+	if x != nil {
+		return x.StartTime
+	}
+	return 0
+}
+
 var File_services_proto protoreflect.FileDescriptor
 
 var file_services_proto_rawDesc = []byte{
@@ -338,10 +409,17 @@ var file_services_proto_rawDesc = []byte{
 	0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22,
 	0x2b, 0x0a, 0x13, 0x52, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x45, 0x6e,
 	0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x42, 0x23, 0x0a, 0x0f,
-	0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x42,
-	0x05, 0x54, 0x79, 0x70, 0x65, 0x73, 0x50, 0x01, 0x5a, 0x07, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65,
-	0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x6b, 0x0a, 0x0b,
+	0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x53,
+	0x74, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x53, 0x74, 0x61, 0x74,
+	0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
+	0x64, 0x12, 0x17, 0x0a, 0x07, 0x65, 0x72, 0x72, 0x5f, 0x6d, 0x73, 0x67, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x06, 0x65, 0x72, 0x72, 0x4d, 0x73, 0x67, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x74,
+	0x61, 0x72, 0x74, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09,
+	0x73, 0x74, 0x61, 0x72, 0x74, 0x54, 0x69, 0x6d, 0x65, 0x42, 0x23, 0x0a, 0x0f, 0x63, 0x6f, 0x6d,
+	0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x42, 0x05, 0x54, 0x79,
+	0x70, 0x65, 0x73, 0x50, 0x01, 0x5a, 0x07, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -356,33 +434,34 @@ func file_services_proto_rawDescGZIP() []byte {
 	return file_services_proto_rawDescData
 }
 
-var file_services_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_services_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_services_proto_goTypes = []interface{}{
 	(*Services)(nil),            // 0: types.Services
 	(*ServiceAreas)(nil),        // 1: types.ServiceAreas
 	(*ReplicationIndex)(nil),    // 2: types.ReplicationIndex
 	(*ReplicationKey)(nil),      // 3: types.ReplicationKey
 	(*ReplicationEndPoint)(nil), // 4: types.ReplicationEndPoint
-	nil,                         // 5: types.Services.ServiceToAreasEntry
-	nil,                         // 6: types.ServiceAreas.AreasEntry
-	nil,                         // 7: types.ReplicationIndex.KeysEntry
-	nil,                         // 8: types.ReplicationIndex.EndPointsEntry
-	nil,                         // 9: types.ReplicationKey.LocationEntry
+	(*Transaction)(nil),         // 5: types.Transaction
+	nil,                         // 6: types.Services.ServiceToAreasEntry
+	nil,                         // 7: types.ServiceAreas.AreasEntry
+	nil,                         // 8: types.ReplicationIndex.KeysEntry
+	nil,                         // 9: types.ReplicationIndex.EndPointsEntry
+	nil,                         // 10: types.ReplicationKey.LocationEntry
 }
 var file_services_proto_depIdxs = []int32{
-	5, // 0: types.Services.service_to_areas:type_name -> types.Services.ServiceToAreasEntry
-	6, // 1: types.ServiceAreas.areas:type_name -> types.ServiceAreas.AreasEntry
-	7, // 2: types.ReplicationIndex.keys:type_name -> types.ReplicationIndex.KeysEntry
-	8, // 3: types.ReplicationIndex.end_points:type_name -> types.ReplicationIndex.EndPointsEntry
-	9, // 4: types.ReplicationKey.location:type_name -> types.ReplicationKey.LocationEntry
-	1, // 5: types.Services.ServiceToAreasEntry.value:type_name -> types.ServiceAreas
-	3, // 6: types.ReplicationIndex.KeysEntry.value:type_name -> types.ReplicationKey
-	4, // 7: types.ReplicationIndex.EndPointsEntry.value:type_name -> types.ReplicationEndPoint
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	6,  // 0: types.Services.service_to_areas:type_name -> types.Services.ServiceToAreasEntry
+	7,  // 1: types.ServiceAreas.areas:type_name -> types.ServiceAreas.AreasEntry
+	8,  // 2: types.ReplicationIndex.keys:type_name -> types.ReplicationIndex.KeysEntry
+	9,  // 3: types.ReplicationIndex.end_points:type_name -> types.ReplicationIndex.EndPointsEntry
+	10, // 4: types.ReplicationKey.location:type_name -> types.ReplicationKey.LocationEntry
+	1,  // 5: types.Services.ServiceToAreasEntry.value:type_name -> types.ServiceAreas
+	3,  // 6: types.ReplicationIndex.KeysEntry.value:type_name -> types.ReplicationKey
+	4,  // 7: types.ReplicationIndex.EndPointsEntry.value:type_name -> types.ReplicationEndPoint
+	8,  // [8:8] is the sub-list for method output_type
+	8,  // [8:8] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_services_proto_init() }
@@ -451,6 +530,18 @@ func file_services_proto_init() {
 				return nil
 			}
 		}
+		file_services_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Transaction); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -458,7 +549,7 @@ func file_services_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_services_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

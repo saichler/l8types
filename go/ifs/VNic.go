@@ -36,25 +36,25 @@ type IVNic interface {
 	Name() string
 	SendMessage([]byte) error
 	// Unicast a message without expecting response
-	Unicast(string, string, uint16, Action, interface{}) error
+	Unicast(string, string, byte, Action, interface{}) error
 	// Unicast a message expecting response
-	Request(string, string, uint16, Action, interface{}) IElements
+	Request(string, string, byte, Action, interface{}) IElements
 	// Reply to a Request
-	Reply(IMessage, IElements) error
+	Reply(*Message, IElements) error
 	// Multicast a message to all service name listeners, without expecting a response
-	Multicast(string, uint16, Action, interface{}) error
+	Multicast(string, byte, Action, interface{}) error
 	// Single a message to ONLY ONE service provider of the group,
 	// not expecting a response. Provider is chosen by residency to the requester.
-	Single(string, uint16, Action, interface{}) (string, error)
+	Single(string, byte, Action, interface{}) (string, error)
 	// SingleRequest same as single but expecting a response
-	SingleRequest(string, uint16, Action, interface{}) IElements
+	SingleRequest(string, byte, Action, interface{}) IElements
 	// Leader Same as SingleRequest but sending always to the leader.
-	Leader(string, uint16, Action, interface{}) IElements
-	Forward(IMessage, string) IElements
-	ServiceAPI(string, uint16) ServiceAPI
+	Leader(string, byte, Action, interface{}) IElements
+	Forward(*Message, string) IElements
+	ServiceAPI(string, byte) ServiceAPI
 	Resources() IResources
-	NotifyServiceAdded([]string, uint16) error
-	NotifyServiceRemoved(string, uint16) error
+	NotifyServiceAdded([]string, byte) error
+	NotifyServiceRemoved(string, byte) error
 	PropertyChangeNotification(*types.NotificationSet)
 	WaitForConnection()
 }

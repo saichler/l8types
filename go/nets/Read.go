@@ -24,7 +24,7 @@ func Read(conn net.Conn, config *types.SysConfig) ([]byte, error) {
 		return nil, err
 	}
 	// Translate the 8 byte array into int64
-	size := Bytes2Long(sizebytes)
+	size := ifs.Bytes2Long(sizebytes)
 	// If the size is larger than the MAX Data Size, return an error
 	// this is to protect against overflowing the buffers
 	// When data to send is > the max data size, one needs to split the data into chunks at a higher level

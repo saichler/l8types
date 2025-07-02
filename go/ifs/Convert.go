@@ -1,4 +1,4 @@
-package nets
+package ifs
 
 func Bytes2Long(data []byte) int64 {
 	v1 := int64(data[0]) << 56
@@ -72,7 +72,7 @@ func UInt322Bytes(s uint32) []byte {
 	return size
 }
 
-func ByteOf(request, reply bool) byte {
+func Bools(request, reply bool) byte {
 	if !request && !reply {
 		return 0
 	} else if request && !reply {
@@ -96,4 +96,16 @@ func BoolOf(b byte) (bool, bool) {
 		return true, true
 	}
 	panic("Unexpected " + string(b+48))
+}
+
+func actionStateToByte(action Action, trState TransactionState) byte {
+	b := byte(action)
+	b += byte(trState * 10)
+	return b
+}
+
+func ByteToActionState(b byte) (Action, TransactionState) {
+	action := Action(b % 10)
+	state := TransactionState(b / 10)
+	return action, state
 }
