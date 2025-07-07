@@ -10,7 +10,7 @@ type IWebServer interface {
 
 type IWebService interface {
 	ServiceName() string
-	ServiceArea() uint16
+	ServiceArea() byte
 
 	PostBody() string
 	PostResp() string
