@@ -9,7 +9,7 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	this.serviceArea = data[pServiceArea]
 	this.priority = Priority(data[pPriority])
 
-	body, err := resources.Security().Decrypt(string(data[pPriority+1]))
+	body, err := resources.Security().Decrypt(string(data[pPriority+1:]))
 	if err != nil {
 		return nil, err
 	}
@@ -43,9 +43,13 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 }
 
 func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
+	destination := ""
+	if data[pDestination] != 0 && data[pDestination+1] != 0 {
+		destination = string(data[pDestination:pServiceName])
+	}
 	return string(data[pSource:pVnet]),
 		string(data[pVnet:pDestination]),
-		string(data[pDestination:pServiceName]),
+		destination,
 		string(data[pServiceName:pServiceArea]),
 		data[pServiceArea],
 		Priority(data[pPriority])

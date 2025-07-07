@@ -23,28 +23,25 @@ type Message struct {
 	tr_startTime int64
 }
 
-func NewMessage(destination, serviceName string, serviceArea byte,
+func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	priority Priority, action Action, source, vnet string, data string,
 	isRequest, isReply bool, msgNum uint32,
-	tr_state TransactionState, tr_id, tr_errMsg string, tr_start int64) *Message {
-
-	return &Message{
-		destination:  destination,
-		serviceName:  serviceName,
-		serviceArea:  serviceArea,
-		priority:     priority,
-		action:       action,
-		source:       source,
-		vnet:         vnet,
-		data:         data,
-		request:      isRequest,
-		reply:        isReply,
-		sequence:     msgNum,
-		tr_state:     tr_state,
-		tr_id:        tr_id,
-		tr_errMsg:    tr_errMsg,
-		tr_startTime: tr_start,
-	}
+	tr_state TransactionState, tr_id, tr_errMsg string, tr_start int64) {
+	this.destination = destination
+	this.serviceName = serviceName
+	this.serviceArea = serviceArea
+	this.priority = priority
+	this.action = action
+	this.source = source
+	this.vnet = vnet
+	this.data = data
+	this.request = isRequest
+	this.reply = isReply
+	this.sequence = msgNum
+	this.tr_state = tr_state
+	this.tr_id = tr_id
+	this.tr_errMsg = tr_errMsg
+	this.tr_startTime = tr_start
 }
 
 //Getters

@@ -38,7 +38,7 @@ type IVNic interface {
 	// Unicast a message without expecting response
 	Unicast(string, string, byte, Action, interface{}) error
 	// Unicast a message expecting response
-	Request(string, string, byte, Action, interface{}) IElements
+	Request(string, string, byte, Action, interface{}, ...string) IElements
 	// Reply to a Request
 	Reply(*Message, IElements) error
 	// Multicast a message to all service name listeners, without expecting a response

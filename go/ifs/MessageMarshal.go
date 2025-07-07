@@ -17,14 +17,14 @@ const (
 	pAction          = 0
 	pAaaId           = pAction + sByte
 	pSequence        = pAaaId + sUuid
-	pTimeout         = pSequence + sByte
+	pTimeout         = pSequence + sUint32
 	pRequestReply    = pTimeout + sUint16
 	pFailMessageSize = pRequestReply + sByte
 	pFailMessage     = pFailMessageSize + sByte
 )
 
 func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, error) {
-	header := make([]byte, pAaaId)
+	header := make([]byte, pPriority+sByte)
 	copy(header[pSource:pVnet], this.source)
 	copy(header[pVnet:pDestination], this.vnet)
 	copy(header[pDestination:pServiceName], this.destination)
