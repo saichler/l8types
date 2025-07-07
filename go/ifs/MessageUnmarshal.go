@@ -1,11 +1,13 @@
 package ifs
 
+import "bytes"
+
 func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) {
 
 	this.source = string(data[pSource:pVnet])
 	this.vnet = string(data[pVnet:pDestination])
-	this.destination = string(data[pDestination:pServiceName])
-	this.serviceName = string(data[pServiceName:pServiceArea])
+	this.destination = ToDestination(data)
+	this.serviceName = ToServiceName(data)
 	this.serviceArea = data[pServiceArea]
 	this.priority = Priority(data[pPriority])
 
@@ -43,14 +45,29 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 }
 
 func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
-	destination := ""
-	if data[pDestination] != 0 && data[pDestination+1] != 0 {
-		destination = string(data[pDestination:pServiceName])
-	}
 	return string(data[pSource:pVnet]),
 		string(data[pVnet:pDestination]),
-		destination,
-		string(data[pServiceName:pServiceArea]),
+		ToDestination(data),
+		ToServiceName(data),
 		data[pServiceArea],
 		Priority(data[pPriority])
+}
+
+func ToDestination(data []byte) string {
+	if data[pDestination] != 0 && data[pDestination+1] != 0 {
+		return string(data[pDestination:pServiceName])
+	}
+	return ""
+}
+
+func ToServiceName(data []byte) string {
+	buff := bytes.Buffer{}
+	for i := pServiceName; i < pServiceName+len(data); i++ {
+		if data[i] != 0 {
+			buff.WriteByte(data[i])
+		} else {
+			return buff.String()
+		}
+	}
+	return buff.String()
 }
