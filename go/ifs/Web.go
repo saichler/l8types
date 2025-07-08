@@ -2,6 +2,10 @@ package ifs
 
 import "github.com/saichler/l8types/go/types"
 
+const (
+	WebService = "WebService"
+)
+
 type IWebServer interface {
 	RegisterWebService(IWebService, IVNic)
 	Start() error
