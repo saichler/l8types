@@ -31,11 +31,8 @@ func IsNil(any interface{}) bool {
 }
 
 type IStorage interface {
-	Write(string, []byte) error
-	Read(string) ([]byte, error)
-}
-
-type IStorageSerializer interface {
-	Serializer() ISerializer
-	Storage() IStorage
+	Put(string, interface{}) error
+	Get(string) (interface{}, error)
+	Delete(string) (interface{}, error)
+	CacheEnabled() bool
 }
