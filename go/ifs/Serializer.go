@@ -30,9 +30,17 @@ func IsNil(any interface{}) bool {
 	return isNil
 }
 
+type CacheState int
+
+const (
+	Full     CacheState = 1
+	Keys     CacheState = 2
+	Disabled CacheState = 3
+)
+
 type IStorage interface {
 	Put(string, interface{}) error
 	Get(string) (interface{}, error)
 	Delete(string) (interface{}, error)
-	CacheEnabled() bool
+	CacheState() CacheState
 }
