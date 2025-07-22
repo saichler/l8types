@@ -29,3 +29,13 @@ func IsNil(any interface{}) bool {
 	}
 	return isNil
 }
+
+type IStorage interface {
+	Write(string, []byte) error
+	Read(string) ([]byte, error)
+}
+
+type IStorageSerializer interface {
+	Serializer() ISerializer
+	Storage() IStorage
+}
