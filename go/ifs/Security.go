@@ -8,7 +8,7 @@ import (
 )
 
 type ISecurityProvider interface {
-	Authenticate(string, string) string
+	Authenticate(string, string) (string, error)
 	Message(string) (*Message, error)
 
 	CanDial(string, uint32) (net.Conn, error)
