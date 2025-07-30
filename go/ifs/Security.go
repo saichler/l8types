@@ -23,10 +23,10 @@ type ISecurityProvider interface {
 }
 
 type ISecurityProviderLoader interface {
-	LoadSecurityProvider(IResources) (ISecurityProvider, error)
+	LoadSecurityProvider(...interface{}) (ISecurityProvider, error)
 }
 
-func LoadSecurityProvider(resources IResources) (ISecurityProvider, error) {
+func LoadSecurityProvider(args ...interface{}) (ISecurityProvider, error) {
 	loaderFile, err := plugin.Open("./loader.so")
 	if err != nil {
 		return nil, errors.New("failed to load security provider error #1")
@@ -40,5 +40,5 @@ func LoadSecurityProvider(resources IResources) (ISecurityProvider, error) {
 	}
 	loaderInterface := *loader.(*ISecurityProviderLoader)
 	securityLoader := loaderInterface.(ISecurityProviderLoader).(ISecurityProviderLoader)
-	return securityLoader.LoadSecurityProvider(resources)
+	return securityLoader.LoadSecurityProvider(args...)
 }
