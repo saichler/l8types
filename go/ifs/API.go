@@ -26,6 +26,7 @@ type IQuery interface {
 	Properties() []IProperty
 	Criteria() IExpression
 	KeyOf() string
+	Match(interface{}) bool
 }
 
 type IProperty interface {
