@@ -44,7 +44,7 @@ type IVNic interface {
 	// Multicast a message to all service name listeners, without expecting a response
 	Multicast(string, byte, Action, interface{}) error
 	// RoundRobin a message to ONLY ONE service provider of the group, in a round-robin fashion
-	RoundRobin(string, byte, Action, interface{}) error
+	RoundRobin(string, byte, Action, interface{}) (string, error)
 	// RoundRobinRequest a request to ONLY ONE service provider of the group, in a round-robin fashion
 	RoundRobinRequest(string, byte, Action, interface{}) IElements
 	// Proximity a message to ONLY ONE service provider of the group with a proximity of the provider to the sender
