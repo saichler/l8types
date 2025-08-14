@@ -37,19 +37,28 @@ type IVNic interface {
 	SendMessage([]byte) error
 	// Unicast a message without expecting response
 	Unicast(string, string, byte, Action, interface{}) error
-	// Unicast a message expecting response
+	// Request unicast a message expecting response
 	Request(string, string, byte, Action, interface{}, ...string) IElements
 	// Reply to a Request
 	Reply(*Message, IElements) error
 	// Multicast a message to all service name listeners, without expecting a response
 	Multicast(string, byte, Action, interface{}) error
-	// Single a message to ONLY ONE service provider of the group,
-	// not expecting a response. Provider is chosen by residency to the requester.
-	Single(string, byte, Action, interface{}) (string, error)
-	// SingleRequest same as single but expecting a response
-	SingleRequest(string, byte, Action, interface{}) IElements
-	// Leader Same as SingleRequest but sending always to the leader.
-	Leader(string, byte, Action, interface{}) IElements
+	// RoundRobin a message to ONLY ONE service provider of the group, in a round-robin fashion
+	RoundRobin(string, byte, Action, interface{}) error
+	// RoundRobinRequest a request to ONLY ONE service provider of the group, in a round-robin fashion
+	RoundRobinRequest(string, byte, Action, interface{}) IElements
+	// Proximity a message to ONLY ONE service provider of the group with a proximity of the provider to the sender
+	Proximity(string, byte, Action, interface{}) (string, error)
+	// Proximity a request to ONLY ONE service provider of the group with a proximity of the provider to the sender
+	ProximityRequest(string, byte, Action, interface{}) IElements
+	// Leader a message to ONLY ONE service provider leader of the group.
+	Leader(string, byte, Action, interface{}) (string, error)
+	// LeaderRequest a request to ONLY ONE service provider leader of the group.
+	LeaderRequest(string, byte, Action, interface{}) IElements
+	// Local a message to ONLY ONE service provider that resides in the same vnic.
+	Local(string, byte, Action, interface{}) (string, error)
+	// LocalRequest a request to ONLY ONE service provider that resides in the same vnic.
+	LocalRequest(string, byte, Action, interface{}) IElements
 	Forward(*Message, string) IElements
 	ServiceAPI(string, byte) ServiceAPI
 	Resources() IResources
