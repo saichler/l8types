@@ -19,6 +19,7 @@ type IElements interface {
 	Notification() bool
 	ReplicasRequest() bool
 	Append(IElements)
+	AsList(IRegistry) (interface{}, error)
 }
 
 type IQuery interface {
