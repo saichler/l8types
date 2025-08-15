@@ -13,6 +13,10 @@ enum TestEnum {
   ValueTwo = 2;
 }
 
+message TestProtoList {
+  repeated TestProto list = 1;
+}
+
 message TestProto {
   string myString = 1;
   int32 myInt32 = 2;
