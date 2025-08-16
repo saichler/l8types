@@ -99,13 +99,14 @@ func BoolOf(b byte) (bool, bool) {
 }
 
 func actionStateToByte(action Action, trState TransactionState) byte {
-	b := byte(action)
-	b += byte(trState * 10)
+	b := byte(action) << 4
+	b = b | byte(trState)
 	return b
 }
 
 func ByteToActionState(b byte) (Action, TransactionState) {
-	action := Action(b % 10)
-	state := TransactionState(b / 10)
+	action := Action(b >> 4)
+	ab := byte(action) << 4
+	state := TransactionState(b ^ ab)
 	return action, state
 }
