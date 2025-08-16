@@ -25,7 +25,8 @@ const (
 	Notify    Action = 7
 	Sync      Action = 8
 	EndPoints Action = 9
-	Internal  Action = 10
+	Routes    Action = 10
+	RRoutes   Action = 11
 )
 
 type TransactionState uint8
