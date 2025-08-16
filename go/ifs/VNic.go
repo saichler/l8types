@@ -66,6 +66,7 @@ type IVNic interface {
 	NotifyServiceRemoved(string, byte) error
 	PropertyChangeNotification(*types.NotificationSet)
 	WaitForConnection()
+	Running() bool
 }
 
 type ServiceAPI interface {
