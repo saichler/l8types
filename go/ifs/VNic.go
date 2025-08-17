@@ -79,6 +79,6 @@ type ServiceAPI interface {
 
 type IDatatListener interface {
 	ShutdownVNic(nic IVNic)
-	HandleData([]byte, IVNic, bool)
+	HandleData([]byte, IVNic)
 	Failed([]byte, IVNic, string)
 }
