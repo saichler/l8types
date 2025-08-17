@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L8Types - Layer 8 Distributed Networking Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        main {
+            background: white;
+            margin-top: -50px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .code-section {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 80px 0;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            border: 1px solid #444;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .code-title {
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .architecture-diagram {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .layer {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            margin: 0.5rem;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .install-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .install-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .install-step {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .code-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 0 60px;
+            }
+        }
+
+        .syntax-keyword { color: #66d9ef; }
+        .syntax-string { color: #a6e22e; }
+        .syntax-comment { color: #75715e; font-style: italic; }
+        .syntax-function { color: #f92672; }
+        .syntax-type { color: #66d9ef; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">L8Types</a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#install">Install</a></li>
+                <li><a href="https://github.com/saichler/l8types">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>L8Types</h1>
+            <p>Layer 8 Distributed Networking Library for Go</p>
+            <p>Build sophisticated distributed systems with virtual networking, service discovery, and real-time health monitoring</p>
+            <a href="#install" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <main>
+        <section id="features" class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Virtual Network Interface</h3>
+                    <p>Advanced VNic abstraction with multiple communication patterns: Unicast, Multicast, Round-robin, Proximity-based routing, and Leader selection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Service Discovery</h3>
+                    <p>Built-in service registration and discovery with area-based routing, health monitoring, and intelligent endpoint selection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Health Monitoring</h3>
+                    <p>Real-time system health tracking with Unix top-style output, CPU/memory usage statistics, and message flow metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Security Framework</h3>
+                    <p>Built-in AES encryption, AAA (Authentication, Authorization, Accounting) framework, and resource-based access control.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Transaction Management</h3>
+                    <p>Distributed transaction support with state tracking, commit/rollback operations, and error handling.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Protocol Buffers</h3>
+                    <p>Comprehensive type definitions with multi-language support, efficient serialization, and cross-platform compatibility.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section" id="examples">
+            <div class="container">
+                <h2 class="section-title" style="color: white;">Code Examples</h2>
+                <div class="code-container">
+                    <div>
+                        <div class="code-title">Service Setup & VNic Configuration</div>
+                        <div class="code-block">
+                            <pre><code><span class="syntax-comment">// Create system configuration</span>
+<span class="syntax-keyword">config</span> := &<span class="syntax-type">types.SysConfig</span>{
+    <span class="syntax-keyword">LocalUuid</span>: <span class="syntax-string">"node-123"</span>,
+    <span class="syntax-keyword">VnetPort</span>: <span class="syntax-string">8080</span>,
+    <span class="syntax-keyword">MaxDataSize</span>: <span class="syntax-string">1024*1024</span>,
+    <span class="syntax-keyword">TxQueueSize</span>: <span class="syntax-string">1000</span>,
+    <span class="syntax-keyword">RxQueueSize</span>: <span class="syntax-string">1000</span>,
+}
+
+<span class="syntax-comment">// Add services to configuration</span>
+<span class="syntax-function">ifs.AddService</span>(config, <span class="syntax-string">"user-service"</span>, <span class="syntax-string">1</span>)
+<span class="syntax-function">ifs.AddService</span>(config, <span class="syntax-string">"auth-service"</span>, <span class="syntax-string">2</span>)
+
+<span class="syntax-comment">// Create and start VNic</span>
+<span class="syntax-keyword">vnic</span> := <span class="syntax-function">NewVNic</span>(config, resources)
+vnic.<span class="syntax-function">Start</span>()</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="code-title">Communication Patterns</div>
+                        <div class="code-block">
+                            <pre><code><span class="syntax-comment">// Unicast to specific destination</span>
+<span class="syntax-keyword">err</span> := vnic.<span class="syntax-function">Unicast</span>(<span class="syntax-string">"node-456"</span>, <span class="syntax-string">"user-service"</span>, 
+    <span class="syntax-string">1</span>, ifs.<span class="syntax-keyword">POST</span>, userData)
+
+<span class="syntax-comment">// Round-robin to service providers</span>
+<span class="syntax-keyword">destination</span>, <span class="syntax-keyword">err</span> := vnic.<span class="syntax-function">RoundRobin</span>(<span class="syntax-string">"auth-service"</span>, 
+    <span class="syntax-string">2</span>, ifs.<span class="syntax-keyword">GET</span>, request)
+
+<span class="syntax-comment">// Request with response</span>
+<span class="syntax-keyword">response</span> := vnic.<span class="syntax-function">Request</span>(<span class="syntax-string">"node-789"</span>, 
+    <span class="syntax-string">"data-service"</span>, <span class="syntax-string">1</span>, ifs.<span class="syntax-keyword">GET</span>, query)
+
+<span class="syntax-comment">// Multicast to all providers</span>
+<span class="syntax-keyword">err</span> = vnic.<span class="syntax-function">Multicast</span>(<span class="syntax-string">"notification-service"</span>, 
+    <span class="syntax-string">1</span>, ifs.<span class="syntax-keyword">Notify</span>, event)</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture" class="container">
+            <h2 class="section-title">Architecture Overview</h2>
+            <div class="architecture-diagram">
+                <div class="layer">Application Layer - User Applications & Services</div>
+                <div class="layer">Service Layer - Business Logic with Service Areas</div>
+                <div class="layer">VNet Protocol - Message Routing & Service Discovery</div>
+                <div class="layer">Physical Network - TCP/UDP Transport Layer</div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div>Protocol Buffer Schemas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div>Message Priority Levels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10+</div>
+                    <div>Core Interfaces</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div>Communication Patterns</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="install-section" id="install">
+            <div class="container">
+                <h2 class="section-title">Quick Installation</h2>
+                <div class="install-steps">
+                    <div class="install-step">
+                        <div class="step-number">1</div>
+                        <h3>Clone Repository</h3>
+                        <div class="code-block" style="background: #f8f9fa; color: #333; margin-top: 1rem;">
+                            <pre><code>git clone https://github.com/saichler/l8types.git
+cd l8types</code></pre>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-number">2</div>
+                        <h3>Install Dependencies</h3>
+                        <div class="code-block" style="background: #f8f9fa; color: #333; margin-top: 1rem;">
+                            <pre><code>cd go
+go mod download</code></pre>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-number">3</div>
+                        <h3>Generate Bindings</h3>
+                        <div class="code-block" style="background: #f8f9fa; color: #333; margin-top: 1rem;">
+                            <pre><code>cd proto
+./make-bindings.sh</code></pre>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-number">4</div>
+                        <h3>Run Tests</h3>
+                        <div class="code-block" style="background: #f8f9fa; color: #333; margin-top: 1rem;">
+                            <pre><code>cd go
+go test ./...</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <h2 class="section-title">Key Components</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Query Engine</h3>
+                    <p>Expression-based querying with comparators, conditions, sorting, pagination, and schema filtering for complex data retrieval.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Type Registry</h3>
+                    <p>Dynamic type registration and introspection with RNode reflection system, decorators, and table views for runtime flexibility.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Notification System</h3>
+                    <p>Property change notifications with batching, sequencing, and event propagation for real-time system updates.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Network Modes</h3>
+                    <p>Support for Native, Docker, and Kubernetes networking environments with automatic adaptation and configuration.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/saichler/l8types">GitHub Repository</a>
+                <a href="https://github.com/saichler/l8types/issues">Report Issues</a>
+                <a href="https://github.com/saichler/l8types/blob/main/README.md">Documentation</a>
+                <a href="https://github.com/saichler/l8types/releases">Releases</a>
+            </div>
+            <p>&copy; 2024 L8Types. Open source distributed networking library for Go.</p>
+            <p>Built for Layer 8 distributed systems with sophisticated networking requirements.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const finalValue = stat.textContent;
+                        const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+                        let currentValue = 0;
+                        const increment = numericValue / 30;
+                        
+                        const timer = setInterval(() => {
+                            currentValue += increment;
+                            if (currentValue >= numericValue) {
+                                stat.textContent = finalValue;
+                                clearInterval(timer);
+                            } else {
+                                stat.textContent = Math.floor(currentValue) + (finalValue.includes('+') ? '+' : '');
+                            }
+                        }, 50);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats-grid');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
