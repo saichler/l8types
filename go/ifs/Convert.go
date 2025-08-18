@@ -144,3 +144,54 @@ func encodeBools(request, reply bool) byte {
 	}
 	return 0
 }
+
+func getUInt32(buf []byte, offset int) uint32 {
+	return uint32(buf[offset])<<24 | uint32(buf[offset+1])<<16 | uint32(buf[offset+2])<<8 | uint32(buf[offset+3])
+}
+
+func getUInt16(buf []byte, offset int) uint16 {
+	return uint16(buf[offset])<<8 | uint16(buf[offset+1])
+}
+
+func getInt64(buf []byte, offset int) int64 {
+	return int64(buf[offset])<<56 | int64(buf[offset+1])<<48 | int64(buf[offset+2])<<40 | int64(buf[offset+3])<<32 |
+		int64(buf[offset+4])<<24 | int64(buf[offset+5])<<16 | int64(buf[offset+6])<<8 | int64(buf[offset+7])
+}
+
+func stringFromBytes(data []byte, start, end int) string {
+	if start >= end || start >= len(data) {
+		return ""
+	}
+	if end > len(data) {
+		end = len(data)
+	}
+	
+	// Find the actual end by trimming null bytes and spaces
+	actualEnd := end
+	for actualEnd > start && (data[actualEnd-1] == 0 || data[actualEnd-1] == ' ') {
+		actualEnd--
+	}
+	
+	if actualEnd == start {
+		return ""
+	}
+	
+	return string(data[start:actualEnd])
+}
+
+func nullTerminatedString(data []byte, start, maxLen int) string {
+	end := start + maxLen
+	if end > len(data) {
+		end = len(data)
+	}
+	
+	for i := start; i < end; i++ {
+		if data[i] == 0 {
+			if i == start {
+				return ""
+			}
+			return string(data[start:i])
+		}
+	}
+	return string(data[start:end])
+}

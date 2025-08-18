@@ -4,10 +4,10 @@ import "bytes"
 
 func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) {
 
-	this.source = string(data[pSource:pVnet])
-	this.vnet = string(data[pVnet:pDestination])
-	this.destination = ToDestination(data)
-	this.serviceName = ToServiceName(data)
+	this.source = stringFromBytes(data, pSource, pVnet)
+	this.vnet = stringFromBytes(data, pVnet, pDestination)
+	this.destination = optimizedToDestination(data)
+	this.serviceName = optimizedToServiceName(data)
 	this.serviceArea = data[pServiceArea]
 	this.priority = Priority(data[pPriority])
 
@@ -17,38 +17,38 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	}
 
 	this.action, this.tr_state = ByteToActionState(body[pAction])
-	this.aaaId = string(body[pAaaId:pSequence])
-	this.sequence = Bytes2UInt32(body[pSequence:pTimeout])
-	this.timeout = Bytes2UInt16(body[pTimeout:pRequestReply])
+	this.aaaId = stringFromBytes(body, pAaaId, pSequence)
+	this.sequence = getUInt32(body, pSequence)
+	this.timeout = getUInt16(body, pTimeout)
 	this.request, this.reply = BoolOf(body[pRequestReply])
 
 	failMessageSize := int(body[pFailMessageSize])
 	pDataSize := pFailMessage + failMessageSize
-	this.failMessage = string(body[pFailMessage:pDataSize])
+	this.failMessage = stringFromBytes(body, pFailMessage, pDataSize)
 
 	pData := pDataSize + sUint32
-	dataSize := int(Bytes2UInt32(body[pDataSize:pData]))
+	dataSize := int(getUInt32(body, pDataSize))
 	pTrId := pData + dataSize
-	this.data = string(body[pData:pTrId])
+	this.data = stringFromBytes(body, pData, pTrId)
 
 	if this.tr_state != Empty {
 		pTrErrMsgSize := pTrId + sUuid
-		this.tr_id = string(body[pTrId:pTrErrMsgSize])
+		this.tr_id = stringFromBytes(body, pTrId, pTrErrMsgSize)
 		trErrMsgSize := int(body[pTrErrMsgSize])
 		pTrErrMsg := pTrErrMsgSize + sByte
 		pTrStartTime := pTrErrMsg + trErrMsgSize
-		this.tr_errMsg = string(body[pTrErrMsg:pTrStartTime])
-		this.tr_startTime = Bytes2Long(body[pTrStartTime:])
+		this.tr_errMsg = stringFromBytes(body, pTrErrMsg, pTrStartTime)
+		this.tr_startTime = getInt64(body, pTrStartTime)
 	}
 
 	return nil, nil
 }
 
 func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
-	return string(data[pSource:pVnet]),
-		string(data[pVnet:pDestination]),
-		ToDestination(data),
-		ToServiceName(data),
+	return stringFromBytes(data, pSource, pVnet),
+		stringFromBytes(data, pVnet, pDestination),
+		optimizedToDestination(data),
+		optimizedToServiceName(data),
 		data[pServiceArea],
 		Priority(data[pPriority])
 }
@@ -56,6 +56,16 @@ func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
 func ToDestination(data []byte) string {
 	if data[pDestination] != 0 && data[pDestination+1] != 0 {
 		return string(data[pDestination:pServiceName])
+	}
+	return ""
+}
+
+func optimizedToDestination(data []byte) string {
+	if len(data) <= pDestination+1 {
+		return ""
+	}
+	if data[pDestination] != 0 && data[pDestination+1] != 0 {
+		return stringFromBytes(data, pDestination, pServiceName)
 	}
 	return ""
 }
@@ -70,4 +80,8 @@ func ToServiceName(data []byte) string {
 		}
 	}
 	return buff.String()
+}
+
+func optimizedToServiceName(data []byte) string {
+	return nullTerminatedString(data, pServiceName, sServiceName)
 }
