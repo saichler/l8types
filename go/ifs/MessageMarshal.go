@@ -24,58 +24,60 @@ const (
 )
 
 func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, error) {
-	header := make([]byte, pPriority+sByte)
-	copy(header[pSource:pVnet], this.source)
-	copy(header[pVnet:pDestination], this.vnet)
-	copy(header[pDestination:pServiceName], this.destination)
-	copy(header[pServiceName:pServiceArea], this.serviceName)
-	header[pServiceArea] = this.serviceArea
-	header[pPriority] = byte(this.priority)
-
 	failMessageSize := len(this.failMessage)
 	dataSize := len(this.data)
+	trErrMsgSize := len(this.tr_errMsg)
+	
 	pDataSize := pFailMessage + failMessageSize
 	pData := pDataSize + sUint32
 	pTrId := pData + dataSize
-
-	pTrErrMsgSize := pTrId + sUuid
-	trErrMsgSize := len(this.tr_errMsg)
-	pTrErrMsg := pTrErrMsgSize + sByte
-	pTrStartTime := pTrErrMsg + trErrMsgSize
-	pEnd := pTrStartTime + 8
-
-	var body []byte
+	
+	var bodySize int
 	if this.tr_state == Empty {
-		body = make([]byte, pTrId)
+		bodySize = pTrId
 	} else {
-		body = make([]byte, pEnd)
+		bodySize = pTrId + sUuid + sByte + trErrMsgSize + 8
 	}
-
+	
+	body := make([]byte, bodySize)
+	
 	body[pAction] = actionStateToByte(this.action, this.tr_state)
 	copy(body[pAaaId:pSequence], this.aaaId)
-	copy(body[pSequence:pTimeout], UInt322Bytes(this.sequence))
-	copy(body[pTimeout:pRequestReply], UInt162Bytes(this.timeout))
-	body[pRequestReply] = Bools(this.request, this.reply)
+	putUInt32(body, pSequence, this.sequence)
+	putUInt16(body, pTimeout, this.timeout)
+	body[pRequestReply] = encodeBools(this.request, this.reply)
 	body[pFailMessageSize] = byte(failMessageSize)
 	copy(body[pFailMessage:pDataSize], this.failMessage)
-	copy(body[pDataSize:pData], UInt322Bytes(uint32(dataSize)))
+	putUInt32(body, pDataSize, uint32(dataSize))
 	copy(body[pData:pTrId], this.data)
-
+	
 	if this.tr_state != Empty {
+		pTrErrMsgSize := pTrId + sUuid
+		pTrErrMsg := pTrErrMsgSize + sByte
+		pTrStartTime := pTrErrMsg + trErrMsgSize
+		
 		copy(body[pTrId:pTrErrMsgSize], this.tr_id)
 		body[pTrErrMsgSize] = byte(trErrMsgSize)
 		copy(body[pTrErrMsg:pTrStartTime], this.tr_errMsg)
-		copy(body[pTrStartTime:pEnd], Long2Bytes(this.tr_startTime))
+		putInt64(body, pTrStartTime, this.tr_startTime)
 	}
-
+	
 	bodyEnc, err := resources.Security().Encrypt(body)
 	if err != nil {
 		return nil, err
 	}
-
-	data := make([]byte, len(header)+len(bodyEnc))
-	copy(data[0:len(header)], header)
-	copy(data[len(header):], bodyEnc)
-
-	return data, nil
+	
+	headerSize := pPriority + sByte
+	result := make([]byte, headerSize+len(bodyEnc))
+	
+	copy(result[pSource:pVnet], this.source)
+	copy(result[pVnet:pDestination], this.vnet)
+	copy(result[pDestination:pServiceName], this.destination)
+	copy(result[pServiceName:pServiceArea], this.serviceName)
+	result[pServiceArea] = this.serviceArea
+	result[pPriority] = byte(this.priority)
+	
+	copy(result[headerSize:], bodyEnc)
+	
+	return result, nil
 }

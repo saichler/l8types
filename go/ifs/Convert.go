@@ -110,3 +110,37 @@ func ByteToActionState(b byte) (Action, TransactionState) {
 	state := TransactionState(b ^ ab)
 	return action, state
 }
+
+func putUInt32(buf []byte, offset int, val uint32) {
+	buf[offset] = byte(val >> 24)
+	buf[offset+1] = byte(val >> 16)
+	buf[offset+2] = byte(val >> 8)
+	buf[offset+3] = byte(val)
+}
+
+func putUInt16(buf []byte, offset int, val uint16) {
+	buf[offset] = byte(val >> 8)
+	buf[offset+1] = byte(val)
+}
+
+func putInt64(buf []byte, offset int, val int64) {
+	buf[offset] = byte(val >> 56)
+	buf[offset+1] = byte(val >> 48)
+	buf[offset+2] = byte(val >> 40)
+	buf[offset+3] = byte(val >> 32)
+	buf[offset+4] = byte(val >> 24)
+	buf[offset+5] = byte(val >> 16)
+	buf[offset+6] = byte(val >> 8)
+	buf[offset+7] = byte(val)
+}
+
+func encodeBools(request, reply bool) byte {
+	if request && reply {
+		return 3
+	} else if reply {
+		return 2
+	} else if request {
+		return 1
+	}
+	return 0
+}
