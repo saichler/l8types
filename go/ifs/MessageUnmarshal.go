@@ -1,8 +1,15 @@
 package ifs
 
-import "bytes"
+import (
+	"bytes"
+	"fmt"
+)
 
 func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) {
+	// Basic bounds checking for header
+	if len(data) < pPriority+1 {
+		return nil, fmt.Errorf("insufficient data for message header: got %d bytes, need at least %d", len(data), pPriority+1)
+	}
 
 	this.source = stringFromBytes(data, pSource, pVnet)
 	this.vnet = stringFromBytes(data, pVnet, pDestination)
@@ -14,6 +21,11 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	body, err := resources.Security().Decrypt(string(data[pPriority+1:]))
 	if err != nil {
 		return nil, err
+	}
+
+	// Basic bounds checking for body
+	if len(body) < pFailMessageSize+1 {
+		return nil, fmt.Errorf("insufficient body data: got %d bytes, need at least %d", len(body), pFailMessageSize+1)
 	}
 
 	this.action, this.tr_state = ByteToActionState(body[pAction])
@@ -45,12 +57,23 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 }
 
 func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
+	var serviceArea byte
+	var priority Priority
+	
+	// Bounds checking for direct byte access
+	if len(data) > pServiceArea {
+		serviceArea = data[pServiceArea]
+	}
+	if len(data) > pPriority {
+		priority = Priority(data[pPriority])
+	}
+	
 	return stringFromBytes(data, pSource, pVnet),
 		stringFromBytes(data, pVnet, pDestination),
 		optimizedToDestination(data),
 		optimizedToServiceName(data),
-		data[pServiceArea],
-		Priority(data[pPriority])
+		serviceArea,
+		priority
 }
 
 func ToDestination(data []byte) string {
@@ -61,7 +84,7 @@ func ToDestination(data []byte) string {
 }
 
 func optimizedToDestination(data []byte) string {
-	if len(data) <= pDestination+1 {
+	if len(data) <= pDestination+1 || len(data) < pServiceName {
 		return ""
 	}
 	if data[pDestination] != 0 && data[pDestination+1] != 0 {

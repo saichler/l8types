@@ -112,6 +112,9 @@ func ByteToActionState(b byte) (Action, TransactionState) {
 }
 
 func putUInt32(buf []byte, offset int, val uint32) {
+	if offset < 0 || offset+4 > len(buf) {
+		return
+	}
 	buf[offset] = byte(val >> 24)
 	buf[offset+1] = byte(val >> 16)
 	buf[offset+2] = byte(val >> 8)
@@ -119,11 +122,17 @@ func putUInt32(buf []byte, offset int, val uint32) {
 }
 
 func putUInt16(buf []byte, offset int, val uint16) {
+	if offset < 0 || offset+2 > len(buf) {
+		return
+	}
 	buf[offset] = byte(val >> 8)
 	buf[offset+1] = byte(val)
 }
 
 func putInt64(buf []byte, offset int, val int64) {
+	if offset < 0 || offset+8 > len(buf) {
+		return
+	}
 	buf[offset] = byte(val >> 56)
 	buf[offset+1] = byte(val >> 48)
 	buf[offset+2] = byte(val >> 40)
@@ -146,22 +155,33 @@ func encodeBools(request, reply bool) byte {
 }
 
 func getUInt32(buf []byte, offset int) uint32 {
+	if offset < 0 || offset+4 > len(buf) {
+		return 0
+	}
 	return uint32(buf[offset])<<24 | uint32(buf[offset+1])<<16 | uint32(buf[offset+2])<<8 | uint32(buf[offset+3])
 }
 
 func getUInt16(buf []byte, offset int) uint16 {
+	if offset < 0 || offset+2 > len(buf) {
+		return 0
+	}
 	return uint16(buf[offset])<<8 | uint16(buf[offset+1])
 }
 
 func getInt64(buf []byte, offset int) int64 {
+	if offset < 0 || offset+8 > len(buf) {
+		return 0
+	}
 	return int64(buf[offset])<<56 | int64(buf[offset+1])<<48 | int64(buf[offset+2])<<40 | int64(buf[offset+3])<<32 |
 		int64(buf[offset+4])<<24 | int64(buf[offset+5])<<16 | int64(buf[offset+6])<<8 | int64(buf[offset+7])
 }
 
 func stringFromBytes(data []byte, start, end int) string {
-	if start >= end || start >= len(data) {
+	// Comprehensive bounds checking
+	if start < 0 || end < 0 || start >= end || len(data) == 0 || start >= len(data) {
 		return ""
 	}
+	
 	if end > len(data) {
 		end = len(data)
 	}
@@ -172,7 +192,7 @@ func stringFromBytes(data []byte, start, end int) string {
 		actualEnd--
 	}
 	
-	if actualEnd == start {
+	if actualEnd <= start {
 		return ""
 	}
 	
@@ -180,9 +200,19 @@ func stringFromBytes(data []byte, start, end int) string {
 }
 
 func nullTerminatedString(data []byte, start, maxLen int) string {
+	// Bounds checking
+	if start < 0 || start >= len(data) || maxLen <= 0 {
+		return ""
+	}
+	
 	end := start + maxLen
 	if end > len(data) {
 		end = len(data)
+	}
+	
+	// Additional safety check
+	if start >= end {
+		return ""
 	}
 	
 	for i := start; i < end; i++ {
@@ -194,4 +224,37 @@ func nullTerminatedString(data []byte, start, maxLen int) string {
 		}
 	}
 	return string(data[start:end])
+}
+
+// Test helper functions to expose internal functions for testing
+func TestNullTerminatedString(data []byte, start, maxLen int) string {
+	return nullTerminatedString(data, start, maxLen)
+}
+
+func TestStringFromBytes(data []byte, start, end int) string {
+	return stringFromBytes(data, start, end)
+}
+
+func TestGetUInt32(buf []byte, offset int) uint32 {
+	return getUInt32(buf, offset)
+}
+
+func TestGetUInt16(buf []byte, offset int) uint16 {
+	return getUInt16(buf, offset)
+}
+
+func TestGetInt64(buf []byte, offset int) int64 {
+	return getInt64(buf, offset)
+}
+
+func TestPutUInt32(buf []byte, offset int, val uint32) {
+	putUInt32(buf, offset, val)
+}
+
+func TestPutUInt16(buf []byte, offset int, val uint16) {
+	putUInt16(buf, offset, val)
+}
+
+func TestPutInt64(buf []byte, offset int, val int64) {
+	putInt64(buf, offset, val)
 }
