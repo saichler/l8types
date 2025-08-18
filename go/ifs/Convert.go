@@ -1,112 +1,100 @@
 package ifs
 
+// Optimized Convert.go - Maintaining full API compatibility with performance improvements
+// Key optimizations:
+// - Bitwise OR instead of addition for better performance
+// - Slice literals instead of make() + assignments for better memory efficiency
+// - Optimized boolean operations with bitwise logic
+// - Improved action/state bit manipulation
+
+// Bytes2Long converts 8 bytes to int64 (optimized with bitwise OR)
 func Bytes2Long(data []byte) int64 {
-	v1 := int64(data[0]) << 56
-	v2 := int64(data[1]) << 48
-	v3 := int64(data[2]) << 40
-	v4 := int64(data[3]) << 32
-	v5 := int64(data[4]) << 24
-	v6 := int64(data[5]) << 16
-	v7 := int64(data[6]) << 8
-	v8 := int64(data[7])
-	return v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8
+	return int64(data[0])<<56 | int64(data[1])<<48 | int64(data[2])<<40 | int64(data[3])<<32 |
+		int64(data[4])<<24 | int64(data[5])<<16 | int64(data[6])<<8 | int64(data[7])
 }
 
+// Long2Bytes converts int64 to 8 bytes (optimized with slice literal)
 func Long2Bytes(s int64) []byte {
-	size := make([]byte, 8)
-	size[7] = byte(s)
-	size[6] = byte(s >> 8)
-	size[5] = byte(s >> 16)
-	size[4] = byte(s >> 24)
-	size[3] = byte(s >> 32)
-	size[2] = byte(s >> 40)
-	size[1] = byte(s >> 48)
-	size[0] = byte(s >> 56)
-	return size
+	return []byte{
+		byte(s >> 56),
+		byte(s >> 48),
+		byte(s >> 40),
+		byte(s >> 32),
+		byte(s >> 24),
+		byte(s >> 16),
+		byte(s >> 8),
+		byte(s),
+	}
 }
 
+// Bytes2Int converts 4 bytes to int32 (optimized with bitwise OR)
 func Bytes2Int(data []byte) int32 {
-	v1 := int32(data[0]) << 24
-	v2 := int32(data[1]) << 16
-	v3 := int32(data[2]) << 8
-	v4 := int32(data[3])
-	return v1 + v2 + v3 + v4
+	return int32(data[0])<<24 | int32(data[1])<<16 | int32(data[2])<<8 | int32(data[3])
 }
 
+// Int2Bytes converts int32 to 4 bytes (optimized with slice literal)
 func Int2Bytes(s int32) []byte {
-	size := make([]byte, 4)
-	size[3] = byte(s)
-	size[2] = byte(s >> 8)
-	size[1] = byte(s >> 16)
-	size[0] = byte(s >> 24)
-	return size
+	return []byte{
+		byte(s >> 24),
+		byte(s >> 16),
+		byte(s >> 8),
+		byte(s),
+	}
 }
 
+// Bytes2UInt16 converts 2 bytes to uint16 (optimized with bitwise OR)
 func Bytes2UInt16(data []byte) uint16 {
-	v1 := uint16(data[0]) << 8
-	v2 := uint16(data[1])
-	return v1 + v2
+	return uint16(data[0])<<8 | uint16(data[1])
 }
 
+// UInt162Bytes converts uint16 to 2 bytes (optimized with slice literal)
 func UInt162Bytes(s uint16) []byte {
-	size := make([]byte, 2)
-	size[1] = byte(s)
-	size[0] = byte(s >> 8)
-	return size
+	return []byte{byte(s >> 8), byte(s)}
 }
 
+// Bytes2UInt32 converts 4 bytes to uint32 (optimized with bitwise OR)
 func Bytes2UInt32(data []byte) uint32 {
-	v1 := uint32(data[0]) << 24
-	v2 := uint32(data[1]) << 16
-	v3 := uint32(data[2]) << 8
-	v4 := uint32(data[3])
-	return v1 + v2 + v3 + v4
+	return uint32(data[0])<<24 | uint32(data[1])<<16 | uint32(data[2])<<8 | uint32(data[3])
 }
 
+// UInt322Bytes converts uint32 to 4 bytes (optimized with slice literal)
 func UInt322Bytes(s uint32) []byte {
-	size := make([]byte, 4)
-	size[3] = byte(s)
-	size[2] = byte(s >> 8)
-	size[1] = byte(s >> 16)
-	size[0] = byte(s >> 24)
-	return size
+	return []byte{
+		byte(s >> 24),
+		byte(s >> 16),
+		byte(s >> 8),
+		byte(s),
+	}
 }
 
+// Bools converts two booleans to a byte (optimized with bitwise operations)
 func Bools(request, reply bool) byte {
-	if !request && !reply {
-		return 0
-	} else if request && !reply {
-		return 1
-	} else if !request {
-		return 2
-	} else {
-		return 3
+	var result byte
+	if request {
+		result |= 1
 	}
+	if reply {
+		result |= 2
+	}
+	return result
 }
 
+// BoolOf converts a byte to two booleans (optimized with bitwise operations)
 func BoolOf(b byte) (bool, bool) {
-	switch b {
-	case 0:
-		return false, false
-	case 1:
-		return true, false
-	case 2:
-		return false, true
-	case 3:
-		return true, true
+	if b > 3 {
+		panic("Unexpected " + string(b+48))
 	}
-	panic("Unexpected " + string(b+48))
+	return (b & 1) != 0, (b & 2) != 0
 }
 
+// actionStateToByte packs action and transaction state into one byte (optimized)
 func actionStateToByte(action Action, trState TransactionState) byte {
-	b := byte(action) << 4
-	b = b | byte(trState)
-	return b
+	return (byte(action) << 4) | byte(trState)
 }
 
+// ByteToActionState unpacks action and transaction state from one byte (optimized)
 func ByteToActionState(b byte) (Action, TransactionState) {
-	action := Action(b >> 4)
-	ab := byte(action) << 4
-	state := TransactionState(b ^ ab)
+	action := Action(b >> 4)            // Upper 4 bits
+	state := TransactionState(b & 0x0F) // Lower 4 bits (direct mask vs XOR)
 	return action, state
 }
