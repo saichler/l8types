@@ -24,7 +24,29 @@ const (
 )
 
 func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, error) {
-	header := make([]byte, pPriority+sByte)
+	failMessageSize := len(this.failMessage)
+	dataSize := len(this.data)
+	trErrMsgSize := len(this.tr_errMsg)
+	
+	pDataSize := pFailMessage + failMessageSize
+	pData := pDataSize + sUint32
+	pTrId := pData + dataSize
+	pTrErrMsgSize := pTrId + sUuid
+	pTrErrMsg := pTrErrMsgSize + sByte
+	pTrStartTime := pTrErrMsg + trErrMsgSize
+	pEnd := pTrStartTime + 8
+
+	var bodySize int
+	if this.tr_state == Empty {
+		bodySize = pTrId
+	} else {
+		bodySize = pEnd
+	}
+
+	totalSize := pPriority + sByte + bodySize
+	result := make([]byte, totalSize)
+	
+	header := result[:pPriority+sByte]
 	copy(header[pSource:pVnet], this.source)
 	copy(header[pVnet:pDestination], this.vnet)
 	copy(header[pDestination:pServiceName], this.destination)
@@ -32,25 +54,7 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	header[pServiceArea] = this.serviceArea
 	header[pPriority] = byte(this.priority)
 
-	failMessageSize := len(this.failMessage)
-	dataSize := len(this.data)
-	pDataSize := pFailMessage + failMessageSize
-	pData := pDataSize + sUint32
-	pTrId := pData + dataSize
-
-	pTrErrMsgSize := pTrId + sUuid
-	trErrMsgSize := len(this.tr_errMsg)
-	pTrErrMsg := pTrErrMsgSize + sByte
-	pTrStartTime := pTrErrMsg + trErrMsgSize
-	pEnd := pTrStartTime + 8
-
-	var body []byte
-	if this.tr_state == Empty {
-		body = make([]byte, pTrId)
-	} else {
-		body = make([]byte, pEnd)
-	}
-
+	body := result[pPriority+sByte:]
 	body[pAction] = actionStateToByte(this.action, this.tr_state)
 	copy(body[pAaaId:pSequence], this.aaaId)
 	copy(body[pSequence:pTimeout], UInt322Bytes(this.sequence))
@@ -73,9 +77,10 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 		return nil, err
 	}
 
-	data := make([]byte, len(header)+len(bodyEnc))
-	copy(data[0:len(header)], header)
-	copy(data[len(header):], bodyEnc)
+	headerSize := pPriority + sByte
+	finalData := make([]byte, headerSize+len(bodyEnc))
+	copy(finalData[:headerSize], header)
+	copy(finalData[headerSize:], bodyEnc)
 
-	return data, nil
+	return finalData, nil
 }

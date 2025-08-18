@@ -1,11 +1,17 @@
 package ifs
 
-import "bytes"
+import (
+	"unsafe"
+)
+
+func unsafeString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
 
 func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) {
 
-	this.source = string(data[pSource:pVnet])
-	this.vnet = string(data[pVnet:pDestination])
+	this.source = unsafeString(data[pSource:pVnet])
+	this.vnet = unsafeString(data[pVnet:pDestination])
 	this.destination = ToDestination(data)
 	this.serviceName = ToServiceName(data)
 	this.serviceArea = data[pServiceArea]
@@ -17,27 +23,27 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	}
 
 	this.action, this.tr_state = ByteToActionState(body[pAction])
-	this.aaaId = string(body[pAaaId:pSequence])
+	this.aaaId = unsafeString(body[pAaaId:pSequence])
 	this.sequence = Bytes2UInt32(body[pSequence:pTimeout])
 	this.timeout = Bytes2UInt16(body[pTimeout:pRequestReply])
 	this.request, this.reply = BoolOf(body[pRequestReply])
 
 	failMessageSize := int(body[pFailMessageSize])
 	pDataSize := pFailMessage + failMessageSize
-	this.failMessage = string(body[pFailMessage:pDataSize])
+	this.failMessage = unsafeString(body[pFailMessage:pDataSize])
 
 	pData := pDataSize + sUint32
 	dataSize := int(Bytes2UInt32(body[pDataSize:pData]))
 	pTrId := pData + dataSize
-	this.data = string(body[pData:pTrId])
+	this.data = unsafeString(body[pData:pTrId])
 
 	if this.tr_state != Empty {
 		pTrErrMsgSize := pTrId + sUuid
-		this.tr_id = string(body[pTrId:pTrErrMsgSize])
+		this.tr_id = unsafeString(body[pTrId:pTrErrMsgSize])
 		trErrMsgSize := int(body[pTrErrMsgSize])
 		pTrErrMsg := pTrErrMsgSize + sByte
 		pTrStartTime := pTrErrMsg + trErrMsgSize
-		this.tr_errMsg = string(body[pTrErrMsg:pTrStartTime])
+		this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrStartTime])
 		this.tr_startTime = Bytes2Long(body[pTrStartTime:])
 	}
 
@@ -45,8 +51,8 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 }
 
 func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
-	return string(data[pSource:pVnet]),
-		string(data[pVnet:pDestination]),
+	return unsafeString(data[pSource:pVnet]),
+		unsafeString(data[pVnet:pDestination]),
 		ToDestination(data),
 		ToServiceName(data),
 		data[pServiceArea],
@@ -55,19 +61,22 @@ func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
 
 func ToDestination(data []byte) string {
 	if data[pDestination] != 0 && data[pDestination+1] != 0 {
-		return string(data[pDestination:pServiceName])
+		return unsafeString(data[pDestination:pServiceName])
 	}
 	return ""
 }
 
 func ToServiceName(data []byte) string {
-	buff := bytes.Buffer{}
-	for i := pServiceName; i < pServiceName+len(data); i++ {
-		if data[i] != 0 {
-			buff.WriteByte(data[i])
-		} else {
-			return buff.String()
+	start := pServiceName
+	end := start + sServiceName
+	if end > len(data) {
+		end = len(data)
+	}
+	
+	for i := start; i < end; i++ {
+		if data[i] == 0 {
+			return unsafeString(data[start:i])
 		}
 	}
-	return buff.String()
+	return unsafeString(data[start:end])
 }
