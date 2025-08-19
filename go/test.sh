@@ -19,7 +19,7 @@ GOPROXY=direct GOPRIVATE=github.com go mod tidy
 go mod vendor
 
 # Run unit tests with coverage
-go test -tags=unit -v -coverpkg=./ifs/...,./aes/... -coverprofile=cover.html ./... --failfast
+go test -tags=unit -v -coverpkg=./ifs/...,./aes/...,./nets/... -coverprofile=cover.html ./... --failfast
 
 #rm -rf ./tests/loader.so
 
