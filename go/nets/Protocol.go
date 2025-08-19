@@ -4,68 +4,66 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types"
 	"google.golang.org/protobuf/proto"
-
 	"net"
 )
 
+// closeOnError is a helper function to close connection and return error
+func closeOnError(conn net.Conn, err error) error {
+	if err != nil {
+		conn.Close()
+	}
+	return err
+}
+
 func ExecuteProtocol(conn net.Conn, config *types.SysConfig, security ifs.ISecurityProvider) error {
-	err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security)
-	if err != nil {
-		conn.Close()
-		return err
+	// Exchange UUIDs
+	if err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security); err != nil {
+		return closeOnError(conn, err)
 	}
-
-	config.RemoteUuid, err = ReadEncrypted(conn, config, security)
+	
+	remoteUuid, err := ReadEncrypted(conn, config, security)
 	if err != nil {
-		conn.Close()
-		return err
+		return closeOnError(conn, err)
 	}
+	config.RemoteUuid = remoteUuid
 
-	forceExternal := "false"
+	// Exchange ForceExternal flags
+	forceExternalStr := "false"
 	if config.ForceExternal {
-		forceExternal = "true"
+		forceExternalStr = "true"
 	}
 
-	err = WriteEncrypted(conn, []byte(forceExternal), config, security)
-	if err != nil {
-		conn.Close()
-		return err
+	if err := WriteEncrypted(conn, []byte(forceExternalStr), config, security); err != nil {
+		return closeOnError(conn, err)
 	}
 
-	forceExternal, err = ReadEncrypted(conn, config, security)
+	remoteForceExternal, err := ReadEncrypted(conn, config, security)
 	if err != nil {
-		conn.Close()
-		return err
+		return closeOnError(conn, err)
 	}
-	if forceExternal == "true" {
-		config.ForceExternal = true
-	}
+	config.ForceExternal = remoteForceExternal == "true"
 
-	err = WriteEncrypted(conn, []byte(config.LocalAlias), config, security)
-	if err != nil {
-		conn.Close()
-		return err
+	// Exchange aliases
+	if err := WriteEncrypted(conn, []byte(config.LocalAlias), config, security); err != nil {
+		return closeOnError(conn, err)
 	}
 
 	remoteAlias, err := ReadEncrypted(conn, config, security)
 	if err != nil {
-		conn.Close()
-		return err
+		return closeOnError(conn, err)
 	}
 	config.RemoteAlias = remoteAlias
 
-	err = WriteEncrypted(conn, ServicesToBytes(config.Services), config, security)
-	if err != nil {
-		conn.Close()
-		return err
+	// Exchange services
+	if err := WriteEncrypted(conn, ServicesToBytes(config.Services), config, security); err != nil {
+		return closeOnError(conn, err)
 	}
 
-	services, err := ReadEncryptedBytes(conn, config, security)
+	servicesBytes, err := ReadEncryptedBytes(conn, config, security)
 	if err != nil {
-		conn.Close()
-		return err
+		return closeOnError(conn, err)
 	}
-	config.Services = BytesToServices(services)
+	config.Services = BytesToServices(servicesBytes)
 
 	return nil
 }

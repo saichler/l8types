@@ -2,6 +2,7 @@ package nets
 
 import (
 	"errors"
+	"fmt"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types"
 	"net"
@@ -21,8 +22,8 @@ func Write(data []byte, conn net.Conn, config *types.SysConfig) error {
 		return errors.New("no Data Available")
 	}
 	// Error is the data is too big
-	if len(data) > int(config.MaxDataSize) {
-		return errors.New("data is larger than MAX size allowed")
+	if uint64(len(data)) > config.MaxDataSize {
+		return fmt.Errorf("data size %d exceeds maximum %d", len(data), config.MaxDataSize)
 	}
 	// Write the size of the data
 	_, e := conn.Write(ifs.Long2Bytes(int64(len(data))))
@@ -40,9 +41,5 @@ func WriteEncrypted(conn net.Conn, data []byte, config *types.SysConfig,
 	if err != nil {
 		return err
 	}
-	err = Write([]byte(encData), conn, config)
-	if err != nil {
-		return err
-	}
-	return nil
+	return Write([]byte(encData), conn, config)
 }
