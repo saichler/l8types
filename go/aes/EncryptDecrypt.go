@@ -7,34 +7,35 @@ import (
 	"encoding/base64"
 	"errors"
 	"io"
-	mathrand "math/rand"
-	"time"
 )
 
-var l = []rune("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var keyChars = []rune("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func GenerateAES256Key() string {
-	mathrand.Seed(time.Now().UnixNano())
-	key := make([]rune, 32)
-	for i := range key {
-		key[i] = l[mathrand.Intn(len(l))]
+	key := make([]byte, 32)
+	if _, err := io.ReadFull(rand.Reader, key); err != nil {
+		panic("failed to generate random key: " + err.Error())
 	}
-	return string(key)
+	
+	keyRunes := make([]rune, 32)
+	for i, b := range key {
+		keyRunes[i] = keyChars[int(b)%len(keyChars)]
+	}
+	return string(keyRunes)
 }
 
 func Encrypt(dataToEncode []byte, key string) (string, error) {
-	k := []byte(key)
-	block, err := aes.NewCipher(k)
+	keyBytes := []byte(key)
+	block, err := aes.NewCipher(keyBytes)
 	if err != nil {
 		return "", err
 	}
 
-	l := len(dataToEncode)
-	cipherdata := make([]byte, aes.BlockSize+l)
+	dataLen := len(dataToEncode)
+	cipherdata := make([]byte, aes.BlockSize+dataLen)
 
 	iv := cipherdata[:aes.BlockSize]
-	_, err = io.ReadFull(rand.Reader, iv)
-	if err != nil {
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		return "", err
 	}
 
@@ -49,14 +50,15 @@ func Decrypt(stringToDecode, key string) ([]byte, error) {
 		return nil, err
 	}
 	if len(encData) < aes.BlockSize {
-		err = errors.New("encrypted data does not have an iv spec")
-		return nil, err
+		return nil, errors.New("encrypted data does not have an iv spec")
 	}
-	k := []byte(key)
-	block, err := aes.NewCipher(k)
+	
+	keyBytes := []byte(key)
+	block, err := aes.NewCipher(keyBytes)
 	if err != nil {
 		return nil, err
 	}
+	
 	iv := encData[:aes.BlockSize]
 	encData = encData[aes.BlockSize:]
 	cfb := cipher.NewCFBDecrypter(block, iv)
