@@ -15,9 +15,9 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	this.destination = ToDestination(data)
 	this.serviceName = ToServiceName(data)
 	this.serviceArea = data[pServiceArea]
-	this.priority, this.multicastMode = ByteToPriorityMulticastMode(data[pPriority])
+	this.priority, this.multicastMode = ByteToPriorityMulticastMode(data[PPriority])
 
-	body, err := resources.Security().Decrypt(string(data[pPriority+1:]))
+	body, err := resources.Security().Decrypt(string(data[PPriority+1:]))
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +56,8 @@ func HeaderOf(data []byte) (string, string, string, string, byte, Priority, Mult
 		ToDestination(data),
 		ToServiceName(data),
 		data[pServiceArea],
-		Priority(data[pPriority] >> 4),
-		MulticastMode(data[pPriority] & 0x0F)
+		Priority(data[PPriority] >> 4),
+		MulticastMode(data[PPriority] & 0x0F)
 }
 
 func ToDestination(data []byte) string {

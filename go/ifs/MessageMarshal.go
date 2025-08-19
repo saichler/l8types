@@ -12,7 +12,7 @@ const (
 	pDestination = pVnet + sUuid
 	pServiceName = pDestination + sUuid
 	pServiceArea = pServiceName + sServiceName
-	pPriority    = pServiceArea + sByte
+	PPriority    = pServiceArea + sByte
 
 	pAction          = 0
 	pAaaId           = pAction + sByte
@@ -43,18 +43,18 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 		bodySize = pEnd
 	}
 
-	totalSize := pPriority + sByte + bodySize
+	totalSize := PPriority + sByte + bodySize
 	result := make([]byte, totalSize)
 
-	header := result[:pPriority+sByte]
+	header := result[:PPriority+sByte]
 	copy(header[pSource:pVnet], this.source)
 	copy(header[pVnet:pDestination], this.vnet)
 	copy(header[pDestination:pServiceName], this.destination)
 	copy(header[pServiceName:pServiceArea], this.serviceName)
 	header[pServiceArea] = this.serviceArea
-	header[pPriority] = priorityMulticastModeToByte(this.priority, this.multicastMode)
+	header[PPriority] = priorityMulticastModeToByte(this.priority, this.multicastMode)
 
-	body := result[pPriority+sByte:]
+	body := result[PPriority+sByte:]
 	body[pAction] = actionStateToByte(this.action, this.tr_state)
 	copy(body[pAaaId:pSequence], this.aaaId)
 	copy(body[pSequence:pTimeout], UInt322Bytes(this.sequence))
@@ -77,7 +77,7 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 		return nil, err
 	}
 
-	headerSize := pPriority + sByte
+	headerSize := PPriority + sByte
 	finalData := make([]byte, headerSize+len(bodyEnc))
 	copy(finalData[:headerSize], header)
 	copy(finalData[headerSize:], bodyEnc)
