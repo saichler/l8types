@@ -28,11 +28,11 @@ func TestHeaderOf(t *testing.T) {
 	// Set service area (1 byte)
 	data[118] = 5
 	
-	// Set priority (1 byte)
-	data[119] = byte(ifs.P3)
+	// Set priority (1 byte) - priority is in upper 4 bits, multicast mode in lower 4 bits  
+	data[119] = byte(ifs.P3)<<4 | 3 // P3 priority with multicast mode 3
 	
 	// Call HeaderOf
-	source, vnet, destination, serviceName, serviceArea, priority := ifs.HeaderOf(data)
+	source, vnet, destination, serviceName, serviceArea, priority, multicastMode := ifs.HeaderOf(data)
 	
 	// Verify results - account for null padding that becomes spaces
 	if !strings.HasPrefix(source, source36) || len(source) != 36 {
@@ -58,6 +58,13 @@ func TestHeaderOf(t *testing.T) {
 	
 	if priority != ifs.P3 {
 		t.Errorf("Priority mismatch: expected P3, got %v", priority)
+	}
+	
+	// Note: multicastMode is extracted from the lower 4 bits of data[119]
+	// Since we set data[119] = (P3<<4 | 3), the multicastMode will be 3
+	expectedMulticastMode := ifs.MulticastMode(3)
+	if multicastMode != expectedMulticastMode {
+		t.Errorf("MulticastMode mismatch: expected %v, got %v", expectedMulticastMode, multicastMode)
 	}
 }
 

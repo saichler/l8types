@@ -1,15 +1,16 @@
 package ifs
 
 type Message struct {
-	source      string
-	vnet        string
-	destination string
-	serviceName string
-	serviceArea byte
-	priority    Priority
+	source        string
+	vnet          string
+	destination   string
+	serviceName   string
+	serviceArea   byte
+	priority      Priority
+	multicastMode MulticastMode
+
 	action      Action
 	tr_state    TransactionState
-
 	aaaId       string
 	sequence    uint32
 	timeout     uint16
@@ -72,6 +73,10 @@ func (this *Message) Sequence() uint32 {
 
 func (this *Message) Priority() Priority {
 	return this.priority
+}
+
+func (this *Message) MulticastMode() MulticastMode {
+	return this.multicastMode
 }
 
 func (this *Message) Action() Action {
@@ -146,6 +151,10 @@ func (this *Message) SetSequence(sequence uint32) {
 
 func (this *Message) SetPriority(priority Priority) {
 	this.priority = priority
+}
+
+func (this *Message) SetMulticastMode(multicastMode MulticastMode) {
+	this.multicastMode = multicastMode
 }
 
 func (this *Message) SetAction(action Action) {

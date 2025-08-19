@@ -13,6 +13,16 @@ const (
 	P1 Priority = 7
 )
 
+type MulticastMode byte
+
+const (
+	M_All        MulticastMode = 0
+	M_RoundRobin MulticastMode = 1
+	M_Proximity  MulticastMode = 2
+	M_Local      MulticastMode = 3
+	M_Leader     MulticastMode = 4
+)
+
 type Action byte
 
 const (

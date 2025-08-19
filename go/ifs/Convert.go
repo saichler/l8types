@@ -98,3 +98,13 @@ func ByteToActionState(b byte) (Action, TransactionState) {
 	state := TransactionState(b & 0x0F) // Lower 4 bits (direct mask vs XOR)
 	return action, state
 }
+
+func priorityMulticastModeToByte(priority Priority, multicastMode MulticastMode) byte {
+	return (byte(priority) << 4) | byte(multicastMode)
+}
+
+func ByteToPriorityMulticastMode(b byte) (Priority, MulticastMode) {
+	priority := Priority(b >> 4)             // Upper 4 bits
+	multicastMode := MulticastMode(b & 0x0F) // Lower 4 bits (direct mask vs XOR)
+	return priority, multicastMode
+}

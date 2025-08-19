@@ -8,6 +8,7 @@ func (this *Message) Clone() *Message {
 	clone.serviceName = this.serviceName
 	clone.serviceArea = this.serviceArea
 	clone.priority = this.priority
+	clone.multicastMode = this.multicastMode
 	clone.aaaId = this.aaaId
 	clone.sequence = this.sequence
 	clone.action = this.action
@@ -31,6 +32,7 @@ func (this *Message) CloneReply(localUuid, remoteUuid string) *Message {
 	clone.serviceName = this.serviceName
 	clone.serviceArea = this.serviceArea
 	clone.priority = this.priority
+	clone.multicastMode = this.multicastMode
 	clone.aaaId = this.aaaId
 	clone.sequence = this.sequence
 	clone.action = Reply
@@ -54,6 +56,7 @@ func (this *Message) CloneFail(failMessage, remoteUuid string) *Message {
 	clone.serviceName = this.serviceName
 	clone.serviceArea = this.serviceArea
 	clone.priority = this.priority
+	clone.multicastMode = this.multicastMode
 	clone.aaaId = this.aaaId
 	clone.sequence = this.sequence
 	clone.action = this.action

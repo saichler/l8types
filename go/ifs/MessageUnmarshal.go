@@ -15,7 +15,7 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	this.destination = ToDestination(data)
 	this.serviceName = ToServiceName(data)
 	this.serviceArea = data[pServiceArea]
-	this.priority = Priority(data[pPriority])
+	this.priority, this.multicastMode = ByteToPriorityMulticastMode(data[pPriority])
 
 	body, err := resources.Security().Decrypt(string(data[pPriority+1:]))
 	if err != nil {
@@ -50,13 +50,14 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	return nil, nil
 }
 
-func HeaderOf(data []byte) (string, string, string, string, byte, Priority) {
+func HeaderOf(data []byte) (string, string, string, string, byte, Priority, MulticastMode) {
 	return unsafeString(data[pSource:pVnet]),
 		unsafeString(data[pVnet:pDestination]),
 		ToDestination(data),
 		ToServiceName(data),
 		data[pServiceArea],
-		Priority(data[pPriority])
+		Priority(data[pPriority] >> 4),
+		MulticastMode(data[pPriority] & 0x0F)
 }
 
 func ToDestination(data []byte) string {
@@ -72,7 +73,7 @@ func ToServiceName(data []byte) string {
 	if end > len(data) {
 		end = len(data)
 	}
-	
+
 	for i := start; i < end; i++ {
 		if data[i] == 0 {
 			return unsafeString(data[start:i])

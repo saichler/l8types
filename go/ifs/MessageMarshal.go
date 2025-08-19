@@ -27,7 +27,7 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	failMessageSize := len(this.failMessage)
 	dataSize := len(this.data)
 	trErrMsgSize := len(this.tr_errMsg)
-	
+
 	pDataSize := pFailMessage + failMessageSize
 	pData := pDataSize + sUint32
 	pTrId := pData + dataSize
@@ -45,14 +45,14 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 
 	totalSize := pPriority + sByte + bodySize
 	result := make([]byte, totalSize)
-	
+
 	header := result[:pPriority+sByte]
 	copy(header[pSource:pVnet], this.source)
 	copy(header[pVnet:pDestination], this.vnet)
 	copy(header[pDestination:pServiceName], this.destination)
 	copy(header[pServiceName:pServiceArea], this.serviceName)
 	header[pServiceArea] = this.serviceArea
-	header[pPriority] = byte(this.priority)
+	header[pPriority] = priorityMulticastModeToByte(this.priority, this.multicastMode)
 
 	body := result[pPriority+sByte:]
 	body[pAction] = actionStateToByte(this.action, this.tr_state)

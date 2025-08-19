@@ -55,7 +55,7 @@ func TestCompleteMessageWorkflow(t *testing.T) {
 	verifyMessageEquality(t, originalMsg, reconstructedMsg)
 	
 	// Test header extraction without full unmarshal
-	source, vnet, destination, serviceName, serviceArea, priority := ifs.HeaderOf(marshaledData)
+	source, vnet, destination, serviceName, serviceArea, priority, multicastMode := ifs.HeaderOf(marshaledData)
 	
 	if !strings.HasPrefix(source, originalMsg.Source()) {
 		t.Errorf("HeaderOf source mismatch: expected to start with '%s', got '%s'", originalMsg.Source(), source)
@@ -74,6 +74,9 @@ func TestCompleteMessageWorkflow(t *testing.T) {
 	}
 	if priority != originalMsg.Priority() {
 		t.Errorf("HeaderOf priority mismatch: expected %v, got %v", originalMsg.Priority(), priority)
+	}
+	if multicastMode != originalMsg.MulticastMode() {
+		t.Errorf("HeaderOf multicastMode mismatch: expected %v, got %v", originalMsg.MulticastMode(), multicastMode)
 	}
 }
 
