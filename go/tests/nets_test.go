@@ -238,7 +238,7 @@ func TestWrite(t *testing.T) {
 		conn := NewMockConn()
 		data := make([]byte, 2048) // Larger than MaxDataSize
 		err := nets.Write(data, conn, config)
-		if err == nil || !strings.Contains(err.Error(), "exceeds maximum") {
+		if err == nil || !strings.Contains(err.Error(), "larger than MAX size") {
 			t.Errorf("Expected size error, got: %v", err)
 		}
 	})
@@ -302,7 +302,7 @@ func TestRead(t *testing.T) {
 		conn.SetReadData(sizeBytes)
 
 		_, err := nets.Read(conn, config)
-		if err == nil || !strings.Contains(err.Error(), "exceeds maximum") {
+		if err == nil || !strings.Contains(err.Error(), "Max Size Exceeded") {
 			t.Errorf("Expected max size error, got: %v", err)
 		}
 	})
@@ -382,8 +382,8 @@ func TestReadSize(t *testing.T) {
 		if err == nil {
 			t.Error("Expected read error on recursive call")
 		}
-		if !strings.Contains(err.Error(), "failed to read data") {
-			t.Errorf("Expected read data error, got: %v", err)
+		if !strings.Contains(err.Error(), "Failed to read packet size") {
+			t.Errorf("Expected packet size error, got: %v", err)
 		}
 	})
 }
