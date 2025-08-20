@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package types;
+
+option java_multiple_files = true;
+option java_outer_classname = "Types";
+option java_package = "com.types.types";
+option go_package = "./types";
+
+enum SystemAction {
+  Invalid_Oper = 0;
+  Routes_Add = 1;
+  Routes_Remove = 2;
+  Service_Add = 3;
+  Service_Remove = 4;
+}
+
+message SystemMessage {
+  SystemAction action = 1;
+  oneof data {
+    RouteTable route_table = 2;
+    ServiceData service_data = 3;
+  }
+}
+
+message RouteTable {
+  map<string, string> rows = 1;
+}
+
+message ServiceData{
+  string service_uuid = 1;
+  string serviceName = 2;
+  int32 serviceArea = 3;
+}
