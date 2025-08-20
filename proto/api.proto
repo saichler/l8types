@@ -38,7 +38,3 @@ message Comparator {
   string oper = 2;
   string right = 3;
 }
-
-message Routes {
-  map<string,string> table = 1;
-}
