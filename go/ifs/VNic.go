@@ -12,6 +12,11 @@ const (
 	NETWORK_K8s    NetworkMode = 3
 )
 
+const (
+	SysMsg  = "sysMsg"
+	SysArea = byte(99)
+)
+
 var networkMode NetworkMode = NETWORK_NATIVE
 
 func SetNetworkMode(mode NetworkMode) {
@@ -44,19 +49,19 @@ type IVNic interface {
 	// Multicast a message to all service name listeners, without expecting a response
 	Multicast(string, byte, Action, interface{}) error
 	// RoundRobin a message to ONLY ONE service provider of the group, in a round-robin fashion
-	RoundRobin(string, byte, Action, interface{}) (string, error)
+	RoundRobin(string, byte, Action, interface{}) error
 	// RoundRobinRequest a request to ONLY ONE service provider of the group, in a round-robin fashion
 	RoundRobinRequest(string, byte, Action, interface{}) IElements
 	// Proximity a message to ONLY ONE service provider of the group with a proximity of the provider to the sender
-	Proximity(string, byte, Action, interface{}) (string, error)
+	Proximity(string, byte, Action, interface{}) error
 	// Proximity a request to ONLY ONE service provider of the group with a proximity of the provider to the sender
 	ProximityRequest(string, byte, Action, interface{}) IElements
 	// Leader a message to ONLY ONE service provider leader of the group.
-	Leader(string, byte, Action, interface{}) (string, error)
+	Leader(string, byte, Action, interface{}) error
 	// LeaderRequest a request to ONLY ONE service provider leader of the group.
 	LeaderRequest(string, byte, Action, interface{}) IElements
 	// Local a message to ONLY ONE service provider that resides in the same vnic.
-	Local(string, byte, Action, interface{}) (string, error)
+	Local(string, byte, Action, interface{}) error
 	// LocalRequest a request to ONLY ONE service provider that resides in the same vnic.
 	LocalRequest(string, byte, Action, interface{}) IElements
 	Forward(*Message, string) IElements

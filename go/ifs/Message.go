@@ -25,13 +25,14 @@ type Message struct {
 }
 
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
-	priority Priority, action Action, source, vnet string, data string,
+	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data string,
 	isRequest, isReply bool, msgNum uint32,
 	tr_state TransactionState, tr_id, tr_errMsg string, tr_start int64) {
 	this.destination = destination
 	this.serviceName = serviceName
 	this.serviceArea = serviceArea
 	this.priority = priority
+	this.multicastMode = multicastMode
 	this.action = action
 	this.source = source
 	this.vnet = vnet
