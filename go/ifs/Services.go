@@ -18,6 +18,8 @@ type IServices interface {
 	ServiceHandler(string, byte) (IServiceHandler, bool)
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
+	//The list of existing services
+	Services() *types.Services
 }
 
 type IServiceHandler interface {
