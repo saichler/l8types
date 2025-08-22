@@ -17,9 +17,10 @@ enum SystemAction {
 
 message SystemMessage {
   SystemAction action = 1;
+  bool publish = 2;
   oneof data {
-    RouteTable route_table = 2;
-    ServiceData service_data = 3;
+    RouteTable route_table = 3;
+    ServiceData service_data = 4;
   }
 }
 
