@@ -35,7 +35,7 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	pData := pDataSize + sUint32
 	dataSize := int(Bytes2UInt32(body[pDataSize:pData]))
 	pTrId := pData + dataSize
-	this.data = unsafeString(body[pData:pTrId])
+	this.data = body[pData:pTrId]
 
 	if this.tr_state != Empty {
 		pTrErrMsgSize := pTrId + sUuid

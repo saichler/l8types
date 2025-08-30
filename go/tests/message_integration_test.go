@@ -18,10 +18,11 @@ func TestCompleteMessageWorkflow(t *testing.T) {
 		"auth-svc", // Keep service name <= 10 chars
 		5,
 		ifs.P2,
+		ifs.M_All,
 		ifs.POST,
 		"client-uuid-987654321098765432109876",
 		"vnet-production-cluster-east-12345",
-		`{"username":"testuser","password":"hashedpwd","timestamp":"2024-01-01T00:00:00Z"}`,
+		[]byte(`{"username":"testuser","password":"hashedpwd","timestamp":"2024-01-01T00:00:00Z"}`),
 		true,
 		false,
 		98765432,
@@ -121,8 +122,8 @@ func verifyMessageEquality(t *testing.T, original, reconstructed *ifs.Message) {
 	if reconstructed.FailMessage() != original.FailMessage() {
 		t.Errorf("FailMessage mismatch: expected '%s', got '%s'", original.FailMessage(), reconstructed.FailMessage())
 	}
-	if reconstructed.Data() != original.Data() {
-		t.Errorf("Data mismatch: expected '%s', got '%s'", original.Data(), reconstructed.Data())
+	if string(reconstructed.Data()) != string(original.Data()) {
+		t.Errorf("Data mismatch: expected '%s', got '%s'", string(original.Data()), string(reconstructed.Data()))
 	}
 	if reconstructed.Tr_State() != original.Tr_State() {
 		t.Errorf("Transaction state mismatch: expected %v, got %v", original.Tr_State(), reconstructed.Tr_State())
@@ -143,7 +144,7 @@ func TestMultipleRoundTrips(t *testing.T) {
 	
 	// Create initial message
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "initial data", true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("initial data"), true, false, 123, ifs.Empty, "", "", 0)
 	
 	// Perform multiple marshal/unmarshal cycles
 	for i := 0; i < 10; i++ {
@@ -159,7 +160,7 @@ func TestMultipleRoundTrips(t *testing.T) {
 		}
 		
 		// Verify data integrity after each cycle
-		if newMsg.Data() != "initial data" {
+		if string(newMsg.Data()) != "initial data" {
 			t.Errorf("Data corruption detected on iteration %d", i)
 		}
 		if newMsg.Sequence() != 123 {
@@ -187,10 +188,11 @@ func TestConcurrentMarshalUnmarshal(t *testing.T) {
 				fmt.Sprintf("service-%d", index),
 				byte(index%256),
 				ifs.Priority(index%8),
+				ifs.M_All,
 				ifs.Action((index%11)+1),
 				fmt.Sprintf("source-%d", index),
 				fmt.Sprintf("vnet-%d", index),
-				fmt.Sprintf("data-%d", index),
+				[]byte(fmt.Sprintf("data-%d", index)),
 				index%2 == 0,
 				index%3 == 0,
 				uint32(index*1000),
@@ -259,7 +261,7 @@ func TestMessageSizeCalculation(t *testing.T) {
 				trStart = 1234567890
 			}
 			
-			msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", data, true, false, 123, tc.trState, trId, trErr, trStart)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(data), true, false, 123, tc.trState, trId, trErr, trStart)
 			
 			marshaledData, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -289,7 +291,7 @@ func TestMessageSizeCalculation(t *testing.T) {
 func BenchmarkMessageMarshal(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "benchmark data", true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0)
 	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -303,7 +305,7 @@ func BenchmarkMessageMarshal(b *testing.B) {
 func BenchmarkMessageUnmarshal(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "benchmark data", true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0)
 	
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -323,7 +325,7 @@ func BenchmarkMessageUnmarshal(b *testing.B) {
 func BenchmarkMessageRoundTrip(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "benchmark data", true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0)
 	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {

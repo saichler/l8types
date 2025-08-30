@@ -1,74 +1,11 @@
 package tests
 
 import (
-	"errors"
-	"net"
 	"strings"
 	"testing"
 	"time"
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types"
 )
-
-// MockSecurityProvider implements ISecurityProvider for testing
-type MockSecurityProvider struct {
-	encryptError bool
-	decryptError bool
-}
-
-func (m *MockSecurityProvider) Authenticate(string, string) (string, error) { return "", nil }
-func (m *MockSecurityProvider) Message(string) (*ifs.Message, error) { return nil, nil }
-func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error) { return nil, nil }
-func (m *MockSecurityProvider) CanAccept(net.Conn) error { return nil }
-func (m *MockSecurityProvider) ValidateConnection(net.Conn, *types.SysConfig) error { return nil }
-func (m *MockSecurityProvider) CanDoAction(ifs.Action, ifs.IElements, string, string, ...string) error { return nil }
-func (m *MockSecurityProvider) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements { return nil }
-
-func (m *MockSecurityProvider) Encrypt(data []byte) (string, error) {
-	if m.encryptError {
-		return "", errors.New("encryption failed")
-	}
-	return string(data), nil
-}
-
-func (m *MockSecurityProvider) Decrypt(data string) ([]byte, error) {
-	if m.decryptError {
-		return nil, errors.New("decryption failed")
-	}
-	return []byte(data), nil
-}
-
-// MockResources implements IResources for testing
-type MockResources struct {
-	security *MockSecurityProvider
-}
-
-func (m *MockResources) Registry() ifs.IRegistry { return nil }
-func (m *MockResources) Services() ifs.IServices { return nil }
-func (m *MockResources) Security() ifs.ISecurityProvider { return m.security }
-func (m *MockResources) DataListener() ifs.IDatatListener { return nil }
-func (m *MockResources) Serializer(ifs.SerializerMode) ifs.ISerializer { return nil }
-func (m *MockResources) Logger() ifs.ILogger { return nil }
-func (m *MockResources) SysConfig() *types.SysConfig { return nil }
-func (m *MockResources) Introspector() ifs.IIntrospector { return nil }
-func (m *MockResources) AddService(string, int32) {}
-func (m *MockResources) Set(interface{}) {}
-func (m *MockResources) Copy(ifs.IResources) {}
-
-func newMockResources() *MockResources {
-	return &MockResources{
-		security: &MockSecurityProvider{},
-	}
-}
-
-func newMockResourcesWithError(encryptError, decryptError bool) *MockResources {
-	return &MockResources{
-		security: &MockSecurityProvider{
-			encryptError: encryptError,
-			decryptError: decryptError,
-		},
-	}
-}
 
 func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 	resources := newMockResources()
@@ -80,10 +17,11 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 		"test-svc", // Keep service name <= 10 chars
 		1,
 		ifs.P1,
+		ifs.M_All,
 		ifs.POST,
 		"test-source",
 		"test-vnet",
-		"test-data",
+		[]byte("test-data"),
 		true,
 		false,
 		12345,
@@ -138,8 +76,8 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 	if newMsg.Action() != ifs.POST {
 		t.Errorf("Action mismatch: expected POST, got %v", newMsg.Action())
 	}
-	if newMsg.Data() != "test-data" {
-		t.Errorf("Data mismatch: expected 'test-data', got '%s'", newMsg.Data())
+	if string(newMsg.Data()) != "test-data" {
+		t.Errorf("Data mismatch: expected 'test-data', got '%s'", string(newMsg.Data()))
 	}
 	if newMsg.Request() != true {
 		t.Errorf("Request mismatch: expected true, got %v", newMsg.Request())
@@ -164,10 +102,11 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 		"service",
 		2,
 		ifs.P5,
+		ifs.M_All,
 		ifs.GET,
 		"source",
 		"vnet",
-		"data",
+		[]byte("data"),
 		false,
 		true,
 		67890,
@@ -210,7 +149,7 @@ func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 	resources := newMockResources()
 	
 	msg := &ifs.Message{}
-	msg.Init("", "", 0, ifs.P8, ifs.Reply, "", "", "", false, false, 0, ifs.Empty, "", "", 0)
+	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.Empty, "", "", 0)
 
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -229,8 +168,8 @@ func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 	if newMsg.ServiceName() != "" {
 		t.Errorf("Expected empty service name, got '%s'", newMsg.ServiceName())
 	}
-	if newMsg.Data() != "" {
-		t.Errorf("Expected empty data, got '%s'", newMsg.Data())
+	if string(newMsg.Data()) != "" {
+		t.Errorf("Expected empty data, got '%s'", string(newMsg.Data()))
 	}
 }
 
@@ -247,10 +186,11 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 		"service",
 		255,
 		ifs.P1,
+		ifs.M_All,
 		ifs.DELETE,
 		"source",
 		"vnet",
-		largeData,
+		[]byte(largeData),
 		true,
 		true,
 		4294967295, // max uint32
@@ -272,7 +212,7 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 		t.Fatalf("Unmarshal failed: %v", err)
 	}
 
-	if newMsg.Data() != largeData {
+	if string(newMsg.Data()) != largeData {
 		t.Errorf("Large data mismatch")
 	}
 	if newMsg.FailMessage() != largeFailMessage {
@@ -290,7 +230,7 @@ func TestMessageMarshalEncryptionError(t *testing.T) {
 	resources := newMockResourcesWithError(true, false)
 	
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 
 	_, err := msg.Marshal(nil, resources)
 	if err == nil {
@@ -305,7 +245,7 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 	resources := newMockResources()
 	
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 
 	// Marshal with working encryption
 	data, err := msg.Marshal(nil, resources)
@@ -329,11 +269,11 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 func TestAllActions(t *testing.T) {
 	resources := newMockResources()
 	
-	actions := []ifs.Action{ifs.POST, ifs.PUT, ifs.PATCH, ifs.DELETE, ifs.GET, ifs.Reply, ifs.Notify, ifs.Sync, ifs.EndPoints, ifs.Routes, ifs.RRoutes}
+	actions := []ifs.Action{ifs.POST, ifs.PUT, ifs.PATCH, ifs.DELETE, ifs.GET, ifs.Reply, ifs.Notify, ifs.Sync, ifs.EndPoints}
 	
 	for _, action := range actions {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, action, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -359,7 +299,7 @@ func TestAllPriorities(t *testing.T) {
 	
 	for _, priority := range priorities {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, priority, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -399,7 +339,7 @@ func TestAllTransactionStates(t *testing.T) {
 			trStart = 1234567890
 		}
 		
-		msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, state, trId, trErr, trStart)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trStart)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -445,7 +385,7 @@ func TestBoolCombinations(t *testing.T) {
 	
 	for _, combo := range combinations {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", combo.request, combo.reply, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.Empty, "", "", 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

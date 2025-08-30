@@ -16,10 +16,11 @@ func TestMessageBoundaryConditions(t *testing.T) {
 		"service",
 		255, // max byte value
 		ifs.P1,
-		ifs.RRoutes, // highest action value
+		ifs.M_All, // multicast mode
+		ifs.Sync, // highest action value
 		"987654321098765432109876543210987654", // exactly 36 chars
 		"abcdefghijklmnopqrstuvwxyz1234567890", // exactly 36 chars
-		"",
+		[]byte(""),
 		false,
 		false,
 		4294967295, // max uint32
@@ -62,7 +63,7 @@ func TestMessageTimeout(t *testing.T) {
 	
 	for _, timeout := range testTimeouts {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 		msg.SetTimeout(timeout)
 
 		data, err := msg.Marshal(nil, resources)
@@ -100,7 +101,7 @@ func TestMessageFailMessage(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 			msg.SetFailMessage(tc.failMessage)
 
 			data, err := msg.Marshal(nil, resources)
@@ -134,7 +135,7 @@ func TestMessageAAAId(t *testing.T) {
 	
 	for _, aaaId := range testCases {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 		msg.SetAAAId(aaaId)
 
 		data, err := msg.Marshal(nil, resources)
@@ -182,7 +183,7 @@ func TestMessageDataSizes(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", tc.data, true, false, 123, ifs.Empty, "", "", 0)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(tc.data), true, false, 123, ifs.Empty, "", "", 0)
 
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -195,7 +196,7 @@ func TestMessageDataSizes(t *testing.T) {
 				t.Fatalf("Unmarshal failed: %v", err)
 			}
 
-			if newMsg.Data() != tc.data {
+			if string(newMsg.Data()) != tc.data {
 				t.Errorf("Data mismatch for %s case", tc.name)
 			}
 		})
@@ -216,7 +217,7 @@ func TestTransactionErrorMessages(t *testing.T) {
 	for _, errMsg := range testCases {
 		msg := &ifs.Message{}
 		msg.Init(
-			"dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data",
+			"dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"),
 			true, false, 123, ifs.Errored, "tr-id", errMsg, 1234567890,
 		)
 
@@ -253,7 +254,7 @@ func TestServiceNameLengthHandling(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", tc.serviceName, 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+			msg.Init("dest", tc.serviceName, 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -295,7 +296,7 @@ func TestPredefinedDestinations(t *testing.T) {
 	
 	for _, destination := range testCases {
 		msg := &ifs.Message{}
-		msg.Init(destination, "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init(destination, "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -327,7 +328,7 @@ func TestSequenceNumberOverflow(t *testing.T) {
 	
 	for _, seq := range testSequences {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.POST, "source", "vnet", "data", true, false, seq, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, seq, ifs.Empty, "", "", 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

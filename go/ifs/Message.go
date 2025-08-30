@@ -17,7 +17,7 @@ type Message struct {
 	request     bool
 	reply       bool
 	failMessage string
-	data        string
+	data        []byte
 
 	tr_id        string
 	tr_errMsg    string
@@ -25,7 +25,7 @@ type Message struct {
 }
 
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
-	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data string,
+	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data []byte,
 	isRequest, isReply bool, msgNum uint32,
 	tr_state TransactionState, tr_id, tr_errMsg string, tr_start int64) {
 	this.destination = destination
@@ -100,7 +100,7 @@ func (this *Message) FailMessage() string {
 	return this.failMessage
 }
 
-func (this *Message) Data() string {
+func (this *Message) Data() []byte {
 	return this.data
 }
 
@@ -179,7 +179,7 @@ func (this *Message) SetAAAId(aaaId string) {
 	this.aaaId = aaaId
 }
 
-func (this *Message) SetData(data string) {
+func (this *Message) SetData(data []byte) {
 	this.data = data
 }
 
