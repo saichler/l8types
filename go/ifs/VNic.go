@@ -43,7 +43,7 @@ type IVNic interface {
 	// Unicast a message without expecting response
 	Unicast(string, string, byte, Action, interface{}) error
 	// Request unicast a message expecting response
-	Request(string, string, byte, Action, interface{}, ...string) IElements
+	Request(string, string, byte, Action, interface{}, int, ...string) IElements
 	// Reply to a Request
 	Reply(*Message, IElements) error
 	// Multicast a message to all service name listeners, without expecting a response
@@ -51,19 +51,19 @@ type IVNic interface {
 	// RoundRobin a message to ONLY ONE service provider of the group, in a round-robin fashion
 	RoundRobin(string, byte, Action, interface{}) error
 	// RoundRobinRequest a request to ONLY ONE service provider of the group, in a round-robin fashion
-	RoundRobinRequest(string, byte, Action, interface{}) IElements
+	RoundRobinRequest(string, byte, Action, interface{}, int, ...string) IElements
 	// Proximity a message to ONLY ONE service provider of the group with a proximity of the provider to the sender
 	Proximity(string, byte, Action, interface{}) error
 	// Proximity a request to ONLY ONE service provider of the group with a proximity of the provider to the sender
-	ProximityRequest(string, byte, Action, interface{}) IElements
+	ProximityRequest(string, byte, Action, interface{}, int, ...string) IElements
 	// Leader a message to ONLY ONE service provider leader of the group.
 	Leader(string, byte, Action, interface{}) error
 	// LeaderRequest a request to ONLY ONE service provider leader of the group.
-	LeaderRequest(string, byte, Action, interface{}) IElements
+	LeaderRequest(string, byte, Action, interface{}, int, ...string) IElements
 	// Local a message to ONLY ONE service provider that resides in the same vnic.
 	Local(string, byte, Action, interface{}) error
 	// LocalRequest a request to ONLY ONE service provider that resides in the same vnic.
-	LocalRequest(string, byte, Action, interface{}) IElements
+	LocalRequest(string, byte, Action, interface{}, int, ...string) IElements
 	Forward(*Message, string) IElements
 	ServiceAPI(string, byte) ServiceAPI
 	Resources() IResources

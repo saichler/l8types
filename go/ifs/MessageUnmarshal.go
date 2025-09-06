@@ -43,8 +43,10 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 		trErrMsgSize := int(body[pTrErrMsgSize])
 		pTrErrMsg := pTrErrMsgSize + sByte
 		pTrStartTime := pTrErrMsg + trErrMsgSize
+		pTrTimeout := pTrStartTime + 8
 		this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrStartTime])
-		this.tr_startTime = Bytes2Long(body[pTrStartTime:])
+		this.tr_startTime = Bytes2Long(body[pTrStartTime:pTrTimeout])
+		this.tr_timeout = Bytes2Long(body[pTrTimeout:])
 	}
 
 	return nil, nil

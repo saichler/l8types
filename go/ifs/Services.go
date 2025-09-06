@@ -32,7 +32,7 @@ type IServiceHandler interface {
 	GetCopy(IElements, IVNic) IElements
 	Get(IElements, IVNic) IElements
 	Failed(IElements, IVNic, *Message) IElements
-	TransactionMethod() ITransactionMethod
+	TransactionConfig() ITransactionConfig
 	WebService() IWebService
 }
 
@@ -51,8 +51,9 @@ type IDistributedCache interface {
 	Sync()
 }
 
-type ITransactionMethod interface {
+type ITransactionConfig interface {
 	Replication() bool
 	ReplicationCount() int
 	KeyOf(IElements, IResources) string
+	ConcurrentGets() bool
 }

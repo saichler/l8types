@@ -34,7 +34,8 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	pTrErrMsgSize := pTrId + sUuid
 	pTrErrMsg := pTrErrMsgSize + sByte
 	pTrStartTime := pTrErrMsg + trErrMsgSize
-	pEnd := pTrStartTime + 8
+	pTrTimeout := pTrStartTime + 8
+	pEnd := pTrTimeout + 8
 
 	var bodySize int
 	if this.tr_state == Empty {
@@ -69,7 +70,8 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 		copy(body[pTrId:pTrErrMsgSize], this.tr_id)
 		body[pTrErrMsgSize] = byte(trErrMsgSize)
 		copy(body[pTrErrMsg:pTrStartTime], this.tr_errMsg)
-		copy(body[pTrStartTime:pEnd], Long2Bytes(this.tr_startTime))
+		copy(body[pTrStartTime:pTrTimeout], Long2Bytes(this.tr_startTime))
+		copy(body[pTrTimeout:pEnd], Long2Bytes(this.tr_timeout))
 	}
 
 	bodyEnc, err := resources.Security().Encrypt(body)
