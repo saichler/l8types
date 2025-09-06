@@ -72,6 +72,7 @@ type IVNic interface {
 	PropertyChangeNotification(*types.NotificationSet)
 	WaitForConnection()
 	Running() bool
+	RegisterServiceBatch(string, byte, MulticastMode, int)
 }
 
 type ServiceAPI interface {
