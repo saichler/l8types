@@ -22,6 +22,7 @@ type IElements interface {
 	ReplicasRequest() bool
 	Append(IElements)
 	AsList(IRegistry) (interface{}, error)
+	IsFilterMode() bool
 }
 
 type IQuery interface {
