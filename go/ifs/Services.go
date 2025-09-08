@@ -41,8 +41,9 @@ type IServiceCacheListener interface {
 }
 
 type IDistributedCache interface {
+	Post(string, interface{}, ...bool) (*types.NotificationSet, error)
 	Put(string, interface{}, ...bool) (*types.NotificationSet, error)
-	Update(string, interface{}, ...bool) (*types.NotificationSet, error)
+	Patch(string, interface{}, ...bool) (*types.NotificationSet, error)
 	Delete(string, ...bool) (*types.NotificationSet, error)
 	Get(k string) interface{}
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
