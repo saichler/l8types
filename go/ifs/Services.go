@@ -29,7 +29,6 @@ type IServiceHandler interface {
 	Put(IElements, IVNic) IElements
 	Patch(IElements, IVNic) IElements
 	Delete(IElements, IVNic) IElements
-	GetCopy(IElements, IVNic) IElements
 	Get(IElements, IVNic) IElements
 	Failed(IElements, IVNic, *Message) IElements
 	TransactionConfig() ITransactionConfig
@@ -41,11 +40,11 @@ type IServiceCacheListener interface {
 }
 
 type IDistributedCache interface {
-	Post(string, interface{}, ...bool) (*types.NotificationSet, error)
-	Put(string, interface{}, ...bool) (*types.NotificationSet, error)
-	Patch(string, interface{}, ...bool) (*types.NotificationSet, error)
-	Delete(string, ...bool) (*types.NotificationSet, error)
-	Get(k string) interface{}
+	Post(interface{}, ...bool) (*types.NotificationSet, error)
+	Put(interface{}, ...bool) (*types.NotificationSet, error)
+	Patch(interface{}, ...bool) (*types.NotificationSet, error)
+	Delete(interface{}, ...bool) (*types.NotificationSet, error)
+	Get(interface{}) (interface{}, error)
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 	ServiceName() string
 	ServiceArea() byte
