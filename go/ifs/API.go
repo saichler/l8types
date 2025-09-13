@@ -31,6 +31,11 @@ type IQuery interface {
 	Criteria() IExpression
 	KeyOf() string
 	Match(interface{}) bool
+	Page() int32
+	Limit() int32
+	SortBy() string
+	MatchCase() bool
+	Descending() bool
 }
 
 type IProperty interface {
