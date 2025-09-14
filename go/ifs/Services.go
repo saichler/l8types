@@ -49,6 +49,7 @@ type IDistributedCache interface {
 	ServiceName() string
 	ServiceArea() byte
 	Sync()
+	Size() int
 }
 
 type ITransactionConfig interface {
