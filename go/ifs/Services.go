@@ -49,7 +49,9 @@ type IDistributedCache interface {
 	ServiceName() string
 	ServiceArea() byte
 	Sync()
-	Size() int
+	Fetch(int, int) []interface{}
+	Stats() map[string]int32
+	AddStatFunc(string, func(interface{}) bool)
 }
 
 type ITransactionConfig interface {
