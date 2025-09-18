@@ -2,14 +2,16 @@ package nets
 
 import (
 	"errors"
+
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8sysconfig"
+
 	"net"
 	"time"
 )
 
 // Read data from socket
-func Read(conn net.Conn, config *types.SysConfig) ([]byte, error) {
+func Read(conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte, error) {
 	// If the connection is nil, return an error
 	if conn == nil {
 		return nil, errors.New("no Connection Available")
@@ -36,7 +38,7 @@ func Read(conn net.Conn, config *types.SysConfig) ([]byte, error) {
 	return data, err
 }
 
-func ReadSize(size int, conn net.Conn, config *types.SysConfig) ([]byte, error) {
+func ReadSize(size int, conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte, error) {
 	data := make([]byte, size)
 	n, e := conn.Read(data)
 	if e != nil {
@@ -57,7 +59,7 @@ func ReadSize(size int, conn net.Conn, config *types.SysConfig) ([]byte, error) 
 	return data, nil
 }
 
-func ReadEncryptedBytes(conn net.Conn, config *types.SysConfig,
+func ReadEncryptedBytes(conn net.Conn, config *l8sysconfig.L8SysConfig,
 	securityProvider ifs.ISecurityProvider) ([]byte, error) {
 	inData, err := Read(conn, config)
 	if err != nil {
@@ -73,7 +75,7 @@ func ReadEncryptedBytes(conn net.Conn, config *types.SysConfig,
 	return decData, nil
 }
 
-func ReadEncrypted(conn net.Conn, config *types.SysConfig,
+func ReadEncrypted(conn net.Conn, config *l8sysconfig.L8SysConfig,
 	securityProvider ifs.ISecurityProvider) (string, error) {
 	data, err := ReadEncryptedBytes(conn, config, securityProvider)
 	return string(data), err

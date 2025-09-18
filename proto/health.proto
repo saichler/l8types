@@ -1,33 +1,33 @@
 syntax = "proto3";
 
-package types;
+package l8health;
 
 option java_multiple_files = true;
-option java_outer_classname = "Types";
-option java_package = "com.types.types";
-option go_package = "./types";
+option java_outer_classname = "L8Health";
+option java_package = "com.types.l8health";
+option go_package = "./types/l8health";
 
 import "services.proto";
 
-enum HealthState {
+enum L8HealthState {
   Invalid_State = 0;
   Up = 1;
   Down = 2;
   Unreachable = 3;
 }
 
-message Health {
+message L8Health {
   string a_uuid = 1;
   string z_uuid = 2;
   string alias = 3;
-  Services services = 4;
-  HealthState status = 5;
-  HealthStats stats = 6;
+  l8services.L8Services services = 4;
+  L8HealthState status = 5;
+  L8HealthStats stats = 6;
   int64 start_time = 7;
   bool is_vnet = 8;
 }
 
-message HealthStats {
+message L8HealthStats {
   int64 last_msg_time = 1;
   int64 tx_msg_count = 2;
   int64 tx_data_count = 3;
@@ -37,6 +37,6 @@ message HealthStats {
   double cpu_usage = 7;
 }
 
-message Top {
-  map<string, Health> healths = 1;
+message L8Top {
+  map<string, L8Health> healths = 1;
 }

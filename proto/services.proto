@@ -1,36 +1,36 @@
 syntax = "proto3";
 
-package types;
+package l8services;
 
 option java_multiple_files = true;
-option java_outer_classname = "Types";
-option java_package = "com.types.types";
-option go_package = "./types";
+option java_outer_classname = "L8Services";
+option java_package = "com.types.l8service";
+option go_package = "./types/l8services";
 
-message Services {
-  map<string, ServiceAreas> service_to_areas = 1;
+message L8Services {
+  map<string, L8ServiceAreas> service_to_areas = 1;
 }
 
-message ServiceAreas {
+message L8ServiceAreas {
   map<sint32, bool> areas = 1;
 }
 
-message ReplicationIndex {
+message L8ReplicationIndex {
   string service_name = 1;
   sint32 service_area = 2;
-  map<string, ReplicationKey> keys = 3;
-  map<string, ReplicationEndPoint> end_points = 4;
+  map<string, L8ReplicationKey> keys = 3;
+  map<string, L8ReplicationEndPoint> end_points = 4;
 }
 
-message ReplicationKey {
+message L8ReplicationKey {
   map<string, int64> location = 1;
 }
 
-message ReplicationEndPoint {
+message L8ReplicationEndPoint {
   int64 score = 1;
 }
 
-message Transaction {
+message L8Transaction {
   int32 State = 1;
   string id = 2;
   string err_msg = 3;

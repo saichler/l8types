@@ -2,13 +2,15 @@ package nets
 
 import (
 	"errors"
+
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8sysconfig"
+
 	"net"
 )
 
 // Write data to socket
-func Write(data []byte, conn net.Conn, config *types.SysConfig) error {
+func Write(data []byte, conn net.Conn, config *l8sysconfig.L8SysConfig) error {
 	// If the connection is nil, return an error
 	if conn == nil {
 		return errors.New("no Connection Available")
@@ -34,7 +36,7 @@ func Write(data []byte, conn net.Conn, config *types.SysConfig) error {
 	return e
 }
 
-func WriteEncrypted(conn net.Conn, data []byte, config *types.SysConfig,
+func WriteEncrypted(conn net.Conn, data []byte, config *l8sysconfig.L8SysConfig,
 	securityProvider ifs.ISecurityProvider) error {
 	encData, err := securityProvider.Encrypt(data)
 	if err != nil {

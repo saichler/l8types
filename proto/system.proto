@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package types;
+package system;
 
 option java_multiple_files = true;
-option java_outer_classname = "Types";
-option java_package = "com.types.types";
-option go_package = "./types";
+option java_outer_classname = "L8System";
+option java_package = "com.types.l8system";
+option go_package = "./types/l8system";
 
-enum SystemAction {
+enum L8SystemAction {
   Invalid_Oper = 0;
   Routes_Add = 1;
   Routes_Remove = 2;
@@ -15,20 +15,20 @@ enum SystemAction {
   Service_Remove = 4;
 }
 
-message SystemMessage {
-  SystemAction action = 1;
+message L8SystemMessage {
+  L8SystemAction action = 1;
   bool publish = 2;
   oneof data {
-    RouteTable route_table = 3;
-    ServiceData service_data = 4;
+    L8RouteTable route_table = 3;
+    L8ServiceData service_data = 4;
   }
 }
 
-message RouteTable {
+message L8RouteTable {
   map<string, string> rows = 1;
 }
 
-message ServiceData{
+message L8ServiceData{
   string service_uuid = 1;
   string serviceName = 2;
   int32 serviceArea = 3;

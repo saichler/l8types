@@ -1,17 +1,17 @@
 syntax = "proto3";
 
-package types;
+package l8api;
 
 option java_multiple_files = true;
-option java_outer_classname = "Types";
-option java_package = "com.types.types";
-option go_package = "./types";
+option java_outer_classname = "L8Api";
+option java_package = "com.types.l8api";
+option go_package = "./types/l8api";
 
-message Query {
+message L8Query {
   string text = 1;
   string rootType = 2;
   repeated string properties = 3;
-  Expression criteria = 4;
+  L8Expression criteria = 4;
   string sort_by = 5;
   bool descending = 6;
   int32 limit = 7;
@@ -20,20 +20,20 @@ message Query {
   string schema = 10;
 }
 
-message Expression {
-  Condition condition = 1;
+message L8Expression {
+  L8Condition condition = 1;
   string and_or = 2;
-  Expression next = 3;
-  Expression child = 4;
+  L8Expression next = 3;
+  L8Expression child = 4;
 }
 
-message Condition {
-  Comparator comparator = 1;
+message L8Condition {
+  L8Comparator comparator = 1;
   string oper = 2;
-  Condition next = 3;
+  L8Condition next = 3;
 }
 
-message Comparator {
+message L8Comparator {
   string left = 1;
   string oper = 2;
   string right = 3;

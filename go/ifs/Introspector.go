@@ -1,21 +1,22 @@
 package ifs
 
 import (
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8reflect"
+
 	"reflect"
 )
 
 type IIntrospector interface {
-	Inspect(interface{}) (*types.RNode, error)
-	Node(string) (*types.RNode, bool)
-	NodeByType(p reflect.Type) (*types.RNode, bool)
-	NodeByTypeName(string) (*types.RNode, bool)
-	NodeByValue(interface{}) (*types.RNode, bool)
-	Nodes(bool, bool) []*types.RNode
+	Inspect(interface{}) (*l8reflect.L8Node, error)
+	Node(string) (*l8reflect.L8Node, bool)
+	NodeByType(p reflect.Type) (*l8reflect.L8Node, bool)
+	NodeByTypeName(string) (*l8reflect.L8Node, bool)
+	NodeByValue(interface{}) (*l8reflect.L8Node, bool)
+	Nodes(bool, bool) []*l8reflect.L8Node
 	Registry() IRegistry
-	Kind(*types.RNode) reflect.Kind
+	Kind(*l8reflect.L8Node) reflect.Kind
 	Clone(interface{}) interface{}
-	TableView(string) (*types.TableView, bool)
-	TableViews() []*types.TableView
+	TableView(string) (*l8reflect.L8TableView, bool)
+	TableViews() []*l8reflect.L8TableView
 	Clean(string)
 }

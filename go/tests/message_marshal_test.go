@@ -4,12 +4,13 @@ import (
 	"strings"
 	"testing"
 	"time"
+
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Create a basic message
 	msg := &ifs.Message{}
 	msg.Init(
@@ -28,7 +29,7 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 		ifs.Empty,
 		"",
 		"",
-		0,
+		0, 0,
 	)
 
 	// Marshal the message
@@ -95,7 +96,7 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 
 func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 	resources := newMockResources()
-	
+
 	msg := &ifs.Message{}
 	msg.Init(
 		"dest",
@@ -113,7 +114,7 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 		ifs.Locked,
 		"transaction-id-12345678901234567890123456",
 		"transaction error message",
-		time.Now().Unix(),
+		time.Now().Unix(), 30,
 	)
 
 	data, err := msg.Marshal(nil, resources)
@@ -147,9 +148,9 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 
 func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 	resources := newMockResources()
-	
+
 	msg := &ifs.Message{}
-	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.Empty, "", "", 0)
+	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.Empty, "", "", 0, 0)
 
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -175,11 +176,11 @@ func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 
 func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Create large data strings
 	largeData := strings.Repeat("A", 10000)
 	largeFailMessage := strings.Repeat("F", 255)
-	
+
 	msg := &ifs.Message{}
 	msg.Init(
 		"destination",
@@ -196,8 +197,9 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 		4294967295, // max uint32
 		ifs.Errored,
 		"transaction-id-large-test-case-here",
-		"large transaction error: " + strings.Repeat("E", 200),
+		"large transaction error: "+strings.Repeat("E", 200),
 		9223372036854775807, // max int64
+		30,
 	)
 	msg.SetFailMessage(largeFailMessage)
 
@@ -228,9 +230,9 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 
 func TestMessageMarshalEncryptionError(t *testing.T) {
 	resources := newMockResourcesWithError(true, false)
-	
+
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 	_, err := msg.Marshal(nil, resources)
 	if err == nil {
@@ -243,9 +245,9 @@ func TestMessageMarshalEncryptionError(t *testing.T) {
 
 func TestMessageUnmarshalDecryptionError(t *testing.T) {
 	resources := newMockResources()
-	
+
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 	// Marshal with working encryption
 	data, err := msg.Marshal(nil, resources)
@@ -257,7 +259,7 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 	resourcesWithError := newMockResourcesWithError(false, true)
 	newMsg := &ifs.Message{}
 	_, err = newMsg.Unmarshal(data, resourcesWithError)
-	
+
 	if err == nil {
 		t.Fatalf("Expected decryption error, but unmarshal succeeded")
 	}
@@ -268,12 +270,12 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 
 func TestAllActions(t *testing.T) {
 	resources := newMockResources()
-	
+
 	actions := []ifs.Action{ifs.POST, ifs.PUT, ifs.PATCH, ifs.DELETE, ifs.GET, ifs.Reply, ifs.Notify, ifs.Sync, ifs.EndPoints}
-	
+
 	for _, action := range actions {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -294,12 +296,12 @@ func TestAllActions(t *testing.T) {
 
 func TestAllPriorities(t *testing.T) {
 	resources := newMockResources()
-	
+
 	priorities := []ifs.Priority{ifs.P8, ifs.P7, ifs.P6, ifs.P5, ifs.P4, ifs.P3, ifs.P2, ifs.P1}
-	
+
 	for _, priority := range priorities {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -320,26 +322,27 @@ func TestAllPriorities(t *testing.T) {
 
 func TestAllTransactionStates(t *testing.T) {
 	resources := newMockResources()
-	
+
 	states := []ifs.TransactionState{
 		ifs.Empty, ifs.Create, ifs.Created, ifs.Start, ifs.Lock, ifs.Locked,
 		ifs.LockFailed, ifs.Commit, ifs.Commited, ifs.Rollback, ifs.Rollbacked,
 		ifs.Finish, ifs.Finished, ifs.Errored,
 	}
-	
+
 	for _, state := range states {
 		msg := &ifs.Message{}
 		var trId, trErr string
 		var trStart int64
-		
+		var trTimeout int64
 		// Only set transaction fields for non-Empty states
 		if state != ifs.Empty {
 			trId = "tr-id-123456789012345678901234567890"
 			trErr = "transaction error message"
 			trStart = 1234567890
+			trTimeout = 30
 		}
-		
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trStart)
+
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trStart, trTimeout)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -355,7 +358,7 @@ func TestAllTransactionStates(t *testing.T) {
 		if newMsg.Tr_State() != state {
 			t.Errorf("Transaction state mismatch for %v: expected %v, got %v", state, state, newMsg.Tr_State())
 		}
-		
+
 		if state != ifs.Empty {
 			if newMsg.Tr_Id() != trId {
 				t.Errorf("Transaction ID mismatch for state %v: expected '%s', got '%s'", state, trId, newMsg.Tr_Id())
@@ -372,7 +375,7 @@ func TestAllTransactionStates(t *testing.T) {
 
 func TestBoolCombinations(t *testing.T) {
 	resources := newMockResources()
-	
+
 	combinations := []struct {
 		request bool
 		reply   bool
@@ -382,10 +385,10 @@ func TestBoolCombinations(t *testing.T) {
 		{false, true},
 		{true, true},
 	}
-	
+
 	for _, combo := range combinations {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.Empty, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

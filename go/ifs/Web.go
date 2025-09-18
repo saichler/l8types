@@ -1,6 +1,8 @@
 package ifs
 
-import "github.com/saichler/l8types/go/types"
+import (
+	"github.com/saichler/l8types/go/types/l8web"
+)
 
 const (
 	WebService = "WebService"
@@ -31,8 +33,8 @@ type IWebService interface {
 	GetBody() string
 	GetResp() string
 
-	Serialize() *types.WebService
-	DeSerialize(*types.WebService)
+	Serialize() *l8web.L8WebService
+	DeSerialize(*l8web.L8WebService)
 
 	Plugin() string
 }

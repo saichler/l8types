@@ -2,13 +2,14 @@ package nets
 
 import (
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8services"
+	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"google.golang.org/protobuf/proto"
 
 	"net"
 )
 
-func ExecuteProtocol(conn net.Conn, config *types.SysConfig, security ifs.ISecurityProvider) error {
+func ExecuteProtocol(conn net.Conn, config *l8sysconfig.L8SysConfig, security ifs.ISecurityProvider) error {
 	err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security)
 	if err != nil {
 		conn.Close()
@@ -70,7 +71,7 @@ func ExecuteProtocol(conn net.Conn, config *types.SysConfig, security ifs.ISecur
 	return nil
 }
 
-func ServicesToBytes(services *types.Services) []byte {
+func ServicesToBytes(services *l8services.L8Services) []byte {
 	data, err := proto.Marshal(services)
 	if err != nil {
 		return []byte{}
@@ -78,8 +79,8 @@ func ServicesToBytes(services *types.Services) []byte {
 	return data
 }
 
-func BytesToServices(data []byte) *types.Services {
-	services := &types.Services{}
+func BytesToServices(data []byte) *l8services.L8Services {
+	services := &l8services.L8Services{}
 	err := proto.Unmarshal(data, services)
 	if err != nil {
 		return nil

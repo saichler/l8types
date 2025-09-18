@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package types;
+package l8notify;
 
 option java_multiple_files = true;
-option java_outer_classname = "Types";
-option java_package = "com.types.types";
-option go_package = "./types";
+option java_outer_classname = "L8Notify";
+option java_package = "com.types.l8notify";
+option go_package = "./types/l8notify";
 
-enum NotificationType {
+enum L8NotificationType {
   Invalid_Notify = 0;
   Add = 1;
   Replace = 2;
@@ -16,7 +16,7 @@ enum NotificationType {
   Sync = 5;
 }
 
-message NotificationSet {
+message L8NotificationSet {
   string source = 1;
   int64 time = 2;
   uint32 sequence = 3;
@@ -24,11 +24,11 @@ message NotificationSet {
   int32 service_area = 5;
   string model_type = 6;
   string model_key = 7;
-  NotificationType type = 8;
-  repeated Notification notification_list = 9;
+  L8NotificationType type = 8;
+  repeated L8Notification notification_list = 9;
 }
 
-message Notification {
+message L8Notification {
   string property_id = 1;
   bytes oldValue = 2;
   bytes newValue = 3;

@@ -1,16 +1,16 @@
 syntax = "proto3";
 
-package types;
+package l8sysconfig;
 
 option java_multiple_files = true;
-option java_outer_classname = "Types";
-option java_package = "com.types.types";
-option go_package = "./types";
+option java_outer_classname = "L8Sysconfig";
+option java_package = "com.types.l8sysconfig";
+option go_package = "./types/l8sysconfig";
 
 import "services.proto";
 
 // A config for the messages limitation and data size
-message SysConfig {
+message L8SysConfig {
   // The maximum data size for a message
   uint64 max_data_size = 1;
   // The transmit message queue size
@@ -33,7 +33,7 @@ message SysConfig {
   // Custom remote alias for this vnic
   string remote_alias = 10;
   // Provided services
-  Services services = 11;
+  l8services.L8Services services = 11;
   //Keep Alive interval in Seconds
   int64 keep_alive_interval_seconds = 12;
 }

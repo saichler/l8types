@@ -2,7 +2,8 @@ package ifs
 
 import (
 	"github.com/google/uuid"
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8services"
+	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
 
 type IResources interface {
@@ -12,14 +13,14 @@ type IResources interface {
 	DataListener() IDatatListener
 	Serializer(SerializerMode) ISerializer
 	Logger() ILogger
-	SysConfig() *types.SysConfig
+	SysConfig() *l8sysconfig.L8SysConfig
 	Introspector() IIntrospector
 	AddService(string, int32)
 	Set(interface{})
 	Copy(IResources)
 }
 
-func AddService(sysConfig *types.SysConfig, serviceName string, serviceArea int32) {
+func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32) {
 	if sysConfig == nil {
 		return
 	}
@@ -27,20 +28,20 @@ func AddService(sysConfig *types.SysConfig, serviceName string, serviceArea int3
 		sysConfig.LocalUuid = NewUuid()
 	}
 	if sysConfig.Services == nil {
-		sysConfig.Services = &types.Services{}
+		sysConfig.Services = &l8services.L8Services{}
 	}
 	if sysConfig.Services.ServiceToAreas == nil {
-		sysConfig.Services.ServiceToAreas = make(map[string]*types.ServiceAreas)
+		sysConfig.Services.ServiceToAreas = make(map[string]*l8services.L8ServiceAreas)
 	}
 	_, ok := sysConfig.Services.ServiceToAreas[serviceName]
 	if !ok {
-		sysConfig.Services.ServiceToAreas[serviceName] = &types.ServiceAreas{}
+		sysConfig.Services.ServiceToAreas[serviceName] = &l8services.L8ServiceAreas{}
 		sysConfig.Services.ServiceToAreas[serviceName].Areas = make(map[int32]bool)
 	}
 	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = true
 }
 
-func RemoveService(services *types.Services, serviceName string, serviceArea int32) {
+func RemoveService(services *l8services.L8Services, serviceName string, serviceArea int32) {
 	if services == nil {
 		return
 	}

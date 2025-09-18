@@ -10,7 +10,8 @@ import (
 
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/nets"
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8services"
+	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
 
 // MockSecurityProviderNets implements ISecurityProvider for testing
@@ -20,12 +21,18 @@ type MockSecurityProviderNets struct {
 }
 
 func (m *MockSecurityProviderNets) Authenticate(string, string) (string, error) { return "", nil }
-func (m *MockSecurityProviderNets) Message(string) (*ifs.Message, error) { return nil, nil }
-func (m *MockSecurityProviderNets) CanDial(string, uint32) (net.Conn, error) { return nil, nil }
-func (m *MockSecurityProviderNets) CanAccept(net.Conn) error { return nil }
-func (m *MockSecurityProviderNets) ValidateConnection(net.Conn, *types.SysConfig) error { return nil }
-func (m *MockSecurityProviderNets) CanDoAction(ifs.Action, ifs.IElements, string, string, ...string) error { return nil }
-func (m *MockSecurityProviderNets) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements { return nil }
+func (m *MockSecurityProviderNets) Message(string) (*ifs.Message, error)        { return nil, nil }
+func (m *MockSecurityProviderNets) CanDial(string, uint32) (net.Conn, error)    { return nil, nil }
+func (m *MockSecurityProviderNets) CanAccept(net.Conn) error                    { return nil }
+func (m *MockSecurityProviderNets) ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error {
+	return nil
+}
+func (m *MockSecurityProviderNets) CanDoAction(ifs.Action, ifs.IElements, string, string, ...string) error {
+	return nil
+}
+func (m *MockSecurityProviderNets) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
+	return nil
+}
 
 func (m *MockSecurityProviderNets) Encrypt(data []byte) (string, error) {
 	if m.encryptError {
@@ -120,28 +127,28 @@ func (m *MockConnPartialRead) Read(b []byte) (n int, err error) {
 	if m.closed {
 		return 0, errors.New("connection closed")
 	}
-	
+
 	// First call returns 0 bytes to trigger sleep path
 	if m.readCount == 0 {
 		m.readCount++
 		return 0, nil
 	}
-	
+
 	// Second call returns actual data
 	if m.readCount == 1 {
 		m.readCount++
 		copy(b, m.data)
 		return len(m.data), nil
 	}
-	
+
 	return 0, nil
 }
 
-func (m *MockConnPartialRead) Write(b []byte) (n int, err error) { return len(b), nil }
-func (m *MockConnPartialRead) Close() error                     { m.closed = true; return nil }
-func (m *MockConnPartialRead) LocalAddr() net.Addr             { return nil }
-func (m *MockConnPartialRead) RemoteAddr() net.Addr            { return nil }
-func (m *MockConnPartialRead) SetDeadline(t time.Time) error   { return nil }
+func (m *MockConnPartialRead) Write(b []byte) (n int, err error)  { return len(b), nil }
+func (m *MockConnPartialRead) Close() error                       { m.closed = true; return nil }
+func (m *MockConnPartialRead) LocalAddr() net.Addr                { return nil }
+func (m *MockConnPartialRead) RemoteAddr() net.Addr               { return nil }
+func (m *MockConnPartialRead) SetDeadline(t time.Time) error      { return nil }
 func (m *MockConnPartialRead) SetReadDeadline(t time.Time) error  { return nil }
 func (m *MockConnPartialRead) SetWriteDeadline(t time.Time) error { return nil }
 
@@ -155,36 +162,36 @@ func (m *MockConnErrorOnSecondRead) Read(b []byte) (n int, err error) {
 	if m.closed {
 		return 0, errors.New("connection closed")
 	}
-	
+
 	// First call returns partial data
 	if !m.firstCallDone {
 		m.firstCallDone = true
 		b[0] = 'A'
 		return 1, nil
 	}
-	
+
 	// Second call returns error
 	return 0, errors.New("simulated read error")
 }
 
-func (m *MockConnErrorOnSecondRead) Write(b []byte) (n int, err error) { return len(b), nil }
-func (m *MockConnErrorOnSecondRead) Close() error                     { m.closed = true; return nil }
-func (m *MockConnErrorOnSecondRead) LocalAddr() net.Addr             { return nil }
-func (m *MockConnErrorOnSecondRead) RemoteAddr() net.Addr            { return nil }
-func (m *MockConnErrorOnSecondRead) SetDeadline(t time.Time) error   { return nil }
+func (m *MockConnErrorOnSecondRead) Write(b []byte) (n int, err error)  { return len(b), nil }
+func (m *MockConnErrorOnSecondRead) Close() error                       { m.closed = true; return nil }
+func (m *MockConnErrorOnSecondRead) LocalAddr() net.Addr                { return nil }
+func (m *MockConnErrorOnSecondRead) RemoteAddr() net.Addr               { return nil }
+func (m *MockConnErrorOnSecondRead) SetDeadline(t time.Time) error      { return nil }
 func (m *MockConnErrorOnSecondRead) SetReadDeadline(t time.Time) error  { return nil }
 func (m *MockConnErrorOnSecondRead) SetWriteDeadline(t time.Time) error { return nil }
 
 // Test Write function
 func TestWrite(t *testing.T) {
-	config := &types.SysConfig{
+	config := &l8sysconfig.L8SysConfig{
 		MaxDataSize: 1024,
 	}
 
 	t.Run("ValidWrite", func(t *testing.T) {
 		conn := NewMockConn()
 		data := []byte("test data")
-		
+
 		err := nets.Write(data, conn, config)
 		if err != nil {
 			t.Errorf("Write failed: %v", err)
@@ -247,7 +254,7 @@ func TestWrite(t *testing.T) {
 		conn := NewMockConn()
 		conn.SetWriteError(errors.New("write failed"))
 		data := []byte("test")
-		
+
 		err := nets.Write(data, conn, config)
 		if err == nil {
 			t.Error("Expected write error")
@@ -257,14 +264,14 @@ func TestWrite(t *testing.T) {
 
 // Test Read function
 func TestRead(t *testing.T) {
-	config := &types.SysConfig{
+	config := &l8sysconfig.L8SysConfig{
 		MaxDataSize: 1024,
 	}
 
 	t.Run("ValidRead", func(t *testing.T) {
 		conn := NewMockConn()
 		testData := []byte("test data for reading")
-		
+
 		// Prepare read buffer with size prefix + data
 		sizeBytes := ifs.Long2Bytes(int64(len(testData)))
 		readData := append(sizeBytes, testData...)
@@ -320,7 +327,7 @@ func TestRead(t *testing.T) {
 
 // Test ReadSize function
 func TestReadSize(t *testing.T) {
-	config := &types.SysConfig{
+	config := &l8sysconfig.L8SysConfig{
 		MaxDataSize: 1024,
 	}
 
@@ -342,10 +349,10 @@ func TestReadSize(t *testing.T) {
 	t.Run("PartialReadThenComplete", func(t *testing.T) {
 		conn := NewMockConn()
 		fullData := []byte("this is a longer test string")
-		
+
 		// First read will only get part of the data
 		conn.SetReadData(fullData)
-		
+
 		result, err := nets.ReadSize(len(fullData), conn, config)
 		if err != nil {
 			t.Errorf("ReadSize failed: %v", err)
@@ -362,7 +369,7 @@ func TestReadSize(t *testing.T) {
 			data:      []byte("test data for partial read"),
 			readCount: 0,
 		}
-		
+
 		result, err := nets.ReadSize(len(conn.data), conn, config)
 		if err != nil {
 			t.Errorf("ReadSize failed: %v", err)
@@ -377,7 +384,7 @@ func TestReadSize(t *testing.T) {
 		conn := &MockConnErrorOnSecondRead{
 			firstCallDone: false,
 		}
-		
+
 		_, err := nets.ReadSize(10, conn, config)
 		if err == nil {
 			t.Error("Expected read error on recursive call")
@@ -390,7 +397,7 @@ func TestReadSize(t *testing.T) {
 
 // Test WriteEncrypted function
 func TestWriteEncrypted(t *testing.T) {
-	config := &types.SysConfig{
+	config := &l8sysconfig.L8SysConfig{
 		MaxDataSize: 1024,
 	}
 
@@ -424,7 +431,7 @@ func TestWriteEncrypted(t *testing.T) {
 
 // Test ReadEncrypted functions
 func TestReadEncrypted(t *testing.T) {
-	config := &types.SysConfig{
+	config := &l8sysconfig.L8SysConfig{
 		MaxDataSize: 1024,
 	}
 
@@ -432,7 +439,7 @@ func TestReadEncrypted(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{}
 		testData := "encrypted test string"
-		
+
 		// Prepare encrypted data (mock encryption just returns the same string)
 		sizeBytes := ifs.Long2Bytes(int64(len(testData)))
 		readData := append(sizeBytes, []byte(testData)...)
@@ -452,7 +459,7 @@ func TestReadEncrypted(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{}
 		testData := []byte("encrypted test bytes")
-		
+
 		// Prepare encrypted data
 		sizeBytes := ifs.Long2Bytes(int64(len(testData)))
 		readData := append(sizeBytes, testData...)
@@ -472,7 +479,7 @@ func TestReadEncrypted(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{decryptError: true}
 		testData := "test data"
-		
+
 		sizeBytes := ifs.Long2Bytes(int64(len(testData)))
 		readData := append(sizeBytes, []byte(testData)...)
 		conn.SetReadData(readData)
@@ -492,8 +499,8 @@ func TestReadEncrypted(t *testing.T) {
 func TestServicesConversion(t *testing.T) {
 	t.Run("ValidConversion", func(t *testing.T) {
 		// Create test services
-		services := &types.Services{
-			ServiceToAreas: map[string]*types.ServiceAreas{
+		services := &l8services.L8Services{
+			ServiceToAreas: map[string]*l8services.L8ServiceAreas{
 				"test-service": {
 					Areas: map[int32]bool{
 						1: true,
@@ -531,10 +538,10 @@ func TestServicesConversion(t *testing.T) {
 	})
 
 	t.Run("EmptyServices", func(t *testing.T) {
-		services := &types.Services{}
+		services := &l8services.L8Services{}
 		data := nets.ServicesToBytes(services)
 		result := nets.BytesToServices(data)
-		
+
 		if result == nil {
 			t.Error("BytesToServices returned nil for empty services")
 		}
@@ -543,27 +550,26 @@ func TestServicesConversion(t *testing.T) {
 	t.Run("InvalidBytes", func(t *testing.T) {
 		invalidData := []byte("not protobuf data")
 		result := nets.BytesToServices(invalidData)
-		
+
 		if result != nil {
 			t.Error("BytesToServices should return nil for invalid data")
 		}
 	})
 }
 
-
 // Test ExecuteProtocol function
 func TestExecuteProtocol(t *testing.T) {
 	t.Run("ValidProtocolExecution", func(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{}
-		
-		config := &types.SysConfig{
-			LocalUuid:    "local-uuid-123",
-			LocalAlias:   "local-alias",
+
+		config := &l8sysconfig.L8SysConfig{
+			LocalUuid:     "local-uuid-123",
+			LocalAlias:    "local-alias",
 			ForceExternal: false,
-			MaxDataSize:  1024,
-			Services: &types.Services{
-				ServiceToAreas: map[string]*types.ServiceAreas{
+			MaxDataSize:   1024,
+			Services: &l8services.L8Services{
+				ServiceToAreas: map[string]*l8services.L8ServiceAreas{
 					"test-service": {
 						Areas: map[int32]bool{1: true},
 					},
@@ -575,27 +581,27 @@ func TestExecuteProtocol(t *testing.T) {
 		remoteUuid := "remote-uuid-456"
 		remoteAlias := "remote-alias"
 		forceExternal := "false"
-		
+
 		// Prepare the read buffer with all expected responses
 		var responses [][]byte
-		
+
 		// Remote UUID response
 		uuidSize := ifs.Long2Bytes(int64(len(remoteUuid)))
 		responses = append(responses, append(uuidSize, []byte(remoteUuid)...))
-		
+
 		// ForceExternal response
 		feSize := ifs.Long2Bytes(int64(len(forceExternal)))
 		responses = append(responses, append(feSize, []byte(forceExternal)...))
-		
+
 		// Remote alias response
 		aliasSize := ifs.Long2Bytes(int64(len(remoteAlias)))
 		responses = append(responses, append(aliasSize, []byte(remoteAlias)...))
-		
+
 		// Services response
 		servicesData := nets.ServicesToBytes(config.Services)
 		servicesSize := ifs.Long2Bytes(int64(len(servicesData)))
 		responses = append(responses, append(servicesSize, servicesData...))
-		
+
 		// Combine all responses
 		allResponses := bytes.Join(responses, []byte{})
 		conn.SetReadData(allResponses)
@@ -618,10 +624,10 @@ func TestExecuteProtocol(t *testing.T) {
 		conn := NewMockConn()
 		conn.SetWriteError(errors.New("write failed"))
 		security := &MockSecurityProviderNets{}
-		
-		config := &types.SysConfig{
+
+		config := &l8sysconfig.L8SysConfig{
 			LocalUuid:   "local-uuid",
-			LocalAlias:  "local-alias", 
+			LocalAlias:  "local-alias",
 			MaxDataSize: 1024,
 		}
 
@@ -638,13 +644,13 @@ func TestExecuteProtocol(t *testing.T) {
 	t.Run("ReadError", func(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{}
-		
-		config := &types.SysConfig{
+
+		config := &l8sysconfig.L8SysConfig{
 			LocalUuid:   "local-uuid",
 			LocalAlias:  "local-alias",
 			MaxDataSize: 1024,
 		}
-		
+
 		// Set read error after first write succeeds
 		conn.SetReadError(errors.New("read failed"))
 
@@ -661,8 +667,8 @@ func TestExecuteProtocol(t *testing.T) {
 	t.Run("EncryptionError", func(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{encryptError: true}
-		
-		config := &types.SysConfig{
+
+		config := &l8sysconfig.L8SysConfig{
 			LocalUuid:   "local-uuid",
 			MaxDataSize: 1024,
 		}
@@ -676,43 +682,43 @@ func TestExecuteProtocol(t *testing.T) {
 			t.Error("Connection should be closed on error")
 		}
 	})
-	
+
 	t.Run("ForceExternalTrue", func(t *testing.T) {
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{}
-		
-		config := &types.SysConfig{
+
+		config := &l8sysconfig.L8SysConfig{
 			LocalUuid:     "local-uuid",
 			LocalAlias:    "local-alias",
 			ForceExternal: true, // Test true case
 			MaxDataSize:   1024,
-			Services:      &types.Services{},
+			Services:      &l8services.L8Services{},
 		}
-		
+
 		// Prepare responses - force external should be "true"
 		remoteUuid := "remote-uuid"
 		remoteAlias := "remote-alias"
 		forceExternal := "true"
-		
+
 		var responses [][]byte
-		
+
 		// Remote UUID response
 		uuidSize := ifs.Long2Bytes(int64(len(remoteUuid)))
 		responses = append(responses, append(uuidSize, []byte(remoteUuid)...))
-		
+
 		// ForceExternal response (true)
 		feSize := ifs.Long2Bytes(int64(len(forceExternal)))
 		responses = append(responses, append(feSize, []byte(forceExternal)...))
-		
+
 		// Remote alias response
 		aliasSize := ifs.Long2Bytes(int64(len(remoteAlias)))
 		responses = append(responses, append(aliasSize, []byte(remoteAlias)...))
-		
+
 		// Services response
 		servicesData := nets.ServicesToBytes(config.Services)
 		servicesSize := ifs.Long2Bytes(int64(len(servicesData)))
 		responses = append(responses, append(servicesSize, servicesData...))
-		
+
 		allResponses := bytes.Join(responses, []byte{})
 		conn.SetReadData(allResponses)
 
@@ -733,9 +739,9 @@ func TestExecuteProtocol(t *testing.T) {
 	t.Run("ProtocolStepErrors", func(t *testing.T) {
 		// Test errors at different stages
 		testCases := []struct {
-			name          string
-			setupError    func(*MockConn)
-			expectClosed  bool
+			name         string
+			setupError   func(*MockConn)
+			expectClosed bool
 		}{
 			{
 				name: "FirstReadError",
@@ -745,7 +751,7 @@ func TestExecuteProtocol(t *testing.T) {
 				expectClosed: true,
 			},
 			{
-				name: "SecondWriteError", 
+				name: "SecondWriteError",
 				setupError: func(conn *MockConn) {
 					// Allow first read, fail on second write
 					remoteUuid := "remote-uuid"
@@ -761,7 +767,7 @@ func TestExecuteProtocol(t *testing.T) {
 			t.Run(tc.name, func(t *testing.T) {
 				conn := NewMockConn()
 				security := &MockSecurityProviderNets{}
-				config := &types.SysConfig{
+				config := &l8sysconfig.L8SysConfig{
 					LocalUuid:   "local-uuid",
 					LocalAlias:  "local-alias",
 					MaxDataSize: 1024,
@@ -786,44 +792,44 @@ func TestExecuteProtocol(t *testing.T) {
 		// Test third write error (alias write)
 		conn := NewMockConn()
 		security := &MockSecurityProviderNets{}
-		
-		config := &types.SysConfig{
+
+		config := &l8sysconfig.L8SysConfig{
 			LocalUuid:     "local-uuid",
-			LocalAlias:    "local-alias",  
+			LocalAlias:    "local-alias",
 			ForceExternal: false,
 			MaxDataSize:   1024,
 		}
-		
+
 		// Prepare responses for first two exchanges
 		remoteUuid := "remote-uuid"
 		forceExternal := "false"
-		
+
 		var responses [][]byte
-		
+
 		// UUID exchange
 		uuidSize := ifs.Long2Bytes(int64(len(remoteUuid)))
 		responses = append(responses, append(uuidSize, []byte(remoteUuid)...))
-		
-		// ForceExternal exchange  
+
+		// ForceExternal exchange
 		feSize := ifs.Long2Bytes(int64(len(forceExternal)))
 		responses = append(responses, append(feSize, []byte(forceExternal)...))
-		
+
 		allResponses := bytes.Join(responses, []byte{})
 		conn.SetReadData(allResponses)
-		
+
 		// Set write error after first two writes succeed
 		// This is tricky with current mock - would need more sophisticated tracking
 		// For now, this test increases coverage of the successful paths
-		
+
 		// Let the test run successfully to cover more paths
 		remoteAlias := "remote-alias"
-		aliasSize := ifs.Long2Bytes(int64(len(remoteAlias))) 
+		aliasSize := ifs.Long2Bytes(int64(len(remoteAlias)))
 		responses = append(responses, append(aliasSize, []byte(remoteAlias)...))
-		
-		servicesData := nets.ServicesToBytes(&types.Services{})
+
+		servicesData := nets.ServicesToBytes(&l8services.L8Services{})
 		servicesSize := ifs.Long2Bytes(int64(len(servicesData)))
 		responses = append(responses, append(servicesSize, servicesData...))
-		
+
 		allResponses = bytes.Join(responses, []byte{})
 		conn.SetReadData(allResponses)
 

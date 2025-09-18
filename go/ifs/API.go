@@ -1,7 +1,7 @@
 package ifs
 
 import (
-	"github.com/saichler/l8types/go/types"
+	"github.com/saichler/l8types/go/types/l8reflect"
 )
 
 const (
@@ -26,7 +26,7 @@ type IElements interface {
 }
 
 type IQuery interface {
-	RootType() *types.RNode
+	RootType() *l8reflect.L8Node
 	Properties() []IProperty
 	Criteria() IExpression
 	KeyOf() string
@@ -42,7 +42,7 @@ type IProperty interface {
 	PropertyId() (string, error)
 	Get(interface{}) (interface{}, error)
 	Set(interface{}, interface{}) (interface{}, interface{}, error)
-	Node() *types.RNode
+	Node() *l8reflect.L8Node
 	Parent() IProperty
 	IsString() bool
 	Resources() IResources

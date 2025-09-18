@@ -1,6 +1,9 @@
 package ifs
 
-import "github.com/saichler/l8types/go/types"
+import (
+	"github.com/saichler/l8types/go/types/l8notify"
+	"github.com/saichler/l8types/go/types/l8services"
+)
 
 // Add a bool for transaction
 type IServices interface {
@@ -19,7 +22,7 @@ type IServices interface {
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
 	//The list of existing services
-	Services() *types.Services
+	Services() *l8services.L8Services
 }
 
 type IServiceHandler interface {
@@ -36,14 +39,14 @@ type IServiceHandler interface {
 }
 
 type IServiceCacheListener interface {
-	PropertyChangeNotification(*types.NotificationSet)
+	PropertyChangeNotification(set *l8notify.L8NotificationSet)
 }
 
 type IDistributedCache interface {
-	Post(interface{}, ...bool) (*types.NotificationSet, error)
-	Put(interface{}, ...bool) (*types.NotificationSet, error)
-	Patch(interface{}, ...bool) (*types.NotificationSet, error)
-	Delete(interface{}, ...bool) (*types.NotificationSet, error)
+	Post(interface{}, ...bool) (*l8notify.L8NotificationSet, error)
+	Put(interface{}, ...bool) (*l8notify.L8NotificationSet, error)
+	Patch(interface{}, ...bool) (*l8notify.L8NotificationSet, error)
+	Delete(interface{}, ...bool) (*l8notify.L8NotificationSet, error)
 	Get(interface{}) (interface{}, error)
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 	ServiceName() string

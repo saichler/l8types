@@ -2,9 +2,10 @@ package ifs
 
 import (
 	"errors"
-	"github.com/saichler/l8types/go/types"
 	"net"
 	"plugin"
+
+	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
 
 type ISecurityProvider interface {
@@ -13,7 +14,7 @@ type ISecurityProvider interface {
 
 	CanDial(string, uint32) (net.Conn, error)
 	CanAccept(net.Conn) error
-	ValidateConnection(net.Conn, *types.SysConfig) error
+	ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error
 
 	Encrypt([]byte) (string, error)
 	Decrypt(string) ([]byte, error)

@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -203,14 +204,16 @@ func TestActionStateBitManipulation(t *testing.T) {
 		msg := &ifs.Message{}
 		var trId, trErr string
 		var trStart int64
+		var trTimeout int64
 
 		if tc.state != ifs.Empty {
 			trId = "tr-id"
 			trErr = "tr-err"
 			trStart = 123
+			trTimeout = 30
 		}
 
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, tc.action, "source", "vnet", []byte("data"), true, false, 123, tc.state, trId, trErr, trStart)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, tc.action, "source", "vnet", []byte("data"), true, false, 123, tc.state, trId, trErr, trStart, trTimeout)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

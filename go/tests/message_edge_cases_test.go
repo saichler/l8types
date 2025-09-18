@@ -3,12 +3,13 @@ package tests
 import (
 	"strings"
 	"testing"
+
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func TestMessageBoundaryConditions(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Test with exactly 36-character UUIDs
 	msg := &ifs.Message{}
 	msg.Init(
@@ -16,18 +17,18 @@ func TestMessageBoundaryConditions(t *testing.T) {
 		"service",
 		255, // max byte value
 		ifs.P1,
-		ifs.M_All, // multicast mode
-		ifs.Sync, // highest action value
+		ifs.M_All,                              // multicast mode
+		ifs.Sync,                               // highest action value
 		"987654321098765432109876543210987654", // exactly 36 chars
 		"abcdefghijklmnopqrstuvwxyz1234567890", // exactly 36 chars
 		[]byte(""),
 		false,
 		false,
-		4294967295, // max uint32
-		ifs.Errored, // highest transaction state
+		4294967295,                               // max uint32
+		ifs.Errored,                              // highest transaction state
 		"uuid-transaction-id-567890123456789012", // exactly 36 chars
 		"",
-		9223372036854775807, // max int64
+		9223372036854775807, 30, // max int64
 	)
 
 	data, err := msg.Marshal(nil, resources)
@@ -58,12 +59,12 @@ func TestMessageBoundaryConditions(t *testing.T) {
 
 func TestMessageTimeout(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testTimeouts := []uint16{0, 1, 255, 256, 65535} // Including max uint16
-	
+
 	for _, timeout := range testTimeouts {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 		msg.SetTimeout(timeout)
 
 		data, err := msg.Marshal(nil, resources)
@@ -85,7 +86,7 @@ func TestMessageTimeout(t *testing.T) {
 
 func TestMessageFailMessage(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []struct {
 		name        string
 		failMessage string
@@ -97,11 +98,11 @@ func TestMessageFailMessage(t *testing.T) {
 		{"with special chars", "Error: \n\t\r\\\""},
 		{"unicode", "错误信息"},
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 			msg.SetFailMessage(tc.failMessage)
 
 			data, err := msg.Marshal(nil, resources)
@@ -124,18 +125,18 @@ func TestMessageFailMessage(t *testing.T) {
 
 func TestMessageAAAId(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []string{
 		"",
 		"a",
 		"simple-aaa-id",
 		"123456789012345678901234567890123456", // 36 chars
-		strings.Repeat("A", 50), // longer than 36
+		strings.Repeat("A", 50),                // longer than 36
 	}
-	
+
 	for _, aaaId := range testCases {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 		msg.SetAAAId(aaaId)
 
 		data, err := msg.Marshal(nil, resources)
@@ -168,22 +169,22 @@ func TestMessageAAAId(t *testing.T) {
 
 func TestMessageDataSizes(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []struct {
 		name string
 		data string
 	}{
 		{"empty", ""},
 		{"small", "hello"},
-		{"medium", strings.Repeat("data", 250)}, // 1KB
+		{"medium", strings.Repeat("data", 250)},             // 1KB
 		{"large", strings.Repeat("large_data_chunk", 1000)}, // ~17KB
 		{"binary-like", string([]byte{0, 1, 2, 3, 255, 254, 253})},
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(tc.data), true, false, 123, ifs.Empty, "", "", 0)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(tc.data), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -205,7 +206,7 @@ func TestMessageDataSizes(t *testing.T) {
 
 func TestTransactionErrorMessages(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []string{
 		"",
 		"short error",
@@ -213,12 +214,12 @@ func TestTransactionErrorMessages(t *testing.T) {
 		"Multi-line\nerror\nmessage",
 		"Error with special chars: !@#$%^&*()",
 	}
-	
+
 	for _, errMsg := range testCases {
 		msg := &ifs.Message{}
 		msg.Init(
 			"dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"),
-			true, false, 123, ifs.Errored, "tr-id", errMsg, 1234567890,
+			true, false, 123, ifs.Errored, "tr-id", errMsg, 1234567890, 30,
 		)
 
 		data, err := msg.Marshal(nil, resources)
@@ -240,7 +241,7 @@ func TestTransactionErrorMessages(t *testing.T) {
 
 func TestServiceNameLengthHandling(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []struct {
 		name        string
 		serviceName string
@@ -250,11 +251,11 @@ func TestServiceNameLengthHandling(t *testing.T) {
 		{"exactly_10_chars", "1234567890"},
 		{"longer_than_10", "12345678901234567890"}, // Should be truncated in practice
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", tc.serviceName, 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+			msg.Init("dest", tc.serviceName, 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -288,15 +289,15 @@ func TestServiceNameLengthHandling(t *testing.T) {
 
 func TestPredefinedDestinations(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []string{
 		ifs.DESTINATION_Single,
 		ifs.DESTINATION_Leader,
 	}
-	
+
 	for _, destination := range testCases {
 		msg := &ifs.Message{}
-		msg.Init(destination, "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0)
+		msg.Init(destination, "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -317,7 +318,7 @@ func TestPredefinedDestinations(t *testing.T) {
 
 func TestSequenceNumberOverflow(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Test sequence numbers around uint32 boundaries
 	testSequences := []uint32{
 		0,
@@ -325,10 +326,10 @@ func TestSequenceNumberOverflow(t *testing.T) {
 		4294967294, // max - 1
 		4294967295, // max uint32
 	}
-	
+
 	for _, seq := range testSequences {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, seq, ifs.Empty, "", "", 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, seq, ifs.Empty, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

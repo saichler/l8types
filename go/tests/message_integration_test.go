@@ -5,12 +5,13 @@ import (
 	"strings"
 	"testing"
 	"time"
+
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func TestCompleteMessageWorkflow(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Create a realistic message scenario
 	originalMsg := &ifs.Message{}
 	originalMsg.Init(
@@ -29,35 +30,35 @@ func TestCompleteMessageWorkflow(t *testing.T) {
 		ifs.Start,
 		"transaction-auth-session-uuid-567890",
 		"",
-		time.Now().Unix(),
+		time.Now().Unix(), 30,
 	)
 	originalMsg.SetAAAId("aaa-session-uuid-456789012345678901")
 	originalMsg.SetTimeout(5000)
-	
+
 	// Marshal
 	marshaledData, err := originalMsg.Marshal(nil, resources)
 	if err != nil {
 		t.Fatalf("Marshal failed: %v", err)
 	}
-	
+
 	// Verify marshal produces data
 	if len(marshaledData) == 0 {
 		t.Fatal("Marshal produced empty data")
 	}
-	
+
 	// Unmarshal
 	reconstructedMsg := &ifs.Message{}
 	_, err = reconstructedMsg.Unmarshal(marshaledData, resources)
 	if err != nil {
 		t.Fatalf("Unmarshal failed: %v", err)
 	}
-	
+
 	// Comprehensive verification
 	verifyMessageEquality(t, originalMsg, reconstructedMsg)
-	
+
 	// Test header extraction without full unmarshal
 	source, vnet, destination, serviceName, serviceArea, priority, multicastMode := ifs.HeaderOf(marshaledData)
-	
+
 	if !strings.HasPrefix(source, originalMsg.Source()) {
 		t.Errorf("HeaderOf source mismatch: expected to start with '%s', got '%s'", originalMsg.Source(), source)
 	}
@@ -141,24 +142,24 @@ func verifyMessageEquality(t *testing.T, original, reconstructed *ifs.Message) {
 
 func TestMultipleRoundTrips(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Create initial message
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("initial data"), true, false, 123, ifs.Empty, "", "", 0)
-	
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("initial data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+
 	// Perform multiple marshal/unmarshal cycles
 	for i := 0; i < 10; i++ {
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
 			t.Fatalf("Marshal failed on iteration %d: %v", i, err)
 		}
-		
+
 		newMsg := &ifs.Message{}
 		_, err = newMsg.Unmarshal(data, resources)
 		if err != nil {
 			t.Fatalf("Unmarshal failed on iteration %d: %v", i, err)
 		}
-		
+
 		// Verify data integrity after each cycle
 		if string(newMsg.Data()) != "initial data" {
 			t.Errorf("Data corruption detected on iteration %d", i)
@@ -166,7 +167,7 @@ func TestMultipleRoundTrips(t *testing.T) {
 		if newMsg.Sequence() != 123 {
 			t.Errorf("Sequence corruption detected on iteration %d", i)
 		}
-		
+
 		// Use the reconstructed message for next iteration
 		msg = newMsg
 	}
@@ -174,14 +175,14 @@ func TestMultipleRoundTrips(t *testing.T) {
 
 func TestConcurrentMarshalUnmarshal(t *testing.T) {
 	resources := newMockResources()
-	
+
 	// Test concurrent access to marshal/unmarshal operations
 	done := make(chan bool, 10)
-	
+
 	for i := 0; i < 10; i++ {
 		go func(index int) {
 			defer func() { done <- true }()
-			
+
 			msg := &ifs.Message{}
 			msg.Init(
 				fmt.Sprintf("dest-%d", index),
@@ -199,22 +200,22 @@ func TestConcurrentMarshalUnmarshal(t *testing.T) {
 				ifs.TransactionState(index%14),
 				fmt.Sprintf("tr-id-%d", index),
 				fmt.Sprintf("tr-err-%d", index),
-				int64(index*10000),
+				int64(index*10000), 30,
 			)
-			
+
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
 				t.Errorf("Concurrent marshal failed for goroutine %d: %v", index, err)
 				return
 			}
-			
+
 			newMsg := &ifs.Message{}
 			_, err = newMsg.Unmarshal(data, resources)
 			if err != nil {
 				t.Errorf("Concurrent unmarshal failed for goroutine %d: %v", index, err)
 				return
 			}
-			
+
 			// Verify specific fields - check prefix due to fixed-size field padding
 			expected := fmt.Sprintf("dest-%d", index)
 			if !strings.HasPrefix(newMsg.Destination(), expected) {
@@ -222,7 +223,7 @@ func TestConcurrentMarshalUnmarshal(t *testing.T) {
 			}
 		}(i)
 	}
-	
+
 	// Wait for all goroutines to complete
 	for i := 0; i < 10; i++ {
 		<-done
@@ -231,7 +232,7 @@ func TestConcurrentMarshalUnmarshal(t *testing.T) {
 
 func TestMessageSizeCalculation(t *testing.T) {
 	resources := newMockResources()
-	
+
 	testCases := []struct {
 		name     string
 		dataSize int
@@ -244,7 +245,7 @@ func TestMessageSizeCalculation(t *testing.T) {
 		{"small_with_transaction", 100, ifs.Locked},
 		{"large_with_transaction", 10000, ifs.Locked},
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
@@ -252,35 +253,37 @@ func TestMessageSizeCalculation(t *testing.T) {
 			if tc.dataSize > 0 {
 				data = fmt.Sprintf("%*s", tc.dataSize, "x") // Create string of specified size
 			}
-			
+
 			var trId, trErr string
 			var trStart int64
+			var trTimeout int64
 			if tc.trState != ifs.Empty {
 				trId = "transaction-id-12345678901234567890"
 				trErr = "transaction error message"
 				trStart = 1234567890
+				trTimeout = 30
 			}
-			
-			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(data), true, false, 123, tc.trState, trId, trErr, trStart)
-			
+
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(data), true, false, 123, tc.trState, trId, trErr, trStart, trTimeout)
+
 			marshaledData, err := msg.Marshal(nil, resources)
 			if err != nil {
 				t.Fatalf("Marshal failed: %v", err)
 			}
-			
+
 			// Verify that marshaled size is reasonable
 			expectedMinSize := 119 + tc.dataSize // Header + minimum body + data
 			if len(marshaledData) < expectedMinSize {
 				t.Errorf("Marshaled data too small: expected at least %d bytes, got %d", expectedMinSize, len(marshaledData))
 			}
-			
+
 			// Verify successful unmarshal
 			newMsg := &ifs.Message{}
 			_, err = newMsg.Unmarshal(marshaledData, resources)
 			if err != nil {
 				t.Fatalf("Unmarshal failed: %v", err)
 			}
-			
+
 			if len(newMsg.Data()) != tc.dataSize {
 				t.Errorf("Data size mismatch: expected %d, got %d", tc.dataSize, len(newMsg.Data()))
 			}
@@ -291,8 +294,8 @@ func TestMessageSizeCalculation(t *testing.T) {
 func BenchmarkMessageMarshal(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0)
-	
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := msg.Marshal(nil, resources)
@@ -305,13 +308,13 @@ func BenchmarkMessageMarshal(b *testing.B) {
 func BenchmarkMessageUnmarshal(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0)
-	
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
 		b.Fatalf("Setup marshal failed: %v", err)
 	}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		newMsg := &ifs.Message{}
@@ -325,15 +328,15 @@ func BenchmarkMessageUnmarshal(b *testing.B) {
 func BenchmarkMessageRoundTrip(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0)
-	
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
 			b.Fatalf("Marshal failed: %v", err)
 		}
-		
+
 		newMsg := &ifs.Message{}
 		_, err = newMsg.Unmarshal(data, resources)
 		if err != nil {
