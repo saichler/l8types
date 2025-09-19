@@ -21,6 +21,7 @@ const (
 	M_Proximity  MulticastMode = 2
 	M_Local      MulticastMode = 3
 	M_Leader     MulticastMode = 4
+	M_Unicast    MulticastMode = 128
 )
 
 type Action byte
