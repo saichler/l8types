@@ -89,3 +89,16 @@ type IDatatListener interface {
 	HandleData([]byte, IVNic)
 	Failed([]byte, IVNic, string)
 }
+
+func NewServiceLink(asideN, zsideN string, asideA, zsideA byte, mode MulticastMode, interval int, request bool) *l8services.L8ServiceLink {
+	link := &l8services.L8ServiceLink{}
+	link.AsideServiceName = asideN
+	link.ZsideServiceName = zsideN
+	link.AsideServiceArea = int32(asideA)
+	link.ZsideServiceArea = int32(zsideA)
+	link.Interval = uint32(interval)
+	link.Request = request
+	link.Mode = int32(mode)
+	return link
+
+}
