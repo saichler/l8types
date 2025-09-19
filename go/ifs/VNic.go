@@ -2,6 +2,7 @@ package ifs
 
 import (
 	"github.com/saichler/l8types/go/types/l8notify"
+	"github.com/saichler/l8types/go/types/l8services"
 )
 
 type NetworkMode int
@@ -72,7 +73,7 @@ type IVNic interface {
 	PropertyChangeNotification(set *l8notify.L8NotificationSet)
 	WaitForConnection()
 	Running() bool
-	RegisterServiceBatch(string, byte, MulticastMode, int)
+	RegisterServiceLink(link *l8services.L8ServiceLink)
 }
 
 type ServiceAPI interface {

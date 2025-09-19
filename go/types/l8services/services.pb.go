@@ -350,6 +350,101 @@ func (x *L8Transaction) GetStartTime() int64 {
 	return 0
 }
 
+type L8ServiceLink struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AsideServiceName string `protobuf:"bytes,1,opt,name=aside_service_name,json=asideServiceName,proto3" json:"aside_service_name,omitempty"`
+	AsideServiceArea int32  `protobuf:"varint,2,opt,name=aside_service_area,json=asideServiceArea,proto3" json:"aside_service_area,omitempty"`
+	ZsideServiceName string `protobuf:"bytes,3,opt,name=zside_service_name,json=zsideServiceName,proto3" json:"zside_service_name,omitempty"`
+	ZsideServiceArea int32  `protobuf:"varint,4,opt,name=zside_service_area,json=zsideServiceArea,proto3" json:"zside_service_area,omitempty"`
+	Method           int32  `protobuf:"varint,5,opt,name=method,proto3" json:"method,omitempty"`
+	Request          bool   `protobuf:"varint,6,opt,name=request,proto3" json:"request,omitempty"`
+	Interval         uint32 `protobuf:"varint,7,opt,name=interval,proto3" json:"interval,omitempty"`
+}
+
+func (x *L8ServiceLink) Reset() {
+	*x = L8ServiceLink{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8ServiceLink) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8ServiceLink) ProtoMessage() {}
+
+func (x *L8ServiceLink) ProtoReflect() protoreflect.Message {
+	mi := &file_services_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8ServiceLink.ProtoReflect.Descriptor instead.
+func (*L8ServiceLink) Descriptor() ([]byte, []int) {
+	return file_services_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *L8ServiceLink) GetAsideServiceName() string {
+	if x != nil {
+		return x.AsideServiceName
+	}
+	return ""
+}
+
+func (x *L8ServiceLink) GetAsideServiceArea() int32 {
+	if x != nil {
+		return x.AsideServiceArea
+	}
+	return 0
+}
+
+func (x *L8ServiceLink) GetZsideServiceName() string {
+	if x != nil {
+		return x.ZsideServiceName
+	}
+	return ""
+}
+
+func (x *L8ServiceLink) GetZsideServiceArea() int32 {
+	if x != nil {
+		return x.ZsideServiceArea
+	}
+	return 0
+}
+
+func (x *L8ServiceLink) GetMethod() int32 {
+	if x != nil {
+		return x.Method
+	}
+	return 0
+}
+
+func (x *L8ServiceLink) GetRequest() bool {
+	if x != nil {
+		return x.Request
+	}
+	return false
+}
+
+func (x *L8ServiceLink) GetInterval() uint32 {
+	if x != nil {
+		return x.Interval
+	}
+	return 0
+}
+
 var File_services_proto protoreflect.FileDescriptor
 
 var file_services_proto_rawDesc = []byte{
@@ -421,11 +516,28 @@ var file_services_proto_rawDesc = []byte{
 	0x72, 0x72, 0x5f, 0x6d, 0x73, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x65, 0x72,
 	0x72, 0x4d, 0x73, 0x67, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x74, 0x61, 0x72, 0x74, 0x5f, 0x74, 0x69,
 	0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x73, 0x74, 0x61, 0x72, 0x74, 0x54,
-	0x69, 0x6d, 0x65, 0x42, 0x37, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73,
-	0x2e, 0x6c, 0x38, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x42, 0x0a, 0x4c, 0x38, 0x53, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x50, 0x01, 0x5a, 0x12, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65,
-	0x73, 0x2f, 0x6c, 0x38, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x6d, 0x65, 0x22, 0x95, 0x02, 0x0a, 0x0d, 0x4c, 0x38, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x4c, 0x69, 0x6e, 0x6b, 0x12, 0x2c, 0x0a, 0x12, 0x61, 0x73, 0x69, 0x64, 0x65, 0x5f, 0x73,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x10, 0x61, 0x73, 0x69, 0x64, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4e,
+	0x61, 0x6d, 0x65, 0x12, 0x2c, 0x0a, 0x12, 0x61, 0x73, 0x69, 0x64, 0x65, 0x5f, 0x73, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x5f, 0x61, 0x72, 0x65, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x10, 0x61, 0x73, 0x69, 0x64, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x72, 0x65,
+	0x61, 0x12, 0x2c, 0x0a, 0x12, 0x7a, 0x73, 0x69, 0x64, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x7a,
+	0x73, 0x69, 0x64, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x12,
+	0x2c, 0x0a, 0x12, 0x7a, 0x73, 0x69, 0x64, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x5f, 0x61, 0x72, 0x65, 0x61, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x10, 0x7a, 0x73, 0x69,
+	0x64, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x72, 0x65, 0x61, 0x12, 0x16, 0x0a,
+	0x06, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x6d,
+	0x65, 0x74, 0x68, 0x6f, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x1a, 0x0a, 0x08, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x76, 0x61, 0x6c, 0x18, 0x07, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x08, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x76, 0x61, 0x6c, 0x42, 0x37, 0x0a, 0x13, 0x63,
+	0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c, 0x38, 0x73, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x42, 0x0a, 0x4c, 0x38, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x50, 0x01,
+	0x5a, 0x12, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c, 0x38, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -440,7 +552,7 @@ func file_services_proto_rawDescGZIP() []byte {
 	return file_services_proto_rawDescData
 }
 
-var file_services_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_services_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_services_proto_goTypes = []interface{}{
 	(*L8Services)(nil),            // 0: l8services.L8Services
 	(*L8ServiceAreas)(nil),        // 1: l8services.L8ServiceAreas
@@ -448,18 +560,19 @@ var file_services_proto_goTypes = []interface{}{
 	(*L8ReplicationKey)(nil),      // 3: l8services.L8ReplicationKey
 	(*L8ReplicationEndPoint)(nil), // 4: l8services.L8ReplicationEndPoint
 	(*L8Transaction)(nil),         // 5: l8services.L8Transaction
-	nil,                           // 6: l8services.L8Services.ServiceToAreasEntry
-	nil,                           // 7: l8services.L8ServiceAreas.AreasEntry
-	nil,                           // 8: l8services.L8ReplicationIndex.KeysEntry
-	nil,                           // 9: l8services.L8ReplicationIndex.EndPointsEntry
-	nil,                           // 10: l8services.L8ReplicationKey.LocationEntry
+	(*L8ServiceLink)(nil),         // 6: l8services.L8ServiceLink
+	nil,                           // 7: l8services.L8Services.ServiceToAreasEntry
+	nil,                           // 8: l8services.L8ServiceAreas.AreasEntry
+	nil,                           // 9: l8services.L8ReplicationIndex.KeysEntry
+	nil,                           // 10: l8services.L8ReplicationIndex.EndPointsEntry
+	nil,                           // 11: l8services.L8ReplicationKey.LocationEntry
 }
 var file_services_proto_depIdxs = []int32{
-	6,  // 0: l8services.L8Services.service_to_areas:type_name -> l8services.L8Services.ServiceToAreasEntry
-	7,  // 1: l8services.L8ServiceAreas.areas:type_name -> l8services.L8ServiceAreas.AreasEntry
-	8,  // 2: l8services.L8ReplicationIndex.keys:type_name -> l8services.L8ReplicationIndex.KeysEntry
-	9,  // 3: l8services.L8ReplicationIndex.end_points:type_name -> l8services.L8ReplicationIndex.EndPointsEntry
-	10, // 4: l8services.L8ReplicationKey.location:type_name -> l8services.L8ReplicationKey.LocationEntry
+	7,  // 0: l8services.L8Services.service_to_areas:type_name -> l8services.L8Services.ServiceToAreasEntry
+	8,  // 1: l8services.L8ServiceAreas.areas:type_name -> l8services.L8ServiceAreas.AreasEntry
+	9,  // 2: l8services.L8ReplicationIndex.keys:type_name -> l8services.L8ReplicationIndex.KeysEntry
+	10, // 3: l8services.L8ReplicationIndex.end_points:type_name -> l8services.L8ReplicationIndex.EndPointsEntry
+	11, // 4: l8services.L8ReplicationKey.location:type_name -> l8services.L8ReplicationKey.LocationEntry
 	1,  // 5: l8services.L8Services.ServiceToAreasEntry.value:type_name -> l8services.L8ServiceAreas
 	3,  // 6: l8services.L8ReplicationIndex.KeysEntry.value:type_name -> l8services.L8ReplicationKey
 	4,  // 7: l8services.L8ReplicationIndex.EndPointsEntry.value:type_name -> l8services.L8ReplicationEndPoint
@@ -548,6 +661,18 @@ func file_services_proto_init() {
 				return nil
 			}
 		}
+		file_services_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8ServiceLink); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -555,7 +680,7 @@ func file_services_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_services_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
