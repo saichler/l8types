@@ -34,6 +34,7 @@ type IQuery interface {
 	Page() int32
 	Limit() int32
 	SortBy() string
+	SortByValue(interface{}) interface{}
 	MatchCase() bool
 	Descending() bool
 	Text() string
