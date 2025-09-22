@@ -37,6 +37,7 @@ type IQuery interface {
 	MatchCase() bool
 	Descending() bool
 	Text() string
+	Hash() string
 }
 
 type IProperty interface {
