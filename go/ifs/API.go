@@ -36,6 +36,7 @@ type IQuery interface {
 	SortBy() string
 	MatchCase() bool
 	Descending() bool
+	Text() string
 }
 
 type IProperty interface {
