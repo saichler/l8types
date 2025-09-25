@@ -27,6 +27,10 @@ type ISecurityProviderLoader interface {
 	LoadSecurityProvider(...interface{}) (ISecurityProvider, error)
 }
 
+type ISecurityProviderActivate interface {
+	Activate(IVNic)
+}
+
 func LoadSecurityProvider(args ...interface{}) (ISecurityProvider, error) {
 	loaderFile, err := plugin.Open("./loader.so")
 	if err != nil {
