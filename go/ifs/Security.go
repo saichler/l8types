@@ -2,6 +2,7 @@ package ifs
 
 import (
 	"errors"
+	"fmt"
 	"net"
 	"plugin"
 
@@ -36,14 +37,17 @@ type ISecurityProviderActivate interface {
 func LoadSecurityProvider(args ...interface{}) (ISecurityProvider, error) {
 	loaderFile, err := plugin.Open("./loader.so")
 	if err != nil {
-		return nil, errors.New("failed to load security provider error #1")
+		fmt.Println("Failed to load security provider #1: ", err.Error())
+		return nil, errors.New("Failed to load security provider #1: " + err.Error())
 	}
 	loader, err := loaderFile.Lookup("Loader")
 	if err != nil {
-		return nil, errors.New("failed to load security provider plugin #2")
+		fmt.Println("Failed to load security provider #2: ", err.Error())
+		return nil, errors.New("Failed to load security provider #2: " + err.Error())
 	}
 	if loader == nil {
-		return nil, errors.New("failed to load security provider plugin #3")
+		fmt.Println("Failed to load security provider #3: Nil Loader")
+		return nil, errors.New("Failed to load security provider #3: Nil Loader")
 	}
 	loaderInterface := *loader.(*ISecurityProviderLoader)
 	securityLoader := loaderInterface.(ISecurityProviderLoader).(ISecurityProviderLoader)
