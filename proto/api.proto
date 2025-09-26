@@ -46,4 +46,5 @@ message AuthUser {
 
 message AuthToken {
   string token = 1;
+  string error = 2;
 }
