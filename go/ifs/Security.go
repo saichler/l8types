@@ -10,7 +10,7 @@ import (
 
 type ISecurityProvider interface {
 	Authenticate(string, string) (string, error)
-	ValidateToken(string) bool
+	ValidateToken(string) (string, bool)
 
 	Message(string) (*Message, error)
 
