@@ -43,3 +43,7 @@ message AuthUser {
   string user = 1;
   string pass = 2;
 }
+
+message AuthToken {
+  string token = 1;
+}
