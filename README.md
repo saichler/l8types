@@ -1,10 +1,19 @@
-# L8Types
+# Layer 8 Types (L8Types)
 
 A foundational library for Layer 8 distributed networking systems, providing Protocol Buffer-based type definitions, Go interfaces, and utilities for building distributed applications with service discovery, health monitoring, and secure communication.
 
+## 🚀 Recent Updates
+
+### Latest Features (v1.2.0)
+- **Enhanced Authentication System**: Token-based authentication with validation and activation mechanisms
+- **Improved Security**: Added hash-based security functions and error handling for auth operations
+- **Logging Enhancements**: Comprehensive logging system for debugging and monitoring
+- **Sorting Capabilities**: Added flexible sorting mechanisms for query results
+- **Token Management**: Implement secure token generation, validation, and lifecycle management
+
 ## Overview
 
-L8Types serves as the core type system and interface library for Layer 8 networking applications, offering:
+Layer 8 Types serves as the core type system and interface library for Layer 8 networking applications, offering:
 
 - **Protocol Buffer Schemas**: Comprehensive type definitions for distributed system components
 - **Virtual Network Interface (VNic)**: Advanced networking abstractions for service communication
@@ -12,7 +21,7 @@ L8Types serves as the core type system and interface library for Layer 8 network
 - **Health Monitoring**: Real-time system health tracking with Unix `top`-style output formatting
 - **Transaction Management**: Distributed transaction support with state tracking
 - **Notification System**: Property change notifications and event propagation
-- **Security Framework**: Authentication, authorization, and encryption interfaces
+- **Security Framework**: Enhanced authentication with token validation, authorization, and encryption
 - **Multi-Language Support**: Go implementation with Zig bindings
 
 ## Key Features
@@ -37,10 +46,13 @@ L8Types serves as the core type system and interface library for Layer 8 network
 - **Query Engine**: Expression-based querying with comparators and conditions
 
 ### Security & Configuration
+- **Token Authentication**: Secure token-based authentication with validation and activation
 - **AES Encryption**: Built-in symmetric encryption for secure communication
+- **Hash Functions**: Cryptographic hash support for data integrity and password security
 - **System Configuration**: Comprehensive configuration management with VNet settings
-- **Authentication Framework**: AAA (Authentication, Authorization, Accounting) support
+- **Authentication Framework**: Enhanced AAA (Authentication, Authorization, Accounting) support
 - **Access Control**: Resource-based security with permission management
+- **Error Handling**: Robust error handling for security operations
 
 ## Protocol Buffer Schemas
 
@@ -302,6 +314,27 @@ data, err := serializer.Serialize(instance)
 1. Implement `ISerializer` interface
 2. Register serializer with type registry
 3. Configure serialization mode in resources
+
+## Testing
+
+The project includes comprehensive test coverage for all major components:
+
+```bash
+# Run all tests with coverage
+cd go
+go test -v -cover ./...
+
+# Generate coverage report
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out -o coverage.html
+```
+
+### Test Coverage Areas
+- **Message Operations**: Marshal/unmarshal, cloning, edge cases
+- **Encryption**: AES encryption/decryption with various key sizes
+- **Network Protocol**: Read/write operations, protocol handling
+- **Type Conversion**: String conversion functions and type safety
+- **Authentication**: Token validation, activation, and error handling
 
 ## Dependencies
 
