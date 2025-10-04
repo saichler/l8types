@@ -23,3 +23,6 @@ mv ./testtypes/*.pb.go ../go/testtypes/.
 rm -rf ./testtypes
 
 rm -rf *.rs
+
+cd ../go
+find . -name "*.go" -type f -exec sed -i 's|"./types/l8services"|"github.com/saichler/l8types/go/types/l8services"|g' {} +
