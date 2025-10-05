@@ -46,4 +46,5 @@ enum L8DecoratorType {
   NoNestedInspection = 6;
   Ignore = 7;
   IgnoreAttr = 8;
+  AlwaysFull = 9;
 }
