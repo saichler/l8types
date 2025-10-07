@@ -23,6 +23,7 @@ type IServices interface {
 	RegisterDistributedCache(cache IDistributedCache)
 	//The list of existing services
 	Services() *l8services.L8Services
+	GetLeader(string, byte) string
 }
 
 type IServiceHandler interface {
