@@ -149,31 +149,33 @@ func TestBoolOfPanic(t *testing.T) {
 }
 
 func TestByteToActionState(t *testing.T) {
-	// Test ByteToActionState function directly with known byte values
+	// Test ByteToActionState function with separate action and state bytes
 	testCases := []struct {
-		input  byte
-		action ifs.Action
-		state  ifs.TransactionState
+		actionByte byte
+		stateByte  byte
+		action     ifs.Action
+		state      ifs.TransactionState
 	}{
-		{0x00, ifs.Action(0), ifs.TransactionState(0)},   // 0000 0000
-		{0x11, ifs.Action(1), ifs.TransactionState(1)},   // 0001 0001
-		{0x23, ifs.Action(2), ifs.TransactionState(3)},   // 0010 0011
-		{0x45, ifs.Action(4), ifs.TransactionState(5)},   // 0100 0101
-		{0x67, ifs.Action(6), ifs.TransactionState(7)},   // 0110 0111
-		{0x89, ifs.Action(8), ifs.TransactionState(9)},   // 1000 1001
-		{0xAB, ifs.Action(10), ifs.TransactionState(11)}, // 1010 1011
-		{0xCD, ifs.Action(12), ifs.TransactionState(13)}, // 1100 1101
-		{0xFF, ifs.Action(15), ifs.TransactionState(15)}, // 1111 1111
+		{0, 0, ifs.Action(0), ifs.TransactionState(0)},
+		{1, 1, ifs.Action(1), ifs.TransactionState(1)},
+		{2, 3, ifs.Action(2), ifs.TransactionState(3)},
+		{4, 5, ifs.Action(4), ifs.TransactionState(5)},
+		{6, 7, ifs.Action(6), ifs.TransactionState(7)},
+		{8, 9, ifs.Action(8), ifs.TransactionState(9)},
+		{10, 11, ifs.Action(10), ifs.TransactionState(11)},
+		{12, 13, ifs.Action(12), ifs.TransactionState(13)},
+		{15, 15, ifs.Action(15), ifs.TransactionState(15)},
+		{19, 5, ifs.Action(19), ifs.TransactionState(5)}, // New Action values > 15
 	}
 
 	for _, tc := range testCases {
-		action, state := ifs.ByteToActionState(tc.input)
+		action, state := ifs.ByteToActionState(tc.actionByte, tc.stateByte)
 
 		if action != tc.action {
-			t.Errorf("Action decode failed for byte 0x%02X: expected %v, got %v", tc.input, tc.action, action)
+			t.Errorf("Action decode failed for bytes (0x%02X, 0x%02X): expected %v, got %v", tc.actionByte, tc.stateByte, tc.action, action)
 		}
 		if state != tc.state {
-			t.Errorf("State decode failed for byte 0x%02X: expected %v, got %v", tc.input, tc.state, state)
+			t.Errorf("State decode failed for bytes (0x%02X, 0x%02X): expected %v, got %v", tc.actionByte, tc.stateByte, tc.state, state)
 		}
 	}
 }

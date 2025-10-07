@@ -15,7 +15,8 @@ const (
 	PPriority    = pServiceArea + sByte
 
 	pAction          = 0
-	pAaaId           = pAction + sByte
+	pTrState         = pAction + sByte
+	pAaaId           = pTrState + sByte
 	pSequence        = pAaaId + sUuid
 	pTimeout         = pSequence + sUint32
 	pRequestReply    = pTimeout + sUint16
@@ -56,7 +57,8 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	header[PPriority] = priorityMulticastModeToByte(this.priority, this.multicastMode)
 
 	body := result[PPriority+sByte:]
-	body[pAction] = actionStateToByte(this.action, this.tr_state)
+	body[pAction] = byte(this.action)
+	body[pTrState] = byte(this.tr_state)
 	copy(body[pAaaId:pSequence], this.aaaId)
 	copy(body[pSequence:pTimeout], UInt322Bytes(this.sequence))
 	copy(body[pTimeout:pRequestReply], UInt162Bytes(this.timeout))

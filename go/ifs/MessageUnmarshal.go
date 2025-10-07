@@ -22,7 +22,8 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 		return nil, err
 	}
 
-	this.action, this.tr_state = ByteToActionState(body[pAction])
+	this.action = Action(body[pAction])
+	this.tr_state = TransactionState(body[pTrState])
 	this.aaaId = unsafeString(body[pAaaId:pSequence])
 	this.sequence = Bytes2UInt32(body[pSequence:pTimeout])
 	this.timeout = Bytes2UInt16(body[pTimeout:pRequestReply])

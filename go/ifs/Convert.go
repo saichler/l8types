@@ -87,16 +87,16 @@ func BoolOf(b byte) (bool, bool) {
 	return (b & 1) != 0, (b & 2) != 0
 }
 
-// actionStateToByte packs action and transaction state into one byte (optimized)
+// actionStateToByte now returns action as a full byte (no packing)
+// Deprecated: Use byte(action) directly
 func actionStateToByte(action Action, trState TransactionState) byte {
-	return (byte(action) << 4) | byte(trState)
+	return byte(action)
 }
 
-// ByteToActionState unpacks action and transaction state from one byte (optimized)
-func ByteToActionState(b byte) (Action, TransactionState) {
-	action := Action(b >> 4)            // Upper 4 bits
-	state := TransactionState(b & 0x0F) // Lower 4 bits (direct mask vs XOR)
-	return action, state
+// ByteToActionState unpacks action and transaction state from two separate bytes
+// Deprecated: Read action and state as separate bytes directly
+func ByteToActionState(actionByte byte, stateByte byte) (Action, TransactionState) {
+	return Action(actionByte), TransactionState(stateByte)
 }
 
 func priorityMulticastModeToByte(priority Priority, multicastMode MulticastMode) byte {
