@@ -33,6 +33,7 @@ func (m *MockSecurityProviderNets) CanDoAction(ifs.Action, ifs.IElements, string
 func (m *MockSecurityProviderNets) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
 	return nil
 }
+func (m *MockSecurityProviderNets) ValidateToken(string) (string, bool) { return "", true }
 
 func (m *MockSecurityProviderNets) Encrypt(data []byte) (string, error) {
 	if m.encryptError {

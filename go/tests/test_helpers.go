@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
 
@@ -27,6 +28,7 @@ func (m *MockSecurityProvider) CanDoAction(ifs.Action, ifs.IElements, string, st
 func (m *MockSecurityProvider) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
 	return nil
 }
+func (m *MockSecurityProvider) ValidateToken(string) (string, bool) { return "", true }
 
 func (m *MockSecurityProvider) Encrypt(data []byte) (string, error) {
 	if m.encryptError {
@@ -58,6 +60,7 @@ func (m *MockResources) Introspector() ifs.IIntrospector               { return 
 func (m *MockResources) AddService(string, int32)                      {}
 func (m *MockResources) Set(interface{})                               {}
 func (m *MockResources) Copy(ifs.IResources)                           {}
+func (m *MockResources) DefaultUser() *l8api.AuthUser                  { return nil }
 
 func newMockResources() *MockResources {
 	return &MockResources{

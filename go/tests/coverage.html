@@ -1,0 +1,1413 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>aes: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/saichler/l8types/go/aes/EncryptDecrypt.go (94.1%)</option>
+				
+				<option value="file1">github.com/saichler/l8types/go/ifs/Convert.go (100.0%)</option>
+				
+				<option value="file2">github.com/saichler/l8types/go/ifs/Logger.go (100.0%)</option>
+				
+				<option value="file3">github.com/saichler/l8types/go/ifs/Message.go (100.0%)</option>
+				
+				<option value="file4">github.com/saichler/l8types/go/ifs/MessageClone.go (100.0%)</option>
+				
+				<option value="file5">github.com/saichler/l8types/go/ifs/MessageEnums.go (100.0%)</option>
+				
+				<option value="file6">github.com/saichler/l8types/go/ifs/MessageMarshal.go (100.0%)</option>
+				
+				<option value="file7">github.com/saichler/l8types/go/ifs/MessageUnmarshal.go (97.8%)</option>
+				
+				<option value="file8">github.com/saichler/l8types/go/ifs/Resources.go (100.0%)</option>
+				
+				<option value="file9">github.com/saichler/l8types/go/ifs/Security.go (0.0%)</option>
+				
+				<option value="file10">github.com/saichler/l8types/go/ifs/Serializer.go (87.5%)</option>
+				
+				<option value="file11">github.com/saichler/l8types/go/ifs/VNic.go (100.0%)</option>
+				
+				<option value="file12">github.com/saichler/l8types/go/nets/Protocol.go (71.4%)</option>
+				
+				<option value="file13">github.com/saichler/l8types/go/nets/Read.go (100.0%)</option>
+				
+				<option value="file14">github.com/saichler/l8types/go/nets/Write.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package aes
+
+import (
+        "crypto/aes"
+        "crypto/cipher"
+        "crypto/rand"
+        "encoding/base64"
+        "errors"
+        "io"
+)
+
+var keyChars = []rune("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func GenerateAES256Key() string <span class="cov8" title="1">{
+        key := make([]byte, 32)
+        if _, err := io.ReadFull(rand.Reader, key); err != nil </span><span class="cov0" title="0">{
+                panic("failed to generate random key: " + err.Error())</span>
+        }
+        
+        <span class="cov8" title="1">keyRunes := make([]rune, 32)
+        for i, b := range key </span><span class="cov8" title="1">{
+                keyRunes[i] = keyChars[int(b)%len(keyChars)]
+        }</span>
+        <span class="cov8" title="1">return string(keyRunes)</span>
+}
+
+func Encrypt(dataToEncode []byte, key string) (string, error) <span class="cov8" title="1">{
+        keyBytes := []byte(key)
+        block, err := aes.NewCipher(keyBytes)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">dataLen := len(dataToEncode)
+        cipherdata := make([]byte, aes.BlockSize+dataLen)
+
+        iv := cipherdata[:aes.BlockSize]
+        if _, err := io.ReadFull(rand.Reader, iv); err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">cfb := cipher.NewCFBEncrypter(block, iv)
+        cfb.XORKeyStream(cipherdata[aes.BlockSize:], dataToEncode)
+        return base64.StdEncoding.EncodeToString(cipherdata), nil</span>
+}
+
+func Decrypt(stringToDecode, key string) ([]byte, error) <span class="cov8" title="1">{
+        encData, err := base64.StdEncoding.DecodeString(stringToDecode)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if len(encData) &lt; aes.BlockSize </span><span class="cov8" title="1">{
+                return nil, errors.New("encrypted data does not have an iv spec")
+        }</span>
+        
+        <span class="cov8" title="1">keyBytes := []byte(key)
+        block, err := aes.NewCipher(keyBytes)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        
+        <span class="cov8" title="1">iv := encData[:aes.BlockSize]
+        encData = encData[aes.BlockSize:]
+        cfb := cipher.NewCFBDecrypter(block, iv)
+        data := make([]byte, len(encData))
+        cfb.XORKeyStream(data, encData)
+        return data, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package ifs
+
+// Optimized Convert.go - Maintaining full API compatibility with performance improvements
+// Key optimizations:
+// - Bitwise OR instead of addition for better performance
+// - Slice literals instead of make() + assignments for better memory efficiency
+// - Optimized boolean operations with bitwise logic
+// - Improved action/state bit manipulation
+
+// Bytes2Long converts 8 bytes to int64 (optimized with bitwise OR)
+func Bytes2Long(data []byte) int64 <span class="cov8" title="1">{
+        return int64(data[0])&lt;&lt;56 | int64(data[1])&lt;&lt;48 | int64(data[2])&lt;&lt;40 | int64(data[3])&lt;&lt;32 |
+                int64(data[4])&lt;&lt;24 | int64(data[5])&lt;&lt;16 | int64(data[6])&lt;&lt;8 | int64(data[7])
+}</span>
+
+// Long2Bytes converts int64 to 8 bytes (optimized with slice literal)
+func Long2Bytes(s int64) []byte <span class="cov8" title="1">{
+        return []byte{
+                byte(s &gt;&gt; 56),
+                byte(s &gt;&gt; 48),
+                byte(s &gt;&gt; 40),
+                byte(s &gt;&gt; 32),
+                byte(s &gt;&gt; 24),
+                byte(s &gt;&gt; 16),
+                byte(s &gt;&gt; 8),
+                byte(s),
+        }
+}</span>
+
+// Bytes2Int converts 4 bytes to int32 (optimized with bitwise OR)
+func Bytes2Int(data []byte) int32 <span class="cov8" title="1">{
+        return int32(data[0])&lt;&lt;24 | int32(data[1])&lt;&lt;16 | int32(data[2])&lt;&lt;8 | int32(data[3])
+}</span>
+
+// Int2Bytes converts int32 to 4 bytes (optimized with slice literal)
+func Int2Bytes(s int32) []byte <span class="cov8" title="1">{
+        return []byte{
+                byte(s &gt;&gt; 24),
+                byte(s &gt;&gt; 16),
+                byte(s &gt;&gt; 8),
+                byte(s),
+        }
+}</span>
+
+// Bytes2UInt16 converts 2 bytes to uint16 (optimized with bitwise OR)
+func Bytes2UInt16(data []byte) uint16 <span class="cov8" title="1">{
+        return uint16(data[0])&lt;&lt;8 | uint16(data[1])
+}</span>
+
+// UInt162Bytes converts uint16 to 2 bytes (optimized with slice literal)
+func UInt162Bytes(s uint16) []byte <span class="cov8" title="1">{
+        return []byte{byte(s &gt;&gt; 8), byte(s)}
+}</span>
+
+// Bytes2UInt32 converts 4 bytes to uint32 (optimized with bitwise OR)
+func Bytes2UInt32(data []byte) uint32 <span class="cov8" title="1">{
+        return uint32(data[0])&lt;&lt;24 | uint32(data[1])&lt;&lt;16 | uint32(data[2])&lt;&lt;8 | uint32(data[3])
+}</span>
+
+// UInt322Bytes converts uint32 to 4 bytes (optimized with slice literal)
+func UInt322Bytes(s uint32) []byte <span class="cov8" title="1">{
+        return []byte{
+                byte(s &gt;&gt; 24),
+                byte(s &gt;&gt; 16),
+                byte(s &gt;&gt; 8),
+                byte(s),
+        }
+}</span>
+
+// Bools converts two booleans to a byte (optimized with bitwise operations)
+func Bools(request, reply bool) byte <span class="cov8" title="1">{
+        var result byte
+        if request </span><span class="cov8" title="1">{
+                result |= 1
+        }</span>
+        <span class="cov8" title="1">if reply </span><span class="cov8" title="1">{
+                result |= 2
+        }</span>
+        <span class="cov8" title="1">return result</span>
+}
+
+// BoolOf converts a byte to two booleans (optimized with bitwise operations)
+func BoolOf(b byte) (bool, bool) <span class="cov8" title="1">{
+        if b &gt; 3 </span><span class="cov8" title="1">{
+                panic("Unexpected " + string(b+48))</span>
+        }
+        <span class="cov8" title="1">return (b &amp; 1) != 0, (b &amp; 2) != 0</span>
+}
+
+// actionStateToByte packs action and transaction state into one byte (optimized)
+func actionStateToByte(action Action, trState TransactionState) byte <span class="cov8" title="1">{
+        return (byte(action) &lt;&lt; 4) | byte(trState)
+}</span>
+
+// ByteToActionState unpacks action and transaction state from one byte (optimized)
+func ByteToActionState(b byte) (Action, TransactionState) <span class="cov8" title="1">{
+        action := Action(b &gt;&gt; 4)            // Upper 4 bits
+        state := TransactionState(b &amp; 0x0F) // Lower 4 bits (direct mask vs XOR)
+        return action, state
+}</span>
+
+func priorityMulticastModeToByte(priority Priority, multicastMode MulticastMode) byte <span class="cov8" title="1">{
+        return (byte(priority) &lt;&lt; 4) | byte(multicastMode)
+}</span>
+
+func ByteToPriorityMulticastMode(b byte) (Priority, MulticastMode) <span class="cov8" title="1">{
+        priority := Priority(b &gt;&gt; 4)             // Upper 4 bits
+        multicastMode := MulticastMode(b &amp; 0x0F) // Lower 4 bits (direct mask vs XOR)
+        return priority, multicastMode
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package ifs
+
+type LogLevel int
+
+const (
+        Trace_Level   LogLevel = 1
+        Debug_Level   LogLevel = 2
+        Info_Level    LogLevel = 3
+        Warning_Level LogLevel = 4
+        Error_Level   LogLevel = 5
+)
+
+func (l LogLevel) String() string <span class="cov8" title="1">{
+        switch l </span>{
+        case Trace_Level:<span class="cov8" title="1">
+                return "(Trace)"</span>
+        case Debug_Level:<span class="cov8" title="1">
+                return "(Debug)"</span>
+        case Info_Level:<span class="cov8" title="1">
+                return "(Info) "</span>
+        case Warning_Level:<span class="cov8" title="1">
+                return "(Warn )"</span>
+        case Error_Level:<span class="cov8" title="1">
+                return "(Error)"</span>
+        }
+        <span class="cov8" title="1">return ""</span>
+}
+
+type ILogger interface {
+        Trace(...interface{})
+        Debug(...interface{})
+        Info(...interface{})
+        Warning(...interface{})
+        Error(...interface{}) error
+        Empty() bool
+        Fail(interface{}, ...interface{})
+        SetLogLevel(LogLevel)
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package ifs
+
+type Message struct {
+        source        string
+        vnet          string
+        destination   string
+        serviceName   string
+        serviceArea   byte
+        priority      Priority
+        multicastMode MulticastMode
+
+        action      Action
+        tr_state    TransactionState
+        aaaId       string
+        sequence    uint32
+        timeout     uint16
+        request     bool
+        reply       bool
+        failMessage string
+        data        []byte
+
+        tr_id        string
+        tr_errMsg    string
+        tr_startTime int64
+        tr_timeout   int64
+}
+
+func (this *Message) Init(destination, serviceName string, serviceArea byte,
+        priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data []byte,
+        isRequest, isReply bool, msgNum uint32,
+        tr_state TransactionState, tr_id, tr_errMsg string, tr_start, tr_timeout int64) <span class="cov8" title="1">{
+        this.destination = destination
+        this.serviceName = serviceName
+        this.serviceArea = serviceArea
+        this.priority = priority
+        this.multicastMode = multicastMode
+        this.action = action
+        this.source = source
+        this.vnet = vnet
+        this.data = data
+        this.request = isRequest
+        this.reply = isReply
+        this.sequence = msgNum
+        this.tr_state = tr_state
+        this.tr_id = tr_id
+        this.tr_errMsg = tr_errMsg
+        this.tr_startTime = tr_start
+        this.tr_timeout = tr_timeout
+}</span>
+
+//Getters
+
+func (this *Message) Source() string <span class="cov8" title="1">{
+        return this.source
+}</span>
+
+func (this *Message) Vnet() string <span class="cov8" title="1">{
+        return this.vnet
+}</span>
+
+func (this *Message) Destination() string <span class="cov8" title="1">{
+        return this.destination
+}</span>
+
+func (this *Message) ServiceName() string <span class="cov8" title="1">{
+        return this.serviceName
+}</span>
+
+func (this *Message) ServiceArea() byte <span class="cov8" title="1">{
+        return this.serviceArea
+}</span>
+
+func (this *Message) Sequence() uint32 <span class="cov8" title="1">{
+        return this.sequence
+}</span>
+
+func (this *Message) Priority() Priority <span class="cov8" title="1">{
+        return this.priority
+}</span>
+
+func (this *Message) MulticastMode() MulticastMode <span class="cov8" title="1">{
+        return this.multicastMode
+}</span>
+
+func (this *Message) Action() Action <span class="cov8" title="1">{
+        return this.action
+}</span>
+
+func (this *Message) Timeout() uint16 <span class="cov8" title="1">{
+        return this.timeout
+}</span>
+
+func (this *Message) Request() bool <span class="cov8" title="1">{
+        return this.request
+}</span>
+
+func (this *Message) Reply() bool <span class="cov8" title="1">{
+        return this.reply
+}</span>
+
+func (this *Message) FailMessage() string <span class="cov8" title="1">{
+        return this.failMessage
+}</span>
+
+func (this *Message) Data() []byte <span class="cov8" title="1">{
+        return this.data
+}</span>
+
+func (this *Message) AAAId() string <span class="cov8" title="1">{
+        return this.aaaId
+}</span>
+
+func (this *Message) Tr_State() TransactionState <span class="cov8" title="1">{
+        return this.tr_state
+}</span>
+
+func (this *Message) Tr_Id() string <span class="cov8" title="1">{
+        return this.tr_id
+}</span>
+
+func (this *Message) Tr_ErrMsg() string <span class="cov8" title="1">{
+        return this.tr_errMsg
+}</span>
+
+func (this *Message) Tr_StartTime() int64 <span class="cov8" title="1">{
+        return this.tr_startTime
+}</span>
+
+func (this *Message) Tr_Timeout() int64 <span class="cov8" title="1">{
+        return this.tr_timeout
+}</span>
+
+//Setters
+
+func (this *Message) SetSource(source string) <span class="cov8" title="1">{
+        this.source = source
+}</span>
+
+func (this *Message) SetVnet(vnet string) <span class="cov8" title="1">{
+        this.vnet = vnet
+}</span>
+
+func (this *Message) SetDestination(destination string) <span class="cov8" title="1">{
+        this.destination = destination
+}</span>
+
+func (this *Message) SetServiceName(serviceName string) <span class="cov8" title="1">{
+        this.serviceName = serviceName
+}</span>
+
+func (this *Message) SetServiceArea(serviceArea byte) <span class="cov8" title="1">{
+        this.serviceArea = serviceArea
+}</span>
+
+func (this *Message) SetSequence(sequence uint32) <span class="cov8" title="1">{
+        this.sequence = sequence
+}</span>
+
+func (this *Message) SetPriority(priority Priority) <span class="cov8" title="1">{
+        this.priority = priority
+}</span>
+
+func (this *Message) SetMulticastMode(multicastMode MulticastMode) <span class="cov8" title="1">{
+        this.multicastMode = multicastMode
+}</span>
+
+func (this *Message) SetAction(action Action) <span class="cov8" title="1">{
+        this.action = action
+}</span>
+
+func (this *Message) SetTimeout(timeout uint16) <span class="cov8" title="1">{
+        this.timeout = timeout
+}</span>
+
+func (this *Message) SetRequestReply(request, reply bool) <span class="cov8" title="1">{
+        this.request = request
+        this.reply = reply
+}</span>
+
+func (this *Message) SetFailMessage(failMessage string) <span class="cov8" title="1">{
+        this.failMessage = failMessage
+}</span>
+
+func (this *Message) SetAAAId(aaaId string) <span class="cov8" title="1">{
+        this.aaaId = aaaId
+}</span>
+
+func (this *Message) SetData(data []byte) <span class="cov8" title="1">{
+        this.data = data
+}</span>
+
+func (this *Message) SetTr_State(trstate TransactionState) <span class="cov8" title="1">{
+        this.tr_state = trstate
+}</span>
+
+func (this *Message) SetTr_Id(trid string) <span class="cov8" title="1">{
+        this.tr_id = trid
+}</span>
+
+func (this *Message) SetTr_ErrMsg(errMsg string) <span class="cov8" title="1">{
+        this.tr_errMsg = errMsg
+}</span>
+
+func (this *Message) SetTr_StartTime(trStartTime int64) <span class="cov8" title="1">{
+        this.tr_startTime = trStartTime
+}</span>
+
+func (this *Message) SetTr_Timeout(timeout int64) <span class="cov8" title="1">{
+        this.tr_timeout = timeout
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package ifs
+
+func (this *Message) Clone() *Message <span class="cov8" title="1">{
+        clone := &amp;Message{}
+        clone.source = this.source
+        clone.vnet = this.vnet
+        clone.destination = this.destination
+        clone.serviceName = this.serviceName
+        clone.serviceArea = this.serviceArea
+        clone.priority = this.priority
+        clone.multicastMode = this.multicastMode
+        clone.aaaId = this.aaaId
+        clone.sequence = this.sequence
+        clone.action = this.action
+        clone.timeout = this.timeout
+        clone.reply = this.reply
+        clone.request = this.request
+        clone.failMessage = this.failMessage
+        clone.data = this.data
+        clone.tr_id = this.tr_id
+        clone.tr_state = this.tr_state
+        clone.tr_errMsg = this.tr_errMsg
+        clone.tr_startTime = this.tr_startTime
+        clone.tr_timeout = this.tr_timeout
+        return clone
+}</span>
+
+func (this *Message) CloneReply(localUuid, remoteUuid string) *Message <span class="cov8" title="1">{
+        clone := &amp;Message{}
+        clone.source = localUuid
+        clone.vnet = remoteUuid
+        clone.destination = this.source
+        clone.serviceName = this.serviceName
+        clone.serviceArea = this.serviceArea
+        clone.priority = this.priority
+        clone.multicastMode = this.multicastMode
+        clone.aaaId = this.aaaId
+        clone.sequence = this.sequence
+        clone.action = Reply
+        clone.timeout = this.timeout
+        clone.reply = true
+        clone.request = false
+        clone.failMessage = this.failMessage
+        clone.data = this.data
+        clone.tr_id = this.tr_id
+        clone.tr_state = this.tr_state
+        clone.tr_errMsg = this.tr_errMsg
+        clone.tr_startTime = this.tr_startTime
+        clone.tr_timeout = this.tr_timeout
+        return clone
+}</span>
+
+func (this *Message) CloneFail(failMessage, remoteUuid string) *Message <span class="cov8" title="1">{
+        clone := &amp;Message{}
+        clone.source = this.destination
+        clone.vnet = remoteUuid
+        clone.destination = this.source
+        clone.serviceName = this.serviceName
+        clone.serviceArea = this.serviceArea
+        clone.priority = this.priority
+        clone.multicastMode = this.multicastMode
+        clone.aaaId = this.aaaId
+        clone.sequence = this.sequence
+        clone.action = this.action
+        clone.timeout = this.timeout
+        clone.reply = this.reply
+        clone.request = this.request
+        clone.failMessage = failMessage
+        clone.data = this.data
+        clone.tr_id = this.tr_id
+        clone.tr_state = this.tr_state
+        clone.tr_errMsg = this.tr_errMsg
+        clone.tr_startTime = this.tr_startTime
+        clone.tr_timeout = this.tr_timeout
+        return clone
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package ifs
+
+type Priority byte
+
+const (
+        P8 Priority = 0
+        P7 Priority = 1
+        P6 Priority = 2
+        P5 Priority = 3
+        P4 Priority = 4
+        P3 Priority = 5
+        P2 Priority = 6
+        P1 Priority = 7
+)
+
+type MulticastMode byte
+
+const (
+        M_All        MulticastMode = 0
+        M_RoundRobin MulticastMode = 1
+        M_Proximity  MulticastMode = 2
+        M_Local      MulticastMode = 3
+        M_Leader     MulticastMode = 4
+        M_Unicast    MulticastMode = 128
+)
+
+type Action byte
+
+const (
+        POST      Action = 1
+        PUT       Action = 2
+        PATCH     Action = 3
+        DELETE    Action = 4
+        GET       Action = 5
+        Reply     Action = 6
+        Notify    Action = 7
+        Sync      Action = 8
+        EndPoints Action = 9
+)
+
+type TransactionState uint8
+
+const (
+        Empty      TransactionState = 0
+        Create     TransactionState = 1
+        Created    TransactionState = 2
+        Start      TransactionState = 3
+        Lock       TransactionState = 4
+        Locked     TransactionState = 5
+        LockFailed TransactionState = 6
+        Commit     TransactionState = 7
+        Commited   TransactionState = 8
+        Rollback   TransactionState = 9
+        Rollbacked TransactionState = 10
+        Finish     TransactionState = 11
+        Finished   TransactionState = 12
+        Errored    TransactionState = 13
+)
+
+func (t TransactionState) String() string <span class="cov8" title="1">{
+        switch t </span>{
+        case Create:<span class="cov8" title="1">
+                return "Create"</span>
+        case Created:<span class="cov8" title="1">
+                return "Created"</span>
+        case Start:<span class="cov8" title="1">
+                return "Start"</span>
+        case Lock:<span class="cov8" title="1">
+                return "Lock"</span>
+        case Locked:<span class="cov8" title="1">
+                return "Locked"</span>
+        case LockFailed:<span class="cov8" title="1">
+                return "LockFailed"</span>
+        case Commit:<span class="cov8" title="1">
+                return "Commit"</span>
+        case Commited:<span class="cov8" title="1">
+                return "Commited"</span>
+        case Rollback:<span class="cov8" title="1">
+                return "Rollback"</span>
+        case Rollbacked:<span class="cov8" title="1">
+                return "Rollbacked"</span>
+        case Finish:<span class="cov8" title="1">
+                return "Finish"</span>
+        case Finished:<span class="cov8" title="1">
+                return "Finished"</span>
+        case Errored:<span class="cov8" title="1">
+                return "Errored"</span>
+        }
+        <span class="cov8" title="1">return "Unknown"</span>
+}
+
+const (
+        DESTINATION_Single = "signleXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        DESTINATION_Leader = "leaderXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+)
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package ifs
+
+const (
+        sUuid        = 36
+        sServiceName = 10
+        sUint32      = 4
+        sUint16      = 2
+        sByte        = 1
+
+        pSource      = 0
+        pVnet        = pSource + sUuid
+        pDestination = pVnet + sUuid
+        pServiceName = pDestination + sUuid
+        pServiceArea = pServiceName + sServiceName
+        PPriority    = pServiceArea + sByte
+
+        pAction          = 0
+        pAaaId           = pAction + sByte
+        pSequence        = pAaaId + sUuid
+        pTimeout         = pSequence + sUint32
+        pRequestReply    = pTimeout + sUint16
+        pFailMessageSize = pRequestReply + sByte
+        pFailMessage     = pFailMessageSize + sByte
+)
+
+func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, error) <span class="cov8" title="1">{
+        failMessageSize := len(this.failMessage)
+        dataSize := len(this.data)
+        trErrMsgSize := len(this.tr_errMsg)
+
+        pDataSize := pFailMessage + failMessageSize
+        pData := pDataSize + sUint32
+        pTrId := pData + dataSize
+        pTrErrMsgSize := pTrId + sUuid
+        pTrErrMsg := pTrErrMsgSize + sByte
+        pTrStartTime := pTrErrMsg + trErrMsgSize
+        pTrTimeout := pTrStartTime + 8
+        pEnd := pTrTimeout + 8
+
+        var bodySize int
+        if this.tr_state == Empty </span><span class="cov8" title="1">{
+                bodySize = pTrId
+        }</span> else<span class="cov8" title="1"> {
+                bodySize = pEnd
+        }</span>
+
+        <span class="cov8" title="1">totalSize := PPriority + sByte + bodySize
+        result := make([]byte, totalSize)
+
+        header := result[:PPriority+sByte]
+        copy(header[pSource:pVnet], this.source)
+        copy(header[pVnet:pDestination], this.vnet)
+        copy(header[pDestination:pServiceName], this.destination)
+        copy(header[pServiceName:pServiceArea], this.serviceName)
+        header[pServiceArea] = this.serviceArea
+        header[PPriority] = priorityMulticastModeToByte(this.priority, this.multicastMode)
+
+        body := result[PPriority+sByte:]
+        body[pAction] = actionStateToByte(this.action, this.tr_state)
+        copy(body[pAaaId:pSequence], this.aaaId)
+        copy(body[pSequence:pTimeout], UInt322Bytes(this.sequence))
+        copy(body[pTimeout:pRequestReply], UInt162Bytes(this.timeout))
+        body[pRequestReply] = Bools(this.request, this.reply)
+        body[pFailMessageSize] = byte(failMessageSize)
+        copy(body[pFailMessage:pDataSize], this.failMessage)
+        copy(body[pDataSize:pData], UInt322Bytes(uint32(dataSize)))
+        copy(body[pData:pTrId], this.data)
+
+        if this.tr_state != Empty </span><span class="cov8" title="1">{
+                copy(body[pTrId:pTrErrMsgSize], this.tr_id)
+                body[pTrErrMsgSize] = byte(trErrMsgSize)
+                copy(body[pTrErrMsg:pTrStartTime], this.tr_errMsg)
+                copy(body[pTrStartTime:pTrTimeout], Long2Bytes(this.tr_startTime))
+                copy(body[pTrTimeout:pEnd], Long2Bytes(this.tr_timeout))
+        }</span>
+
+        <span class="cov8" title="1">bodyEnc, err := resources.Security().Encrypt(body)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">headerSize := PPriority + sByte
+        finalData := make([]byte, headerSize+len(bodyEnc))
+        copy(finalData[:headerSize], header)
+        copy(finalData[headerSize:], bodyEnc)
+
+        return finalData, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package ifs
+
+import (
+        "unsafe"
+)
+
+func unsafeString(b []byte) string <span class="cov8" title="1">{
+        return *(*string)(unsafe.Pointer(&amp;b))
+}</span>
+
+func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) <span class="cov8" title="1">{
+
+        this.source = unsafeString(data[pSource:pVnet])
+        this.vnet = unsafeString(data[pVnet:pDestination])
+        this.destination = ToDestination(data)
+        this.serviceName = ToServiceName(data)
+        this.serviceArea = data[pServiceArea]
+        this.priority, this.multicastMode = ByteToPriorityMulticastMode(data[PPriority])
+
+        body, err := resources.Security().Decrypt(string(data[PPriority+1:]))
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">this.action, this.tr_state = ByteToActionState(body[pAction])
+        this.aaaId = unsafeString(body[pAaaId:pSequence])
+        this.sequence = Bytes2UInt32(body[pSequence:pTimeout])
+        this.timeout = Bytes2UInt16(body[pTimeout:pRequestReply])
+        this.request, this.reply = BoolOf(body[pRequestReply])
+
+        failMessageSize := int(body[pFailMessageSize])
+        pDataSize := pFailMessage + failMessageSize
+        this.failMessage = unsafeString(body[pFailMessage:pDataSize])
+
+        pData := pDataSize + sUint32
+        dataSize := int(Bytes2UInt32(body[pDataSize:pData]))
+        pTrId := pData + dataSize
+        this.data = body[pData:pTrId]
+
+        if this.tr_state != Empty </span><span class="cov8" title="1">{
+                pTrErrMsgSize := pTrId + sUuid
+                this.tr_id = unsafeString(body[pTrId:pTrErrMsgSize])
+                trErrMsgSize := int(body[pTrErrMsgSize])
+                pTrErrMsg := pTrErrMsgSize + sByte
+                pTrStartTime := pTrErrMsg + trErrMsgSize
+                pTrTimeout := pTrStartTime + 8
+                this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrStartTime])
+                this.tr_startTime = Bytes2Long(body[pTrStartTime:pTrTimeout])
+                this.tr_timeout = Bytes2Long(body[pTrTimeout:])
+        }</span>
+
+        <span class="cov8" title="1">return nil, nil</span>
+}
+
+func HeaderOf(data []byte) (string, string, string, string, byte, Priority, MulticastMode) <span class="cov8" title="1">{
+        return unsafeString(data[pSource:pVnet]),
+                unsafeString(data[pVnet:pDestination]),
+                ToDestination(data),
+                ToServiceName(data),
+                data[pServiceArea],
+                Priority(data[PPriority] &gt;&gt; 4),
+                MulticastMode(data[PPriority] &amp; 0x0F)
+}</span>
+
+func ToDestination(data []byte) string <span class="cov8" title="1">{
+        if data[pDestination] != 0 &amp;&amp; data[pDestination+1] != 0 </span><span class="cov8" title="1">{
+                return unsafeString(data[pDestination:pServiceName])
+        }</span>
+        <span class="cov8" title="1">return ""</span>
+}
+
+func ToServiceName(data []byte) string <span class="cov8" title="1">{
+        start := pServiceName
+        end := start + sServiceName
+        if end &gt; len(data) </span><span class="cov0" title="0">{
+                end = len(data)
+        }</span>
+
+        <span class="cov8" title="1">for i := start; i &lt; end; i++ </span><span class="cov8" title="1">{
+                if data[i] == 0 </span><span class="cov8" title="1">{
+                        return unsafeString(data[start:i])
+                }</span>
+        }
+        <span class="cov8" title="1">return unsafeString(data[start:end])</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package ifs
+
+import (
+        "github.com/google/uuid"
+        "github.com/saichler/l8types/go/types/l8api"
+        "github.com/saichler/l8types/go/types/l8services"
+        "github.com/saichler/l8types/go/types/l8sysconfig"
+)
+
+type IResources interface {
+        Registry() IRegistry
+        Services() IServices
+        Security() ISecurityProvider
+        DataListener() IDatatListener
+        Serializer(SerializerMode) ISerializer
+        Logger() ILogger
+        SysConfig() *l8sysconfig.L8SysConfig
+        Introspector() IIntrospector
+        AddService(string, int32)
+        Set(interface{})
+        Copy(IResources)
+        DefaultUser() *l8api.AuthUser
+}
+
+func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32) <span class="cov8" title="1">{
+        if sysConfig == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">if sysConfig.LocalUuid == "" </span><span class="cov8" title="1">{
+                sysConfig.LocalUuid = NewUuid()
+        }</span>
+        <span class="cov8" title="1">if sysConfig.Services == nil </span><span class="cov8" title="1">{
+                sysConfig.Services = &amp;l8services.L8Services{}
+        }</span>
+        <span class="cov8" title="1">if sysConfig.Services.ServiceToAreas == nil </span><span class="cov8" title="1">{
+                sysConfig.Services.ServiceToAreas = make(map[string]*l8services.L8ServiceAreas)
+        }</span>
+        <span class="cov8" title="1">_, ok := sysConfig.Services.ServiceToAreas[serviceName]
+        if !ok </span><span class="cov8" title="1">{
+                sysConfig.Services.ServiceToAreas[serviceName] = &amp;l8services.L8ServiceAreas{}
+                sysConfig.Services.ServiceToAreas[serviceName].Areas = make(map[int32]bool)
+        }</span>
+        <span class="cov8" title="1">sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = true</span>
+}
+
+func RemoveService(services *l8services.L8Services, serviceName string, serviceArea int32) <span class="cov8" title="1">{
+        if services == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">if services.ServiceToAreas == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">_, ok := services.ServiceToAreas[serviceName]
+        if !ok </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">delete(services.ServiceToAreas[serviceName].Areas, serviceArea)
+        if len(services.ServiceToAreas[serviceName].Areas) == 0 </span><span class="cov8" title="1">{
+                delete(services.ServiceToAreas, serviceName)
+        }</span>
+}
+
+func NewUuid() string <span class="cov8" title="1">{
+        return uuid.New().String()
+}</span>
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package ifs
+
+import (
+        "errors"
+        "fmt"
+        "net"
+        "plugin"
+
+        "github.com/saichler/l8types/go/types/l8sysconfig"
+)
+
+type ISecurityProvider interface {
+        Authenticate(string, string) (string, error)
+        ValidateToken(string) (string, bool)
+
+        Message(string) (*Message, error)
+
+        CanDial(string, uint32) (net.Conn, error)
+        CanAccept(net.Conn) error
+        ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error
+
+        Encrypt([]byte) (string, error)
+        Decrypt(string) ([]byte, error)
+
+        CanDoAction(Action, IElements, string, string, ...string) error
+        ScopeView(IElements, string, string, ...string) IElements
+}
+
+type ISecurityProviderLoader interface {
+        LoadSecurityProvider(...interface{}) (ISecurityProvider, error)
+}
+
+type ISecurityProviderActivate interface {
+        Activate(IVNic)
+}
+
+func LoadSecurityProvider(args ...interface{}) (ISecurityProvider, error) <span class="cov0" title="0">{
+        loaderFile, err := plugin.Open("./loader.so")
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println("Failed to load security provider #1: ", err.Error())
+                return nil, errors.New("Failed to load security provider #1: " + err.Error())
+        }</span>
+        <span class="cov0" title="0">loader, err := loaderFile.Lookup("Loader")
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println("Failed to load security provider #2: ", err.Error())
+                return nil, errors.New("Failed to load security provider #2: " + err.Error())
+        }</span>
+        <span class="cov0" title="0">if loader == nil </span><span class="cov0" title="0">{
+                fmt.Println("Failed to load security provider #3: Nil Loader")
+                return nil, errors.New("Failed to load security provider #3: Nil Loader")
+        }</span>
+        <span class="cov0" title="0">loaderInterface := *loader.(*ISecurityProviderLoader)
+        securityLoader := loaderInterface.(ISecurityProviderLoader).(ISecurityProviderLoader)
+        return securityLoader.LoadSecurityProvider(args...)</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package ifs
+
+import "reflect"
+
+type SerializerMode int
+
+const (
+        BINARY SerializerMode = 1
+        JSON   SerializerMode = 2
+        STRING SerializerMode = 3
+)
+
+type ISerializer interface {
+        Mode() SerializerMode
+        Marshal(interface{}, IResources) ([]byte, error)
+        Unmarshal([]byte, IResources) (interface{}, error)
+}
+
+func IsNil(any interface{}) bool <span class="cov8" title="1">{
+        if any == nil </span><span class="cov8" title="1">{
+                return true
+        }</span>
+        <span class="cov8" title="1">v := reflect.ValueOf(any)
+        isNil := v.IsNil()
+        if !isNil </span><span class="cov8" title="1">{
+                if v.Kind() == reflect.Func </span><span class="cov0" title="0">{
+                        panic("Trying to check nil on a function!")</span>
+                }
+        }
+        <span class="cov8" title="1">return isNil</span>
+}
+
+type IStorage interface {
+        Put(string, interface{}) error
+        Get(string) (interface{}, error)
+        Delete(string) (interface{}, error)
+        Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
+        CacheEnabled() bool
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package ifs
+
+import (
+        "github.com/saichler/l8types/go/types/l8notify"
+        "github.com/saichler/l8types/go/types/l8services"
+)
+
+type NetworkMode int
+
+const (
+        NETWORK_NATIVE NetworkMode = 1
+        NETWORK_DOCKER NetworkMode = 2
+        NETWORK_K8s    NetworkMode = 3
+)
+
+const (
+        SysMsg  = "sysMsg"
+        SysArea = byte(99)
+)
+
+var networkMode NetworkMode = NETWORK_NATIVE
+
+func SetNetworkMode(mode NetworkMode) <span class="cov8" title="1">{
+        networkMode = mode
+}</span>
+
+func NetworkMode_Native() bool <span class="cov8" title="1">{
+        return networkMode == NETWORK_NATIVE
+}</span>
+
+func NetworkMode_DOCKER() bool <span class="cov8" title="1">{
+        return networkMode == NETWORK_DOCKER
+}</span>
+
+func NetworkMode_K8s() bool <span class="cov8" title="1">{
+        return networkMode == NETWORK_K8s
+}</span>
+
+type IVNic interface {
+        Start()
+        Shutdown()
+        Name() string
+        SendMessage([]byte) error
+        // Unicast a message without expecting response
+        Unicast(string, string, byte, Action, interface{}) error
+        // Request unicast a message expecting response
+        Request(string, string, byte, Action, interface{}, int, ...string) IElements
+        // Reply to a Request
+        Reply(*Message, IElements) error
+        // Multicast a message to all service name listeners, without expecting a response
+        Multicast(string, byte, Action, interface{}) error
+        // RoundRobin a message to ONLY ONE service provider of the group, in a round-robin fashion
+        RoundRobin(string, byte, Action, interface{}) error
+        // RoundRobinRequest a request to ONLY ONE service provider of the group, in a round-robin fashion
+        RoundRobinRequest(string, byte, Action, interface{}, int, ...string) IElements
+        // Proximity a message to ONLY ONE service provider of the group with a proximity of the provider to the sender
+        Proximity(string, byte, Action, interface{}) error
+        // Proximity a request to ONLY ONE service provider of the group with a proximity of the provider to the sender
+        ProximityRequest(string, byte, Action, interface{}, int, ...string) IElements
+        // Leader a message to ONLY ONE service provider leader of the group.
+        Leader(string, byte, Action, interface{}) error
+        // LeaderRequest a request to ONLY ONE service provider leader of the group.
+        LeaderRequest(string, byte, Action, interface{}, int, ...string) IElements
+        // Local a message to ONLY ONE service provider that resides in the same vnic.
+        Local(string, byte, Action, interface{}) error
+        // LocalRequest a request to ONLY ONE service provider that resides in the same vnic.
+        LocalRequest(string, byte, Action, interface{}, int, ...string) IElements
+        Forward(*Message, string) IElements
+        ServiceAPI(string, byte) ServiceAPI
+        Resources() IResources
+        NotifyServiceAdded([]string, byte) error
+        NotifyServiceRemoved(string, byte) error
+        PropertyChangeNotification(set *l8notify.L8NotificationSet)
+        WaitForConnection()
+        Running() bool
+        RegisterServiceLink(link *l8services.L8ServiceLink)
+}
+
+type ServiceAPI interface {
+        Post(interface{}) IElements
+        Put(interface{}) IElements
+        Patch(interface{}) IElements
+        Delete(interface{}) IElements
+        Get(string) IElements
+}
+
+type IDatatListener interface {
+        ShutdownVNic(nic IVNic)
+        HandleData([]byte, IVNic)
+        Failed([]byte, IVNic, string)
+}
+
+func NewServiceLink(asideN, zsideN string, asideA, zsideA byte, mode MulticastMode, interval int, request bool) *l8services.L8ServiceLink <span class="cov8" title="1">{
+        link := &amp;l8services.L8ServiceLink{}
+        link.AsideServiceName = asideN
+        link.ZsideServiceName = zsideN
+        link.AsideServiceArea = int32(asideA)
+        link.ZsideServiceArea = int32(zsideA)
+        link.Interval = uint32(interval)
+        link.Request = request
+        link.Mode = int32(mode)
+        return link
+
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package nets
+
+import (
+        "github.com/saichler/l8types/go/ifs"
+        "github.com/saichler/l8types/go/types/l8services"
+        "github.com/saichler/l8types/go/types/l8sysconfig"
+        "google.golang.org/protobuf/proto"
+
+        "net"
+)
+
+func ExecuteProtocol(conn net.Conn, config *l8sysconfig.L8SysConfig, security ifs.ISecurityProvider) error <span class="cov8" title="1">{
+        err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security)
+        if err != nil </span><span class="cov8" title="1">{
+                conn.Close()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">config.RemoteUuid, err = ReadEncrypted(conn, config, security)
+        if err != nil </span><span class="cov8" title="1">{
+                conn.Close()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">forceExternal := "false"
+        if config.ForceExternal </span><span class="cov0" title="0">{
+                forceExternal = "true"
+        }</span>
+
+        <span class="cov8" title="1">err = WriteEncrypted(conn, []byte(forceExternal), config, security)
+        if err != nil </span><span class="cov0" title="0">{
+                conn.Close()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">forceExternal, err = ReadEncrypted(conn, config, security)
+        if err != nil </span><span class="cov0" title="0">{
+                conn.Close()
+                return err
+        }</span>
+        <span class="cov8" title="1">if forceExternal == "true" </span><span class="cov8" title="1">{
+                config.ForceExternal = true
+        }</span>
+
+        <span class="cov8" title="1">err = WriteEncrypted(conn, []byte(config.LocalAlias), config, security)
+        if err != nil </span><span class="cov0" title="0">{
+                conn.Close()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">remoteAlias, err := ReadEncrypted(conn, config, security)
+        if err != nil </span><span class="cov0" title="0">{
+                conn.Close()
+                return err
+        }</span>
+        <span class="cov8" title="1">config.RemoteAlias = remoteAlias
+
+        err = WriteEncrypted(conn, ServicesToBytes(config.Services), config, security)
+        if err != nil </span><span class="cov0" title="0">{
+                conn.Close()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">services, err := ReadEncryptedBytes(conn, config, security)
+        if err != nil </span><span class="cov0" title="0">{
+                conn.Close()
+                return err
+        }</span>
+        <span class="cov8" title="1">config.Services = BytesToServices(services)
+
+        return nil</span>
+}
+
+func ServicesToBytes(services *l8services.L8Services) []byte <span class="cov8" title="1">{
+        data, err := proto.Marshal(services)
+        if err != nil </span><span class="cov0" title="0">{
+                return []byte{}
+        }</span>
+        <span class="cov8" title="1">return data</span>
+}
+
+func BytesToServices(data []byte) *l8services.L8Services <span class="cov8" title="1">{
+        services := &amp;l8services.L8Services{}
+        err := proto.Unmarshal(data, services)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+        <span class="cov8" title="1">return services</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package nets
+
+import (
+        "errors"
+
+        "github.com/saichler/l8types/go/ifs"
+        "github.com/saichler/l8types/go/types/l8sysconfig"
+
+        "net"
+        "time"
+)
+
+// Read data from socket
+func Read(conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte, error) <span class="cov8" title="1">{
+        // If the connection is nil, return an error
+        if conn == nil </span><span class="cov8" title="1">{
+                return nil, errors.New("no Connection Available")
+        }</span>
+        // If the config is nil, error
+        <span class="cov8" title="1">if config == nil </span><span class="cov8" title="1">{
+                return nil, errors.New("no Config Available")
+        }</span>
+        // read 8 bytes, e.g. long, hinting of the size of the byte array
+        <span class="cov8" title="1">sizebytes, err := ReadSize(8, conn, config)
+        if sizebytes == nil || err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        // Translate the 8 byte array into int64
+        <span class="cov8" title="1">size := ifs.Bytes2Long(sizebytes)
+        // If the size is larger than the MAX Data Size, return an error
+        // this is to protect against overflowing the buffers
+        // When data to send is &gt; the max data size, one needs to split the data into chunks at a higher level
+        if uint64(size) &gt; config.MaxDataSize </span><span class="cov8" title="1">{
+                return nil, errors.New("Max Size Exceeded!")
+        }</span>
+        // Read the bunch of bytes according to the size from the socket
+        <span class="cov8" title="1">data, err := ReadSize(int(size), conn, config)
+        return data, err</span>
+}
+
+func ReadSize(size int, conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte, error) <span class="cov8" title="1">{
+        data := make([]byte, size)
+        n, e := conn.Read(data)
+        if e != nil </span><span class="cov8" title="1">{
+                return nil, errors.New("Failed to read data size:" + e.Error())
+        }</span>
+
+        <span class="cov8" title="1">if n &lt; size </span><span class="cov8" title="1">{
+                if n == 0 </span><span class="cov8" title="1">{
+                        time.Sleep(time.Second)
+                }</span>
+                <span class="cov8" title="1">data = data[0:n]
+                left, e := ReadSize(size-n, conn, config)
+                if e != nil </span><span class="cov8" title="1">{
+                        return nil, errors.New("Failed to read packet size:" + e.Error())
+                }</span>
+                <span class="cov8" title="1">data = append(data, left...)</span>
+        }
+        <span class="cov8" title="1">return data, nil</span>
+}
+
+func ReadEncryptedBytes(conn net.Conn, config *l8sysconfig.L8SysConfig,
+        securityProvider ifs.ISecurityProvider) ([]byte, error) <span class="cov8" title="1">{
+        inData, err := Read(conn, config)
+        if err != nil </span><span class="cov8" title="1">{
+                conn.Close()
+                return []byte{}, err
+        }</span>
+
+        <span class="cov8" title="1">decData, err := securityProvider.Decrypt(string(inData))
+        if err != nil </span><span class="cov8" title="1">{
+                conn.Close()
+                return []byte{}, err
+        }</span>
+        <span class="cov8" title="1">return decData, nil</span>
+}
+
+func ReadEncrypted(conn net.Conn, config *l8sysconfig.L8SysConfig,
+        securityProvider ifs.ISecurityProvider) (string, error) <span class="cov8" title="1">{
+        data, err := ReadEncryptedBytes(conn, config, securityProvider)
+        return string(data), err
+}</span>
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package nets
+
+import (
+        "errors"
+
+        "github.com/saichler/l8types/go/ifs"
+        "github.com/saichler/l8types/go/types/l8sysconfig"
+
+        "net"
+)
+
+// Write data to socket
+func Write(data []byte, conn net.Conn, config *l8sysconfig.L8SysConfig) error <span class="cov8" title="1">{
+        // If the connection is nil, return an error
+        if conn == nil </span><span class="cov8" title="1">{
+                return errors.New("no Connection Available")
+        }</span>
+        // If the config is nil, error
+        <span class="cov8" title="1">if config == nil </span><span class="cov8" title="1">{
+                return errors.New("no Config Available")
+        }</span>
+        <span class="cov8" title="1">if data == nil </span><span class="cov8" title="1">{
+                return errors.New("no Data Available")
+        }</span>
+        // Error is the data is too big
+        <span class="cov8" title="1">if len(data) &gt; int(config.MaxDataSize) </span><span class="cov8" title="1">{
+                return errors.New("data is larger than MAX size allowed")
+        }</span>
+        // Write the size of the data
+        <span class="cov8" title="1">_, e := conn.Write(ifs.Long2Bytes(int64(len(data))))
+        if e != nil </span><span class="cov8" title="1">{
+                return e
+        }</span>
+        // Write the actual data
+        <span class="cov8" title="1">_, e = conn.Write(data)
+        return e</span>
+}
+
+func WriteEncrypted(conn net.Conn, data []byte, config *l8sysconfig.L8SysConfig,
+        securityProvider ifs.ISecurityProvider) error <span class="cov8" title="1">{
+        encData, err := securityProvider.Encrypt(data)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">err = Write([]byte(encData), conn, config)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
