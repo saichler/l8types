@@ -45,6 +45,11 @@ const (
 	LeaderQuery        Action = 14 // Query who is the current leader
 	LeaderResign       Action = 15 // Graceful leader resignation
 	LeaderChallenge    Action = 16 // Challenge current leader validity
+
+	// Participant Registry Actions
+	ServiceRegister   Action = 17 // Announce: "I'm hosting this service"
+	ServiceUnregister Action = 18 // Announce: "I'm no longer hosting this service"
+	ServiceQuery      Action = 19 // Query: "Who is hosting this service?"
 )
 
 type TransactionState uint8
