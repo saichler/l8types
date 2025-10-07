@@ -36,6 +36,15 @@ const (
 	Notify    Action = 7
 	Sync      Action = 8
 	EndPoints Action = 9
+
+	// Leader Election Actions
+	ElectionRequest    Action = 10 // Initiate election for a service
+	ElectionResponse   Action = 11 // Response from higher-priority node (still alive)
+	LeaderAnnouncement Action = 12 // Announce new leader for service
+	LeaderHeartbeat    Action = 13 // Periodic heartbeat from current leader
+	LeaderQuery        Action = 14 // Query who is the current leader
+	LeaderResign       Action = 15 // Graceful leader resignation
+	LeaderChallenge    Action = 16 // Challenge current leader validity
 )
 
 type TransactionState uint8
