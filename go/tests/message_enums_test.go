@@ -11,20 +11,14 @@ func TestTransactionStateString(t *testing.T) {
 		state    ifs.TransactionState
 		expected string
 	}{
-		{ifs.NotATransaction, "Unknown"},
-		{ifs.Create, "Create"},
+		{ifs.NotATransaction, "NotATransaction"},
 		{ifs.Created, "Created"},
-		{ifs.Start, "Start"},
-		{ifs.Lock, "Lock"},
-		{ifs.Locked, "Locked"},
-		{ifs.LockFailed, "LockFailed"},
-		{ifs.Commit, "Commit"},
-		{ifs.Commited, "Commited"},
+		{ifs.Queued, "Queued"},
+		{ifs.Running, "Running"},
+		{ifs.Committed, "Committed"},
 		{ifs.Rollback, "Rollback"},
-		{ifs.Rollbacked, "Rollbacked"},
-		{ifs.Finish, "Finish"},
-		{ifs.Finished, "Finished"},
-		{ifs.Errored, "Errored"},
+		{ifs.Failed, "Failed"},
+		{ifs.Cleanup, "Cleanup"},
 		{ifs.TransactionState(99), "Unknown"},
 	}
 

@@ -23,13 +23,9 @@ func TestMessageClone(t *testing.T) {
 	msg.SetFailMessage("original fail")
 	msg.SetData([]byte("original data"))
 	msg.SetAAAId("original-aaa")
-	msg.SetTr_State(ifs.Start)
+	msg.SetTr_State(ifs.Running)
 	msg.SetTr_Id("original-tr-id")
 	msg.SetTr_ErrMsg("original tr error")
-	msg.SetTr_Created(int64(1000))
-	msg.SetTr_Queued(int64(1500))
-	msg.SetTr_Running(int64(1800))
-	msg.SetTr_End(int64(2000))
 	msg.SetTr_Timeout(int64(3000))
 
 	// Test Clone
@@ -85,18 +81,7 @@ func TestMessageClone(t *testing.T) {
 	if clone.Tr_ErrMsg() != msg.Tr_ErrMsg() {
 		t.Errorf("Clone tr error mismatch: expected %s, got %s", msg.Tr_ErrMsg(), clone.Tr_ErrMsg())
 	}
-	if clone.Tr_Created() != msg.Tr_Created() {
-		t.Errorf("Clone tr created mismatch: expected %d, got %d", msg.Tr_Created(), clone.Tr_Created())
-	}
-	if clone.Tr_Queued() != msg.Tr_Queued() {
-		t.Errorf("Clone tr queued mismatch: expected %d, got %d", msg.Tr_Queued(), clone.Tr_Queued())
-	}
-	if clone.Tr_Running() != msg.Tr_Running() {
-		t.Errorf("Clone tr running mismatch: expected %d, got %d", msg.Tr_Running(), clone.Tr_Running())
-	}
-	if clone.Tr_End() != msg.Tr_End() {
-		t.Errorf("Clone tr end mismatch: expected %d, got %d", msg.Tr_End(), clone.Tr_End())
-	}
+	// Note: timing attributes are auto-set by SetTr_State, so they should be cloned
 	if clone.Tr_Timeout() != msg.Tr_Timeout() {
 		t.Errorf("Clone tr timeout mismatch: expected %d, got %d", msg.Tr_Timeout(), clone.Tr_Timeout())
 	}

@@ -100,8 +100,8 @@ func TestMessageSetters(t *testing.T) {
 	}
 
 	// Test SetTr_State
-	msg.SetTr_State(ifs.Start)
-	if msg.Tr_State() != ifs.Start {
+	msg.SetTr_State(ifs.Running)
+	if msg.Tr_State() != ifs.Running {
 		t.Errorf("Expected transaction state Start, got %v", msg.Tr_State())
 	}
 
@@ -117,28 +117,25 @@ func TestMessageSetters(t *testing.T) {
 		t.Errorf("Expected transaction error 'test tr error', got '%s'", msg.Tr_ErrMsg())
 	}
 
-	// Test SetTr_Created
-	msg.SetTr_Created(int64(111111111))
-	if msg.Tr_Created() != int64(111111111) {
-		t.Errorf("Expected transaction created 111111111, got %d", msg.Tr_Created())
+	// Test that SetTr_State automatically sets timing attributes
+	msg.SetTr_State(ifs.Created)
+	if msg.Tr_Created() == 0 {
+		t.Error("Expected tr_created to be set when state is Created")
 	}
 
-	// Test SetTr_Queued
-	msg.SetTr_Queued(int64(222222222))
-	if msg.Tr_Queued() != int64(222222222) {
-		t.Errorf("Expected transaction queued 222222222, got %d", msg.Tr_Queued())
+	msg.SetTr_State(ifs.Queued)
+	if msg.Tr_Queued() == 0 {
+		t.Error("Expected tr_queued to be set when state is Queued")
 	}
 
-	// Test SetTr_Running
-	msg.SetTr_Running(int64(333333333))
-	if msg.Tr_Running() != int64(333333333) {
-		t.Errorf("Expected transaction running 333333333, got %d", msg.Tr_Running())
+	msg.SetTr_State(ifs.Running)
+	if msg.Tr_Running() == 0 {
+		t.Error("Expected tr_running to be set when state is Running")
 	}
 
-	// Test SetTr_End
-	msg.SetTr_End(int64(444444444))
-	if msg.Tr_End() != int64(444444444) {
-		t.Errorf("Expected transaction end 444444444, got %d", msg.Tr_End())
+	msg.SetTr_State(ifs.Committed)
+	if msg.Tr_End() == 0 {
+		t.Error("Expected tr_end to be set when state is Committed")
 	}
 
 	// Test SetTr_Timeout

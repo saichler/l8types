@@ -27,7 +27,7 @@ func TestCompleteMessageWorkflow(t *testing.T) {
 		true,
 		false,
 		98765432,
-		ifs.Start,
+		ifs.Running,
 		"transaction-auth-session-uuid-567890",
 		"",
 		time.Now().Unix(), time.Now().Unix()+5, time.Now().Unix()+10, time.Now().Unix()+15, 30,
@@ -250,9 +250,9 @@ func TestMessageSizeCalculation(t *testing.T) {
 		{"empty_no_transaction", 0, ifs.NotATransaction},
 		{"small_no_transaction", 100, ifs.NotATransaction},
 		{"large_no_transaction", 10000, ifs.NotATransaction},
-		{"empty_with_transaction", 0, ifs.Locked},
-		{"small_with_transaction", 100, ifs.Locked},
-		{"large_with_transaction", 10000, ifs.Locked},
+		{"empty_with_transaction", 0, ifs.Running},
+		{"small_with_transaction", 100, ifs.Running},
+		{"large_with_transaction", 10000, ifs.Running},
 	}
 
 	for _, tc := range testCases {

@@ -190,16 +190,13 @@ func TestActionStateBitManipulation(t *testing.T) {
 		state  ifs.TransactionState
 	}{
 		{ifs.POST, ifs.NotATransaction},
-		{ifs.GET, ifs.Locked},
-		{ifs.PUT, ifs.Commited},
-		{ifs.DELETE, ifs.Errored},
-		{ifs.PATCH, ifs.Finished},
-		{ifs.Reply, ifs.Create},
-		{ifs.Notify, ifs.Start},
-		{ifs.Sync, ifs.Lock},
-		{ifs.EndPoints, ifs.Commit},
-		{ifs.Sync, ifs.Rollback},
-		{ifs.Sync, ifs.Finish},
+		{ifs.GET, ifs.Created},
+		{ifs.PUT, ifs.Queued},
+		{ifs.DELETE, ifs.Running},
+		{ifs.PATCH, ifs.Committed},
+		{ifs.Reply, ifs.Rollback},
+		{ifs.Notify, ifs.Failed},
+		{ifs.Sync, ifs.Cleanup},
 	}
 
 	for _, tc := range testCases {

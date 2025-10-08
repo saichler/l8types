@@ -25,7 +25,7 @@ func TestMessageBoundaryConditions(t *testing.T) {
 		false,
 		false,
 		4294967295,                               // max uint32
-		ifs.Errored,                              // highest transaction state
+		ifs.Failed,                              // highest transaction state
 		"uuid-transaction-id-567890123456789012", // exactly 36 chars
 		"",
 		9223372036854775807, 9223372036854775806, 9223372036854775805, 9223372036854775804, 30, // max int64 values
@@ -228,7 +228,7 @@ func TestTransactionErrorMessages(t *testing.T) {
 		msg := &ifs.Message{}
 		msg.Init(
 			"dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"),
-			true, false, 123, ifs.Errored, "tr-id", errMsg, 1234567890, 1234567900, 1234567910, 1234567920, 30,
+			true, false, 123, ifs.Failed, "tr-id", errMsg, 1234567890, 1234567900, 1234567910, 1234567920, 30,
 		)
 
 		data, err := msg.Marshal(nil, resources)
