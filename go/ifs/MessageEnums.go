@@ -58,7 +58,11 @@ const (
 	NotATransaction TransactionState = 0
 	Created         TransactionState = 1
 	Queued          TransactionState = 2
-	Failed          TransactionState = 3
+	Running         TransactionState = 3
+	Committed       TransactionState = 4
+	Rollback        TransactionState = 5
+	Completed       TransactionState = 6
+	Failed          TransactionState = 7
 	/*
 		Start      TransactionState = 3
 		Lock       TransactionState = 4
@@ -82,6 +86,14 @@ func (t TransactionState) String() string {
 		return "Created"
 	case Queued:
 		return "Queued"
+	case Running:
+		return "Running"
+	case Committed:
+		return "Committed"
+	case Rollback:
+		return "Rollback"
+	case Completed:
+		return "Completed"
 	case Failed:
 		return "Failed"
 		/*

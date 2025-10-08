@@ -1,5 +1,7 @@
 package ifs
 
+import "time"
+
 type Message struct {
 	source        string
 	vnet          string
@@ -209,6 +211,18 @@ func (this *Message) SetData(data []byte) {
 
 func (this *Message) SetTr_State(trstate TransactionState) {
 	this.tr_state = trstate
+	switch trstate {
+	case Created:
+		this.tr_created = time.Now().Unix()
+	case Queued:
+		this.tr_queued = time.Now().Unix()
+	case Running:
+		this.tr_running = time.Now().Unix()
+	case Failed:
+		fallthrough
+	case Completed:
+		this.tr_end = time.Now().Unix()
+	}
 }
 
 func (this *Message) SetTr_Id(trid string) {
@@ -217,22 +231,6 @@ func (this *Message) SetTr_Id(trid string) {
 
 func (this *Message) SetTr_ErrMsg(errMsg string) {
 	this.tr_errMsg = errMsg
-}
-
-func (this *Message) SetTr_Created(trCreated int64) {
-	this.tr_created = trCreated
-}
-
-func (this *Message) SetTr_Queued(trQueued int64) {
-	this.tr_queued = trQueued
-}
-
-func (this *Message) SetTr_Running(trRunning int64) {
-	this.tr_running = trRunning
-}
-
-func (this *Message) SetTr_End(trEnd int64) {
-	this.tr_end = trEnd
 }
 
 func (this *Message) SetTr_Timeout(timeout int64) {
