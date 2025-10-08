@@ -61,21 +61,8 @@ const (
 	Running         TransactionState = 3
 	Committed       TransactionState = 4
 	Rollback        TransactionState = 5
-	Completed       TransactionState = 6
-	Failed          TransactionState = 7
-	/*
-		Start      TransactionState = 3
-		Lock       TransactionState = 4
-		Locked     TransactionState = 5
-		LockFailed TransactionState = 6
-		Commit     TransactionState = 7
-		Commited   TransactionState = 8
-		Rollback   TransactionState = 9
-		Rollbacked TransactionState = 10
-		Finish     TransactionState = 11
-		Finished   TransactionState = 12
-		Errored    TransactionState = 13
-	*/
+	Failed          TransactionState = 6
+	Cleanup         TransactionState = 7
 )
 
 func (t TransactionState) String() string {
@@ -92,34 +79,10 @@ func (t TransactionState) String() string {
 		return "Committed"
 	case Rollback:
 		return "Rollback"
-	case Completed:
-		return "Completed"
 	case Failed:
 		return "Failed"
-		/*
-			case Start:
-				return "Start"
-			case Lock:
-				return "Lock"
-			case Locked:
-				return "Locked"
-			case LockFailed:
-				return "LockFailed"
-			case Commit:
-				return "Commit"
-			case Commited:
-				return "Commited"
-			case Rollback:
-				return "Rollback"
-			case Rollbacked:
-				return "Rollbacked"
-			case Finish:
-				return "Finish"
-			case Finished:
-				return "Finished"
-			case Errored:
-				return "Errored"
-		*/
+	case Cleanup:
+		return "Cleanup"
 	}
 	return "Unknown"
 }

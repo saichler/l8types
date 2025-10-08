@@ -220,7 +220,7 @@ func (this *Message) SetTr_State(trstate TransactionState) {
 		this.tr_running = time.Now().Unix()
 	case Failed:
 		fallthrough
-	case Completed:
+	case Committed:
 		this.tr_end = time.Now().Unix()
 	}
 }
