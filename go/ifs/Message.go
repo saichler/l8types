@@ -19,10 +19,13 @@ type Message struct {
 	failMessage string
 	data        []byte
 
-	tr_id        string
-	tr_errMsg    string
-	tr_startTime int64
-	tr_timeout   int64
+	tr_id      string
+	tr_errMsg  string
+	tr_created int64
+	tr_queued  int64
+	tr_running int64
+	tr_end     int64
+	tr_timeout int64
 }
 
 func (this *Message) Init(destination, serviceName string, serviceArea byte,

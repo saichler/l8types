@@ -34,7 +34,10 @@ message L8Transaction {
   int32 State = 1;
   string id = 2;
   string err_msg = 3;
-  int64 start_time = 4;
+  int64 created = 4;
+  int64 queued = 5;
+  int64 running = 6;
+  int64 end = 7;
 }
 
 message L8ServiceLink {

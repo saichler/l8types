@@ -55,50 +55,59 @@ const (
 type TransactionState uint8
 
 const (
-	Empty      TransactionState = 0
-	Create     TransactionState = 1
-	Created    TransactionState = 2
-	Start      TransactionState = 3
-	Lock       TransactionState = 4
-	Locked     TransactionState = 5
-	LockFailed TransactionState = 6
-	Commit     TransactionState = 7
-	Commited   TransactionState = 8
-	Rollback   TransactionState = 9
-	Rollbacked TransactionState = 10
-	Finish     TransactionState = 11
-	Finished   TransactionState = 12
-	Errored    TransactionState = 13
+	NotATransaction TransactionState = 0
+	Created         TransactionState = 1
+	Queued          TransactionState = 2
+	Failed          TransactionState = 3
+	/*
+		Start      TransactionState = 3
+		Lock       TransactionState = 4
+		Locked     TransactionState = 5
+		LockFailed TransactionState = 6
+		Commit     TransactionState = 7
+		Commited   TransactionState = 8
+		Rollback   TransactionState = 9
+		Rollbacked TransactionState = 10
+		Finish     TransactionState = 11
+		Finished   TransactionState = 12
+		Errored    TransactionState = 13
+	*/
 )
 
 func (t TransactionState) String() string {
 	switch t {
-	case Create:
-		return "Create"
+	case NotATransaction:
+		return "NotATransaction"
 	case Created:
 		return "Created"
-	case Start:
-		return "Start"
-	case Lock:
-		return "Lock"
-	case Locked:
-		return "Locked"
-	case LockFailed:
-		return "LockFailed"
-	case Commit:
-		return "Commit"
-	case Commited:
-		return "Commited"
-	case Rollback:
-		return "Rollback"
-	case Rollbacked:
-		return "Rollbacked"
-	case Finish:
-		return "Finish"
-	case Finished:
-		return "Finished"
-	case Errored:
-		return "Errored"
+	case Queued:
+		return "Queued"
+	case Failed:
+		return "Failed"
+		/*
+			case Start:
+				return "Start"
+			case Lock:
+				return "Lock"
+			case Locked:
+				return "Locked"
+			case LockFailed:
+				return "LockFailed"
+			case Commit:
+				return "Commit"
+			case Commited:
+				return "Commited"
+			case Rollback:
+				return "Rollback"
+			case Rollbacked:
+				return "Rollbacked"
+			case Finish:
+				return "Finish"
+			case Finished:
+				return "Finished"
+			case Errored:
+				return "Errored"
+		*/
 	}
 	return "Unknown"
 }
