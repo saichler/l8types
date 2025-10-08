@@ -25,6 +25,7 @@ type IServices interface {
 	Services() *l8services.L8Services
 	GetLeader(string, byte) string
 	GetParticipants(string, byte) map[string]bool
+	RoundRobinParticipants(string, byte, int) map[string]bool
 }
 
 type IServiceHandler interface {
