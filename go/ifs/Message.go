@@ -31,7 +31,7 @@ type Message struct {
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data []byte,
 	isRequest, isReply bool, msgNum uint32,
-	tr_state TransactionState, tr_id, tr_errMsg string, tr_start, tr_timeout int64) {
+	tr_state TransactionState, tr_id, tr_errMsg string, tr_created, tr_queued, tr_running, tr_end, tr_timeout int64) {
 	this.destination = destination
 	this.serviceName = serviceName
 	this.serviceArea = serviceArea
@@ -47,7 +47,10 @@ func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	this.tr_state = tr_state
 	this.tr_id = tr_id
 	this.tr_errMsg = tr_errMsg
-	this.tr_startTime = tr_start
+	this.tr_created = tr_created
+	this.tr_queued = tr_queued
+	this.tr_running = tr_running
+	this.tr_end = tr_end
 	this.tr_timeout = tr_timeout
 }
 
@@ -125,8 +128,20 @@ func (this *Message) Tr_ErrMsg() string {
 	return this.tr_errMsg
 }
 
-func (this *Message) Tr_StartTime() int64 {
-	return this.tr_startTime
+func (this *Message) Tr_Created() int64 {
+	return this.tr_created
+}
+
+func (this *Message) Tr_Queued() int64 {
+	return this.tr_queued
+}
+
+func (this *Message) Tr_Running() int64 {
+	return this.tr_running
+}
+
+func (this *Message) Tr_End() int64 {
+	return this.tr_end
 }
 
 func (this *Message) Tr_Timeout() int64 {
@@ -204,8 +219,20 @@ func (this *Message) SetTr_ErrMsg(errMsg string) {
 	this.tr_errMsg = errMsg
 }
 
-func (this *Message) SetTr_StartTime(trStartTime int64) {
-	this.tr_startTime = trStartTime
+func (this *Message) SetTr_Created(trCreated int64) {
+	this.tr_created = trCreated
+}
+
+func (this *Message) SetTr_Queued(trQueued int64) {
+	this.tr_queued = trQueued
+}
+
+func (this *Message) SetTr_Running(trRunning int64) {
+	this.tr_running = trRunning
+}
+
+func (this *Message) SetTr_End(trEnd int64) {
+	this.tr_end = trEnd
 }
 
 func (this *Message) SetTr_Timeout(timeout int64) {

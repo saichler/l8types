@@ -11,7 +11,7 @@ func TestTransactionStateString(t *testing.T) {
 		state    ifs.TransactionState
 		expected string
 	}{
-		{ifs.Empty, "Unknown"},
+		{ifs.NotATransaction, "Unknown"},
 		{ifs.Create, "Create"},
 		{ifs.Created, "Created"},
 		{ifs.Start, "Start"},

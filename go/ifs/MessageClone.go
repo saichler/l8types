@@ -20,7 +20,10 @@ func (this *Message) Clone() *Message {
 	clone.tr_id = this.tr_id
 	clone.tr_state = this.tr_state
 	clone.tr_errMsg = this.tr_errMsg
-	clone.tr_startTime = this.tr_startTime
+	clone.tr_created = this.tr_created
+	clone.tr_queued = this.tr_queued
+	clone.tr_running = this.tr_running
+	clone.tr_end = this.tr_end
 	clone.tr_timeout = this.tr_timeout
 	return clone
 }
@@ -45,7 +48,10 @@ func (this *Message) CloneReply(localUuid, remoteUuid string) *Message {
 	clone.tr_id = this.tr_id
 	clone.tr_state = this.tr_state
 	clone.tr_errMsg = this.tr_errMsg
-	clone.tr_startTime = this.tr_startTime
+	clone.tr_created = this.tr_created
+	clone.tr_queued = this.tr_queued
+	clone.tr_running = this.tr_running
+	clone.tr_end = this.tr_end
 	clone.tr_timeout = this.tr_timeout
 	return clone
 }
@@ -70,7 +76,10 @@ func (this *Message) CloneFail(failMessage, remoteUuid string) *Message {
 	clone.tr_id = this.tr_id
 	clone.tr_state = this.tr_state
 	clone.tr_errMsg = this.tr_errMsg
-	clone.tr_startTime = this.tr_startTime
+	clone.tr_created = this.tr_created
+	clone.tr_queued = this.tr_queued
+	clone.tr_running = this.tr_running
+	clone.tr_end = this.tr_end
 	clone.tr_timeout = this.tr_timeout
 	return clone
 }

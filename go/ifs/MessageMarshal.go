@@ -34,12 +34,15 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	pTrId := pData + dataSize
 	pTrErrMsgSize := pTrId + sUuid
 	pTrErrMsg := pTrErrMsgSize + sByte
-	pTrStartTime := pTrErrMsg + trErrMsgSize
-	pTrTimeout := pTrStartTime + 8
+	pTrCreated := pTrErrMsg + trErrMsgSize
+	pTrQueued := pTrCreated + 8
+	pTrRunning := pTrQueued + 8
+	pTrEnd := pTrRunning + 8
+	pTrTimeout := pTrEnd + 8
 	pEnd := pTrTimeout + 8
 
 	var bodySize int
-	if this.tr_state == Empty {
+	if this.tr_state == NotATransaction {
 		bodySize = pTrId
 	} else {
 		bodySize = pEnd
@@ -68,11 +71,14 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	copy(body[pDataSize:pData], UInt322Bytes(uint32(dataSize)))
 	copy(body[pData:pTrId], this.data)
 
-	if this.tr_state != Empty {
+	if this.tr_state != NotATransaction {
 		copy(body[pTrId:pTrErrMsgSize], this.tr_id)
 		body[pTrErrMsgSize] = byte(trErrMsgSize)
-		copy(body[pTrErrMsg:pTrStartTime], this.tr_errMsg)
-		copy(body[pTrStartTime:pTrTimeout], Long2Bytes(this.tr_startTime))
+		copy(body[pTrErrMsg:pTrCreated], this.tr_errMsg)
+		copy(body[pTrCreated:pTrQueued], Long2Bytes(this.tr_created))
+		copy(body[pTrQueued:pTrRunning], Long2Bytes(this.tr_queued))
+		copy(body[pTrRunning:pTrEnd], Long2Bytes(this.tr_running))
+		copy(body[pTrEnd:pTrTimeout], Long2Bytes(this.tr_end))
 		copy(body[pTrTimeout:pEnd], Long2Bytes(this.tr_timeout))
 	}
 

@@ -189,7 +189,7 @@ func TestActionStateBitManipulation(t *testing.T) {
 		action ifs.Action
 		state  ifs.TransactionState
 	}{
-		{ifs.POST, ifs.Empty},
+		{ifs.POST, ifs.NotATransaction},
 		{ifs.GET, ifs.Locked},
 		{ifs.PUT, ifs.Commited},
 		{ifs.DELETE, ifs.Errored},
@@ -205,17 +205,19 @@ func TestActionStateBitManipulation(t *testing.T) {
 	for _, tc := range testCases {
 		msg := &ifs.Message{}
 		var trId, trErr string
-		var trStart int64
-		var trTimeout int64
+		var trCreated, trQueued, trRunning, trEnd, trTimeout int64
 
-		if tc.state != ifs.Empty {
+		if tc.state != ifs.NotATransaction {
 			trId = "tr-id"
 			trErr = "tr-err"
-			trStart = 123
+			trCreated = 123
+			trQueued = 133
+			trRunning = 143
+			trEnd = 153
 			trTimeout = 30
 		}
 
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, tc.action, "source", "vnet", []byte("data"), true, false, 123, tc.state, trId, trErr, trStart, trTimeout)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, tc.action, "source", "vnet", []byte("data"), true, false, 123, tc.state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

@@ -26,10 +26,10 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 		true,
 		false,
 		12345,
-		ifs.Empty,
+		ifs.NotATransaction,
 		"",
 		"",
-		0, 0,
+		0, 0, 0, 0, 0,
 	)
 
 	// Marshal the message
@@ -89,7 +89,7 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 	if newMsg.Sequence() != 12345 {
 		t.Errorf("Sequence mismatch: expected 12345, got %d", newMsg.Sequence())
 	}
-	if newMsg.Tr_State() != ifs.Empty {
+	if newMsg.Tr_State() != ifs.NotATransaction {
 		t.Errorf("Transaction state mismatch: expected Empty, got %v", newMsg.Tr_State())
 	}
 }
@@ -114,7 +114,7 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 		ifs.Locked,
 		"transaction-id-12345678901234567890123456",
 		"transaction error message",
-		time.Now().Unix(), 30,
+		time.Now().Unix(), time.Now().Unix()+10, time.Now().Unix()+20, time.Now().Unix()+30, 30,
 	)
 
 	data, err := msg.Marshal(nil, resources)
@@ -141,8 +141,17 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 	if newMsg.Tr_ErrMsg() != "transaction error message" {
 		t.Errorf("Transaction error message mismatch: expected 'transaction error message', got '%s'", newMsg.Tr_ErrMsg())
 	}
-	if newMsg.Tr_StartTime() != msg.Tr_StartTime() {
-		t.Errorf("Transaction start time mismatch: expected %d, got %d", msg.Tr_StartTime(), newMsg.Tr_StartTime())
+	if newMsg.Tr_Created() != msg.Tr_Created() {
+		t.Errorf("Transaction created mismatch: expected %d, got %d", msg.Tr_Created(), newMsg.Tr_Created())
+	}
+	if newMsg.Tr_Queued() != msg.Tr_Queued() {
+		t.Errorf("Transaction queued mismatch: expected %d, got %d", msg.Tr_Queued(), newMsg.Tr_Queued())
+	}
+	if newMsg.Tr_Running() != msg.Tr_Running() {
+		t.Errorf("Transaction running mismatch: expected %d, got %d", msg.Tr_Running(), newMsg.Tr_Running())
+	}
+	if newMsg.Tr_End() != msg.Tr_End() {
+		t.Errorf("Transaction end mismatch: expected %d, got %d", msg.Tr_End(), newMsg.Tr_End())
 	}
 }
 
@@ -150,7 +159,7 @@ func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 	resources := newMockResources()
 
 	msg := &ifs.Message{}
-	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.Empty, "", "", 0, 0)
+	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
 
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -199,6 +208,9 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 		"transaction-id-large-test-case-here",
 		"large transaction error: "+strings.Repeat("E", 200),
 		9223372036854775807, // max int64
+		9223372036854775806,
+		9223372036854775805,
+		9223372036854775804,
 		30,
 	)
 	msg.SetFailMessage(largeFailMessage)
@@ -223,8 +235,17 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 	if newMsg.Sequence() != 4294967295 {
 		t.Errorf("Max sequence mismatch: expected 4294967295, got %d", newMsg.Sequence())
 	}
-	if newMsg.Tr_StartTime() != 9223372036854775807 {
-		t.Errorf("Max start time mismatch: expected 9223372036854775807, got %d", newMsg.Tr_StartTime())
+	if newMsg.Tr_Created() != 9223372036854775807 {
+		t.Errorf("Max created time mismatch: expected 9223372036854775807, got %d", newMsg.Tr_Created())
+	}
+	if newMsg.Tr_Queued() != 9223372036854775806 {
+		t.Errorf("Max queued time mismatch: expected 9223372036854775806, got %d", newMsg.Tr_Queued())
+	}
+	if newMsg.Tr_Running() != 9223372036854775805 {
+		t.Errorf("Max running time mismatch: expected 9223372036854775805, got %d", newMsg.Tr_Running())
+	}
+	if newMsg.Tr_End() != 9223372036854775804 {
+		t.Errorf("Max end time mismatch: expected 9223372036854775804, got %d", newMsg.Tr_End())
 	}
 }
 
@@ -232,7 +253,7 @@ func TestMessageMarshalEncryptionError(t *testing.T) {
 	resources := newMockResourcesWithError(true, false)
 
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0)
 
 	_, err := msg.Marshal(nil, resources)
 	if err == nil {
@@ -247,7 +268,7 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 	resources := newMockResources()
 
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0)
 
 	// Marshal with working encryption
 	data, err := msg.Marshal(nil, resources)
@@ -275,7 +296,7 @@ func TestAllActions(t *testing.T) {
 
 	for _, action := range actions {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -301,7 +322,7 @@ func TestAllPriorities(t *testing.T) {
 
 	for _, priority := range priorities {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -324,7 +345,7 @@ func TestAllTransactionStates(t *testing.T) {
 	resources := newMockResources()
 
 	states := []ifs.TransactionState{
-		ifs.Empty, ifs.Create, ifs.Created, ifs.Start, ifs.Lock, ifs.Locked,
+		ifs.NotATransaction, ifs.Create, ifs.Created, ifs.Start, ifs.Lock, ifs.Locked,
 		ifs.LockFailed, ifs.Commit, ifs.Commited, ifs.Rollback, ifs.Rollbacked,
 		ifs.Finish, ifs.Finished, ifs.Errored,
 	}
@@ -332,17 +353,19 @@ func TestAllTransactionStates(t *testing.T) {
 	for _, state := range states {
 		msg := &ifs.Message{}
 		var trId, trErr string
-		var trStart int64
-		var trTimeout int64
+		var trCreated, trQueued, trRunning, trEnd, trTimeout int64
 		// Only set transaction fields for non-Empty states
-		if state != ifs.Empty {
+		if state != ifs.NotATransaction {
 			trId = "tr-id-123456789012345678901234567890"
 			trErr = "transaction error message"
-			trStart = 1234567890
+			trCreated = 1234567890
+			trQueued = 1234567900
+			trRunning = 1234567910
+			trEnd = 1234567920
 			trTimeout = 30
 		}
 
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trStart, trTimeout)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -359,15 +382,24 @@ func TestAllTransactionStates(t *testing.T) {
 			t.Errorf("Transaction state mismatch for %v: expected %v, got %v", state, state, newMsg.Tr_State())
 		}
 
-		if state != ifs.Empty {
+		if state != ifs.NotATransaction {
 			if newMsg.Tr_Id() != trId {
 				t.Errorf("Transaction ID mismatch for state %v: expected '%s', got '%s'", state, trId, newMsg.Tr_Id())
 			}
 			if newMsg.Tr_ErrMsg() != trErr {
 				t.Errorf("Transaction error message mismatch for state %v: expected '%s', got '%s'", state, trErr, newMsg.Tr_ErrMsg())
 			}
-			if newMsg.Tr_StartTime() != trStart {
-				t.Errorf("Transaction start time mismatch for state %v: expected %d, got %d", state, trStart, newMsg.Tr_StartTime())
+			if newMsg.Tr_Created() != trCreated {
+				t.Errorf("Transaction created mismatch for state %v: expected %d, got %d", state, trCreated, newMsg.Tr_Created())
+			}
+			if newMsg.Tr_Queued() != trQueued {
+				t.Errorf("Transaction queued mismatch for state %v: expected %d, got %d", state, trQueued, newMsg.Tr_Queued())
+			}
+			if newMsg.Tr_Running() != trRunning {
+				t.Errorf("Transaction running mismatch for state %v: expected %d, got %d", state, trRunning, newMsg.Tr_Running())
+			}
+			if newMsg.Tr_End() != trEnd {
+				t.Errorf("Transaction end mismatch for state %v: expected %d, got %d", state, trEnd, newMsg.Tr_End())
 			}
 		}
 	}
@@ -388,7 +420,7 @@ func TestBoolCombinations(t *testing.T) {
 
 	for _, combo := range combinations {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.Empty, "", "", 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.NotATransaction, "", "", 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

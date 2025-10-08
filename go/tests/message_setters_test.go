@@ -117,10 +117,28 @@ func TestMessageSetters(t *testing.T) {
 		t.Errorf("Expected transaction error 'test tr error', got '%s'", msg.Tr_ErrMsg())
 	}
 
-	// Test SetTr_StartTime
-	msg.SetTr_StartTime(int64(123456789))
-	if msg.Tr_StartTime() != int64(123456789) {
-		t.Errorf("Expected transaction start time 123456789, got %d", msg.Tr_StartTime())
+	// Test SetTr_Created
+	msg.SetTr_Created(int64(111111111))
+	if msg.Tr_Created() != int64(111111111) {
+		t.Errorf("Expected transaction created 111111111, got %d", msg.Tr_Created())
+	}
+
+	// Test SetTr_Queued
+	msg.SetTr_Queued(int64(222222222))
+	if msg.Tr_Queued() != int64(222222222) {
+		t.Errorf("Expected transaction queued 222222222, got %d", msg.Tr_Queued())
+	}
+
+	// Test SetTr_Running
+	msg.SetTr_Running(int64(333333333))
+	if msg.Tr_Running() != int64(333333333) {
+		t.Errorf("Expected transaction running 333333333, got %d", msg.Tr_Running())
+	}
+
+	// Test SetTr_End
+	msg.SetTr_End(int64(444444444))
+	if msg.Tr_End() != int64(444444444) {
+		t.Errorf("Expected transaction end 444444444, got %d", msg.Tr_End())
 	}
 
 	// Test SetTr_Timeout

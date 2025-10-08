@@ -38,15 +38,21 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	pTrId := pData + dataSize
 	this.data = body[pData:pTrId]
 
-	if this.tr_state != Empty {
+	if this.tr_state != NotATransaction {
 		pTrErrMsgSize := pTrId + sUuid
 		this.tr_id = unsafeString(body[pTrId:pTrErrMsgSize])
 		trErrMsgSize := int(body[pTrErrMsgSize])
 		pTrErrMsg := pTrErrMsgSize + sByte
-		pTrStartTime := pTrErrMsg + trErrMsgSize
-		pTrTimeout := pTrStartTime + 8
-		this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrStartTime])
-		this.tr_startTime = Bytes2Long(body[pTrStartTime:pTrTimeout])
+		pTrCreated := pTrErrMsg + trErrMsgSize
+		pTrQueued := pTrCreated + 8
+		pTrRunning := pTrQueued + 8
+		pTrEnd := pTrRunning + 8
+		pTrTimeout := pTrEnd + 8
+		this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrCreated])
+		this.tr_created = Bytes2Long(body[pTrCreated:pTrQueued])
+		this.tr_queued = Bytes2Long(body[pTrQueued:pTrRunning])
+		this.tr_running = Bytes2Long(body[pTrRunning:pTrEnd])
+		this.tr_end = Bytes2Long(body[pTrEnd:pTrTimeout])
 		this.tr_timeout = Bytes2Long(body[pTrTimeout:])
 	}
 

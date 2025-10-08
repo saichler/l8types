@@ -30,7 +30,7 @@ func TestCompleteMessageWorkflow(t *testing.T) {
 		ifs.Start,
 		"transaction-auth-session-uuid-567890",
 		"",
-		time.Now().Unix(), 30,
+		time.Now().Unix(), time.Now().Unix()+5, time.Now().Unix()+10, time.Now().Unix()+15, 30,
 	)
 	originalMsg.SetAAAId("aaa-session-uuid-456789012345678901")
 	originalMsg.SetTimeout(5000)
@@ -135,8 +135,17 @@ func verifyMessageEquality(t *testing.T, original, reconstructed *ifs.Message) {
 	if reconstructed.Tr_ErrMsg() != original.Tr_ErrMsg() {
 		t.Errorf("Transaction error message mismatch: expected '%s', got '%s'", original.Tr_ErrMsg(), reconstructed.Tr_ErrMsg())
 	}
-	if reconstructed.Tr_StartTime() != original.Tr_StartTime() {
-		t.Errorf("Transaction start time mismatch: expected %d, got %d", original.Tr_StartTime(), reconstructed.Tr_StartTime())
+	if reconstructed.Tr_Created() != original.Tr_Created() {
+		t.Errorf("Transaction created mismatch: expected %d, got %d", original.Tr_Created(), reconstructed.Tr_Created())
+	}
+	if reconstructed.Tr_Queued() != original.Tr_Queued() {
+		t.Errorf("Transaction queued mismatch: expected %d, got %d", original.Tr_Queued(), reconstructed.Tr_Queued())
+	}
+	if reconstructed.Tr_Running() != original.Tr_Running() {
+		t.Errorf("Transaction running mismatch: expected %d, got %d", original.Tr_Running(), reconstructed.Tr_Running())
+	}
+	if reconstructed.Tr_End() != original.Tr_End() {
+		t.Errorf("Transaction end mismatch: expected %d, got %d", original.Tr_End(), reconstructed.Tr_End())
 	}
 }
 
@@ -145,7 +154,7 @@ func TestMultipleRoundTrips(t *testing.T) {
 
 	// Create initial message
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("initial data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("initial data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
 
 	// Perform multiple marshal/unmarshal cycles
 	for i := 0; i < 10; i++ {
@@ -200,7 +209,7 @@ func TestConcurrentMarshalUnmarshal(t *testing.T) {
 				ifs.TransactionState(index%14),
 				fmt.Sprintf("tr-id-%d", index),
 				fmt.Sprintf("tr-err-%d", index),
-				int64(index*10000), 30,
+				int64(index*10000), int64(index*10000+100), int64(index*10000+200), int64(index*10000+300), 30,
 			)
 
 			data, err := msg.Marshal(nil, resources)
@@ -238,9 +247,9 @@ func TestMessageSizeCalculation(t *testing.T) {
 		dataSize int
 		trState  ifs.TransactionState
 	}{
-		{"empty_no_transaction", 0, ifs.Empty},
-		{"small_no_transaction", 100, ifs.Empty},
-		{"large_no_transaction", 10000, ifs.Empty},
+		{"empty_no_transaction", 0, ifs.NotATransaction},
+		{"small_no_transaction", 100, ifs.NotATransaction},
+		{"large_no_transaction", 10000, ifs.NotATransaction},
 		{"empty_with_transaction", 0, ifs.Locked},
 		{"small_with_transaction", 100, ifs.Locked},
 		{"large_with_transaction", 10000, ifs.Locked},
@@ -255,16 +264,18 @@ func TestMessageSizeCalculation(t *testing.T) {
 			}
 
 			var trId, trErr string
-			var trStart int64
-			var trTimeout int64
-			if tc.trState != ifs.Empty {
+			var trCreated, trQueued, trRunning, trEnd, trTimeout int64
+			if tc.trState != ifs.NotATransaction {
 				trId = "transaction-id-12345678901234567890"
 				trErr = "transaction error message"
-				trStart = 1234567890
+				trCreated = 1234567890
+				trQueued = 1234567900
+				trRunning = 1234567910
+				trEnd = 1234567920
 				trTimeout = 30
 			}
 
-			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(data), true, false, 123, tc.trState, trId, trErr, trStart, trTimeout)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(data), true, false, 123, tc.trState, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout)
 
 			marshaledData, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -294,7 +305,7 @@ func TestMessageSizeCalculation(t *testing.T) {
 func BenchmarkMessageMarshal(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -308,7 +319,7 @@ func BenchmarkMessageMarshal(b *testing.B) {
 func BenchmarkMessageUnmarshal(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
 
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -328,7 +339,7 @@ func BenchmarkMessageUnmarshal(b *testing.B) {
 func BenchmarkMessageRoundTrip(b *testing.B) {
 	resources := newMockResources()
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.Empty, "", "", 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("benchmark data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
