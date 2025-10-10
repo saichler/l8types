@@ -24,6 +24,7 @@ message L8ReplicationIndex {
 
 message L8ReplicationKey {
   map<string, int32> location = 1;
+  string replica0 = 2;
 }
 
 message L8Transaction {
