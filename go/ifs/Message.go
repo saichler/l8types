@@ -28,6 +28,7 @@ type Message struct {
 	tr_running int64
 	tr_end     int64
 	tr_timeout int64
+	tr_replica byte
 }
 
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
@@ -150,6 +151,10 @@ func (this *Message) Tr_Timeout() int64 {
 	return this.tr_timeout
 }
 
+func (this *Message) Tr_Replica() byte {
+	return this.tr_replica
+}
+
 //Setters
 
 func (this *Message) SetSource(source string) {
@@ -235,4 +240,8 @@ func (this *Message) SetTr_ErrMsg(errMsg string) {
 
 func (this *Message) SetTr_Timeout(timeout int64) {
 	this.tr_timeout = timeout
+}
+
+func (this *Message) SetTr_Replica(replica byte) {
+	this.tr_replica = replica
 }
