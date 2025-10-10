@@ -21,20 +21,21 @@ type Message struct {
 	failMessage string
 	data        []byte
 
-	tr_id      string
-	tr_errMsg  string
-	tr_created int64
-	tr_queued  int64
-	tr_running int64
-	tr_end     int64
-	tr_timeout int64
-	tr_replica byte
+	tr_id        string
+	tr_errMsg    string
+	tr_created   int64
+	tr_queued    int64
+	tr_running   int64
+	tr_end       int64
+	tr_timeout   int64
+	tr_replica   byte
+	tr_isReplica bool
 }
 
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data []byte,
 	isRequest, isReply bool, msgNum uint32,
-	tr_state TransactionState, tr_id, tr_errMsg string, tr_created, tr_queued, tr_running, tr_end, tr_timeout int64, tr_replica byte) {
+	tr_state TransactionState, tr_id, tr_errMsg string, tr_created, tr_queued, tr_running, tr_end, tr_timeout int64, tr_replica byte, tr_isreplica bool) {
 	this.destination = destination
 	this.serviceName = serviceName
 	this.serviceArea = serviceArea
@@ -56,6 +57,7 @@ func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	this.tr_end = tr_end
 	this.tr_timeout = tr_timeout
 	this.tr_replica = tr_replica
+	this.tr_isReplica = tr_isreplica
 }
 
 //Getters
@@ -156,6 +158,10 @@ func (this *Message) Tr_Replica() byte {
 	return this.tr_replica
 }
 
+func (this *Message) Tr_IsReplica() bool {
+	return this.tr_isReplica
+}
+
 //Setters
 
 func (this *Message) SetSource(source string) {
@@ -245,4 +251,8 @@ func (this *Message) SetTr_Timeout(timeout int64) {
 
 func (this *Message) SetTr_Replica(replica byte) {
 	this.tr_replica = replica
+}
+
+func (this *Message) SetTr_IsReplica(isReplica bool) {
+	this.tr_isReplica = isReplica
 }

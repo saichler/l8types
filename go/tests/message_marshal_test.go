@@ -29,7 +29,7 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 		ifs.NotATransaction,
 		"",
 		"",
-		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, false,
 	)
 
 	// Marshal the message
@@ -114,7 +114,7 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 		ifs.Running,
 		"transaction-id-12345678901234567890123456",
 		"transaction error message",
-		time.Now().Unix(), time.Now().Unix()+10, time.Now().Unix()+20, time.Now().Unix()+30, 30, 0,
+		time.Now().Unix(), time.Now().Unix()+10, time.Now().Unix()+20, time.Now().Unix()+30, 30, 0, false,
 	)
 
 	data, err := msg.Marshal(nil, resources)
@@ -170,13 +170,47 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 	if newMsg2.Tr_Replica() != byte(3) {
 		t.Errorf("Transaction replica mismatch: expected 3, got %d", newMsg2.Tr_Replica())
 	}
+
+	// Test tr_isReplica field
+	msg.SetTr_IsReplica(true)
+	data, err = msg.Marshal(nil, resources)
+	if err != nil {
+		t.Fatalf("Marshal with tr_isReplica failed: %v", err)
+	}
+
+	newMsg3 := &ifs.Message{}
+	_, err = newMsg3.Unmarshal(data, resources)
+	if err != nil {
+		t.Fatalf("Unmarshal with tr_isReplica failed: %v", err)
+	}
+
+	if !newMsg3.Tr_IsReplica() {
+		t.Errorf("Transaction isReplica mismatch: expected true, got false")
+	}
+
+	// Test tr_isReplica false
+	msg.SetTr_IsReplica(false)
+	data, err = msg.Marshal(nil, resources)
+	if err != nil {
+		t.Fatalf("Marshal with tr_isReplica=false failed: %v", err)
+	}
+
+	newMsg4 := &ifs.Message{}
+	_, err = newMsg4.Unmarshal(data, resources)
+	if err != nil {
+		t.Fatalf("Unmarshal with tr_isReplica=false failed: %v", err)
+	}
+
+	if newMsg4.Tr_IsReplica() {
+		t.Errorf("Transaction isReplica mismatch: expected false, got true")
+	}
 }
 
 func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 	resources := newMockResources()
 
 	msg := &ifs.Message{}
-	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
+	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0, false)
 
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -228,7 +262,7 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 		9223372036854775806,
 		9223372036854775805,
 		9223372036854775804,
-		30, 0,
+		30, 0, false,
 	)
 	msg.SetFailMessage(largeFailMessage)
 
@@ -270,7 +304,7 @@ func TestMessageMarshalEncryptionError(t *testing.T) {
 	resources := newMockResourcesWithError(true, false)
 
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0, false)
 
 	_, err := msg.Marshal(nil, resources)
 	if err == nil {
@@ -285,7 +319,7 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 	resources := newMockResources()
 
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0, false)
 
 	// Marshal with working encryption
 	data, err := msg.Marshal(nil, resources)
@@ -313,7 +347,7 @@ func TestAllActions(t *testing.T) {
 
 	for _, action := range actions {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0, false)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -339,7 +373,7 @@ func TestAllPriorities(t *testing.T) {
 
 	for _, priority := range priorities {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0, false)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -381,7 +415,7 @@ func TestAllTransactionStates(t *testing.T) {
 			trTimeout = 30
 		}
 
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout, 0, false)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -420,6 +454,7 @@ func TestAllTransactionStates(t *testing.T) {
 
 			// Test tr_replica for transaction states
 			msg.SetTr_Replica(byte(5))
+			msg.SetTr_IsReplica(true)
 			data, err = msg.Marshal(nil, resources)
 			if err != nil {
 				t.Fatalf("Marshal with tr_replica failed for state %v: %v", state, err)
@@ -433,6 +468,9 @@ func TestAllTransactionStates(t *testing.T) {
 
 			if testMsg.Tr_Replica() != byte(5) {
 				t.Errorf("Transaction replica mismatch for state %v: expected 5, got %d", state, testMsg.Tr_Replica())
+			}
+			if !testMsg.Tr_IsReplica() {
+				t.Errorf("Transaction isReplica mismatch for state %v: expected true, got false", state)
 			}
 		}
 	}
@@ -453,7 +491,7 @@ func TestBoolCombinations(t *testing.T) {
 
 	for _, combo := range combinations {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0, false)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

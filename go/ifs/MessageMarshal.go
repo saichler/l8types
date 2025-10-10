@@ -40,7 +40,8 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 	pTrEnd := pTrRunning + 8
 	pTrTimeout := pTrEnd + 8
 	pTrReplica := pTrTimeout + 8
-	pEnd := pTrReplica + sByte
+	pTrIsReplica := pTrReplica + sByte
+	pEnd := pTrIsReplica + sByte
 
 	var bodySize int
 	if this.tr_state == NotATransaction {
@@ -82,6 +83,11 @@ func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, err
 		copy(body[pTrEnd:pTrTimeout], Long2Bytes(this.tr_end))
 		copy(body[pTrTimeout:pTrReplica], Long2Bytes(this.tr_timeout))
 		body[pTrReplica] = this.tr_replica
+		if this.tr_isReplica {
+			body[pTrIsReplica] = 1
+		} else {
+			body[pTrIsReplica] = 0
+		}
 	}
 
 	bodyEnc, err := resources.Security().Encrypt(body)

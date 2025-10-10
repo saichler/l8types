@@ -5,10 +5,6 @@ import (
 	"github.com/saichler/l8types/go/types/l8services"
 )
 
-const (
-	ReplicationOff = byte(99)
-)
-
 // Add a bool for transaction
 type IServices interface {
 	// Add a service point type so compiling will pull the code for it

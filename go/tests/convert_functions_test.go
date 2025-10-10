@@ -214,7 +214,7 @@ func TestActionStateBitManipulation(t *testing.T) {
 			trTimeout = 30
 		}
 
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, tc.action, "source", "vnet", []byte("data"), true, false, 123, tc.state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, tc.action, "source", "vnet", []byte("data"), true, false, 123, tc.state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout, 0, false)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

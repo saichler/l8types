@@ -49,6 +49,7 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 		pTrEnd := pTrRunning + 8
 		pTrTimeout := pTrEnd + 8
 		pTrReplica := pTrTimeout + 8
+		pTrIsReplica := pTrReplica + sByte
 		this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrCreated])
 		this.tr_created = Bytes2Long(body[pTrCreated:pTrQueued])
 		this.tr_queued = Bytes2Long(body[pTrQueued:pTrRunning])
@@ -56,6 +57,7 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 		this.tr_end = Bytes2Long(body[pTrEnd:pTrTimeout])
 		this.tr_timeout = Bytes2Long(body[pTrTimeout:pTrReplica])
 		this.tr_replica = body[pTrReplica]
+		this.tr_isReplica = body[pTrIsReplica] == 1
 	}
 
 	return nil, nil
