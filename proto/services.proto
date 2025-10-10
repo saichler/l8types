@@ -19,10 +19,11 @@ message L8ReplicationIndex {
   string service_name = 1;
   sint32 service_area = 2;
   map<string, L8ReplicationKey> keys = 3;
+  map<string, bool> extracted = 4;
 }
 
 message L8ReplicationKey {
-  map<string, int64> location = 1;
+  map<string, int32> location = 1;
 }
 
 message L8Transaction {
