@@ -19,10 +19,10 @@ type IElements interface {
 	Serialize() ([]byte, error)
 	Deserialize([]byte, IRegistry) error
 	Notification() bool
-	ReplicasRequest() bool
 	Append(IElements)
 	AsList(IRegistry) (interface{}, error)
 	IsFilterMode() bool
+	Replica() int
 }
 
 type IQuery interface {

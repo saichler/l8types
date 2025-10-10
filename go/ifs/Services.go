@@ -60,6 +60,14 @@ type IDistributedCache interface {
 	AddStatFunc(string, func(interface{}) bool)
 }
 
+type IReplicationCache interface {
+	Post(interface{}, int) error
+	Put(interface{}, int) error
+	Patch(interface{}, int) error
+	Delete(interface{}, int) error
+	Get(interface{}, int) (interface{}, error)
+}
+
 type ITransactionConfig interface {
 	Replication() bool
 	ReplicationCount() int
