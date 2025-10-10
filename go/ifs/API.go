@@ -23,7 +23,7 @@ type IElements interface {
 	AsList(IRegistry) (interface{}, error)
 	IsFilterMode() bool
 	IsReplica() bool
-	Replica() int
+	Replica() byte
 }
 
 type IQuery interface {
