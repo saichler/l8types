@@ -22,6 +22,7 @@ type IElements interface {
 	Append(IElements)
 	AsList(IRegistry) (interface{}, error)
 	IsFilterMode() bool
+	IsReplica() bool
 	Replica() int
 }
 
