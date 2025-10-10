@@ -28,7 +28,7 @@ func TestMessageBoundaryConditions(t *testing.T) {
 		ifs.Failed,                              // highest transaction state
 		"uuid-transaction-id-567890123456789012", // exactly 36 chars
 		"",
-		9223372036854775807, 9223372036854775806, 9223372036854775805, 9223372036854775804, 30, // max int64 values
+		9223372036854775807, 9223372036854775806, 9223372036854775805, 9223372036854775804, 30, 0, // max int64 values
 	)
 
 	data, err := msg.Marshal(nil, resources)
@@ -73,7 +73,7 @@ func TestMessageTimeout(t *testing.T) {
 
 	for _, timeout := range testTimeouts {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 		msg.SetTimeout(timeout)
 
 		data, err := msg.Marshal(nil, resources)
@@ -111,7 +111,7 @@ func TestMessageFailMessage(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 			msg.SetFailMessage(tc.failMessage)
 
 			data, err := msg.Marshal(nil, resources)
@@ -145,7 +145,7 @@ func TestMessageAAAId(t *testing.T) {
 
 	for _, aaaId := range testCases {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 		msg.SetAAAId(aaaId)
 
 		data, err := msg.Marshal(nil, resources)
@@ -193,7 +193,7 @@ func TestMessageDataSizes(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(tc.data), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+			msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte(tc.data), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -228,7 +228,7 @@ func TestTransactionErrorMessages(t *testing.T) {
 		msg := &ifs.Message{}
 		msg.Init(
 			"dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"),
-			true, false, 123, ifs.Failed, "tr-id", errMsg, 1234567890, 1234567900, 1234567910, 1234567920, 30,
+			true, false, 123, ifs.Failed, "tr-id", errMsg, 1234567890, 1234567900, 1234567910, 1234567920, 30, 0,
 		)
 
 		data, err := msg.Marshal(nil, resources)
@@ -264,7 +264,7 @@ func TestServiceNameLengthHandling(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			msg := &ifs.Message{}
-			msg.Init("dest", tc.serviceName, 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+			msg.Init("dest", tc.serviceName, 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 			data, err := msg.Marshal(nil, resources)
 			if err != nil {
@@ -306,7 +306,7 @@ func TestPredefinedDestinations(t *testing.T) {
 
 	for _, destination := range testCases {
 		msg := &ifs.Message{}
-		msg.Init(destination, "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init(destination, "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -338,7 +338,7 @@ func TestSequenceNumberOverflow(t *testing.T) {
 
 	for _, seq := range testSequences {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, seq, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, seq, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

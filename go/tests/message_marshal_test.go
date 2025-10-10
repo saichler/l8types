@@ -29,7 +29,7 @@ func TestMessageMarshalUnmarshalBasic(t *testing.T) {
 		ifs.NotATransaction,
 		"",
 		"",
-		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0,
 	)
 
 	// Marshal the message
@@ -114,7 +114,7 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 		ifs.Running,
 		"transaction-id-12345678901234567890123456",
 		"transaction error message",
-		time.Now().Unix(), time.Now().Unix()+10, time.Now().Unix()+20, time.Now().Unix()+30, 30,
+		time.Now().Unix(), time.Now().Unix()+10, time.Now().Unix()+20, time.Now().Unix()+30, 30, 0,
 	)
 
 	data, err := msg.Marshal(nil, resources)
@@ -176,7 +176,7 @@ func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
 	resources := newMockResources()
 
 	msg := &ifs.Message{}
-	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+	msg.Init("", "", 0, ifs.P8, ifs.M_All, ifs.Reply, "", "", []byte(""), false, false, 0, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 	data, err := msg.Marshal(nil, resources)
 	if err != nil {
@@ -228,7 +228,7 @@ func TestMessageMarshalUnmarshalLargeData(t *testing.T) {
 		9223372036854775806,
 		9223372036854775805,
 		9223372036854775804,
-		30,
+		30, 0,
 	)
 	msg.SetFailMessage(largeFailMessage)
 
@@ -270,7 +270,7 @@ func TestMessageMarshalEncryptionError(t *testing.T) {
 	resources := newMockResourcesWithError(true, false)
 
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 	_, err := msg.Marshal(nil, resources)
 	if err == nil {
@@ -285,7 +285,7 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 	resources := newMockResources()
 
 	msg := &ifs.Message{}
-	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+	msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 	// Marshal with working encryption
 	data, err := msg.Marshal(nil, resources)
@@ -313,7 +313,7 @@ func TestAllActions(t *testing.T) {
 
 	for _, action := range actions {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, action, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -339,7 +339,7 @@ func TestAllPriorities(t *testing.T) {
 
 	for _, priority := range priorities {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, priority, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -381,7 +381,7 @@ func TestAllTransactionStates(t *testing.T) {
 			trTimeout = 30
 		}
 
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), true, false, 123, state, trId, trErr, trCreated, trQueued, trRunning, trEnd, trTimeout, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {
@@ -453,7 +453,7 @@ func TestBoolCombinations(t *testing.T) {
 
 	for _, combo := range combinations {
 		msg := &ifs.Message{}
-		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0)
+		msg.Init("dest", "service", 1, ifs.P1, ifs.M_All, ifs.POST, "source", "vnet", []byte("data"), combo.request, combo.reply, 123, ifs.NotATransaction, "", "", 0, 0, 0, 0, 0, 0)
 
 		data, err := msg.Marshal(nil, resources)
 		if err != nil {

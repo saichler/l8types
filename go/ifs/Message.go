@@ -34,7 +34,7 @@ type Message struct {
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data []byte,
 	isRequest, isReply bool, msgNum uint32,
-	tr_state TransactionState, tr_id, tr_errMsg string, tr_created, tr_queued, tr_running, tr_end, tr_timeout int64) {
+	tr_state TransactionState, tr_id, tr_errMsg string, tr_created, tr_queued, tr_running, tr_end, tr_timeout int64, tr_replica byte) {
 	this.destination = destination
 	this.serviceName = serviceName
 	this.serviceArea = serviceArea
@@ -55,6 +55,7 @@ func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	this.tr_running = tr_running
 	this.tr_end = tr_end
 	this.tr_timeout = tr_timeout
+	this.tr_replica = tr_replica
 }
 
 //Getters
