@@ -25,6 +25,7 @@ func (this *Message) Clone() *Message {
 	clone.tr_running = this.tr_running
 	clone.tr_end = this.tr_end
 	clone.tr_timeout = this.tr_timeout
+	clone.tr_replica = this.tr_replica
 	return clone
 }
 
@@ -53,6 +54,7 @@ func (this *Message) CloneReply(localUuid, remoteUuid string) *Message {
 	clone.tr_running = this.tr_running
 	clone.tr_end = this.tr_end
 	clone.tr_timeout = this.tr_timeout
+	clone.tr_replica = this.tr_replica
 	return clone
 }
 
@@ -81,5 +83,6 @@ func (this *Message) CloneFail(failMessage, remoteUuid string) *Message {
 	clone.tr_running = this.tr_running
 	clone.tr_end = this.tr_end
 	clone.tr_timeout = this.tr_timeout
+	clone.tr_replica = this.tr_replica
 	return clone
 }
