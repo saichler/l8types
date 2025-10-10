@@ -27,6 +27,7 @@ func TestMessageClone(t *testing.T) {
 	msg.SetTr_Id("original-tr-id")
 	msg.SetTr_ErrMsg("original tr error")
 	msg.SetTr_Timeout(int64(3000))
+	msg.SetTr_Replica(byte(7))
 
 	// Test Clone
 	clone := msg.Clone()
@@ -85,6 +86,9 @@ func TestMessageClone(t *testing.T) {
 	if clone.Tr_Timeout() != msg.Tr_Timeout() {
 		t.Errorf("Clone tr timeout mismatch: expected %d, got %d", msg.Tr_Timeout(), clone.Tr_Timeout())
 	}
+	if clone.Tr_Replica() != msg.Tr_Replica() {
+		t.Errorf("Clone tr replica mismatch: expected %d, got %d", msg.Tr_Replica(), clone.Tr_Replica())
+	}
 }
 
 func TestMessageCloneReply(t *testing.T) {
@@ -102,6 +106,8 @@ func TestMessageCloneReply(t *testing.T) {
 	msg.SetTimeout(uint16(45))
 	msg.SetRequestReply(true, false)
 	msg.SetData([]byte("test data"))
+	msg.SetTr_State(ifs.Running)
+	msg.SetTr_Replica(byte(2))
 
 	// Test CloneReply
 	localUuid := "local-uuid"
@@ -135,6 +141,9 @@ func TestMessageCloneReply(t *testing.T) {
 	if reply.Sequence() != msg.Sequence() {
 		t.Errorf("CloneReply sequence mismatch: expected %d, got %d", msg.Sequence(), reply.Sequence())
 	}
+	if reply.Tr_Replica() != msg.Tr_Replica() {
+		t.Errorf("CloneReply tr replica mismatch: expected %d, got %d", msg.Tr_Replica(), reply.Tr_Replica())
+	}
 }
 
 func TestMessageCloneFail(t *testing.T) {
@@ -146,6 +155,8 @@ func TestMessageCloneFail(t *testing.T) {
 	msg.SetServiceName("test-service")
 	msg.SetAction(ifs.PUT)
 	msg.SetSequence(uint32(300))
+	msg.SetTr_State(ifs.Failed)
+	msg.SetTr_Replica(byte(4))
 
 	// Test CloneFail
 	failMessage := "Operation failed"
@@ -175,5 +186,8 @@ func TestMessageCloneFail(t *testing.T) {
 	}
 	if failClone.Sequence() != msg.Sequence() {
 		t.Errorf("CloneFail sequence mismatch: expected %d, got %d", msg.Sequence(), failClone.Sequence())
+	}
+	if failClone.Tr_Replica() != msg.Tr_Replica() {
+		t.Errorf("CloneFail tr replica mismatch: expected %d, got %d", msg.Tr_Replica(), failClone.Tr_Replica())
 	}
 }

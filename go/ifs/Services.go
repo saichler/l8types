@@ -24,8 +24,8 @@ type IServices interface {
 	//The list of existing services
 	Services() *l8services.L8Services
 	GetLeader(string, byte) string
-	GetParticipants(string, byte) map[string]bool
-	RoundRobinParticipants(string, byte, int) map[string]bool
+	GetParticipants(string, byte) map[string]byte
+	RoundRobinParticipants(string, byte, int) map[string]byte
 }
 
 type IServiceHandler interface {

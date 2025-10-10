@@ -153,6 +153,23 @@ func TestMessageMarshalUnmarshalWithTransaction(t *testing.T) {
 	if newMsg.Tr_End() != msg.Tr_End() {
 		t.Errorf("Transaction end mismatch: expected %d, got %d", msg.Tr_End(), newMsg.Tr_End())
 	}
+
+	// Test tr_replica field
+	msg.SetTr_Replica(byte(3))
+	data, err = msg.Marshal(nil, resources)
+	if err != nil {
+		t.Fatalf("Marshal with tr_replica failed: %v", err)
+	}
+
+	newMsg2 := &ifs.Message{}
+	_, err = newMsg2.Unmarshal(data, resources)
+	if err != nil {
+		t.Fatalf("Unmarshal with tr_replica failed: %v", err)
+	}
+
+	if newMsg2.Tr_Replica() != byte(3) {
+		t.Errorf("Transaction replica mismatch: expected 3, got %d", newMsg2.Tr_Replica())
+	}
 }
 
 func TestMessageMarshalUnmarshalEmptyFields(t *testing.T) {
@@ -399,6 +416,23 @@ func TestAllTransactionStates(t *testing.T) {
 			}
 			if newMsg.Tr_End() != trEnd {
 				t.Errorf("Transaction end mismatch for state %v: expected %d, got %d", state, trEnd, newMsg.Tr_End())
+			}
+
+			// Test tr_replica for transaction states
+			msg.SetTr_Replica(byte(5))
+			data, err = msg.Marshal(nil, resources)
+			if err != nil {
+				t.Fatalf("Marshal with tr_replica failed for state %v: %v", state, err)
+			}
+
+			testMsg := &ifs.Message{}
+			_, err = testMsg.Unmarshal(data, resources)
+			if err != nil {
+				t.Fatalf("Unmarshal with tr_replica failed for state %v: %v", state, err)
+			}
+
+			if testMsg.Tr_Replica() != byte(5) {
+				t.Errorf("Transaction replica mismatch for state %v: expected 5, got %d", state, testMsg.Tr_Replica())
 			}
 		}
 	}
