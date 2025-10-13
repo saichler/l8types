@@ -21,6 +21,7 @@ type IServices interface {
 	ServiceHandler(string, byte) (IServiceHandler, bool)
 	// Register a distributed cache
 	RegisterDistributedCache(cache IDistributedCache)
+	RegisterServiceCache(serviceCache IServiceHandlerCache)
 	//The list of existing services
 	Services() *l8services.L8Services
 	GetLeader(string, byte) string
@@ -39,6 +40,17 @@ type IServiceHandler interface {
 	Failed(IElements, IVNic, *Message) IElements
 	TransactionConfig() ITransactionConfig
 	WebService() IWebService
+}
+
+type IServiceHandlerCache interface {
+	IServiceHandler
+	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
+	Sync()
+	Fetch(int, int, IQuery) []interface{}
+	Stats() map[string]int32
+	AddStatFunc(string, func(interface{}) bool)
+	ServiceName() string
+	ServiceArea() byte
 }
 
 type IServiceCacheListener interface {
