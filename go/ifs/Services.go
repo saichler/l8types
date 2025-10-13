@@ -51,6 +51,7 @@ type IServiceHandlerCache interface {
 	AddStatFunc(string, func(interface{}) bool)
 	ServiceName() string
 	ServiceArea() byte
+	Size() int
 }
 
 type IServiceCacheListener interface {
