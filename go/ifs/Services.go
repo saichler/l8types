@@ -45,6 +45,7 @@ type IServiceHandler interface {
 type IServiceHandlerCache interface {
 	IServiceHandler
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
+	All() map[string]interface{}
 	Sync()
 	Fetch(int, int, IQuery) []interface{}
 	Stats() map[string]int32
