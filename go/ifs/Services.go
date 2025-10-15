@@ -19,9 +19,6 @@ type IServices interface {
 	Notify(IElements, IVNic, *Message, bool) IElements
 	// Return the service point handler for the service name and area
 	ServiceHandler(string, byte) (IServiceHandler, bool)
-	// Register a distributed cache
-	RegisterDistributedCache(cache IDistributedCache)
-	RegisterServiceCache(serviceCache IServiceHandlerCache)
 	//The list of existing services
 	Services() *l8services.L8Services
 	GetLeader(string, byte) string
