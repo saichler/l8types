@@ -34,8 +34,8 @@ const (
 	GET       Action = 5
 	Reply     Action = 6
 	Notify    Action = 7
-	Sync      Action = 8
 	EndPoints Action = 9
+	//Sync      Action = 8
 
 	// Leader Election Actions
 	ElectionRequest    Action = 10 // Initiate election for a service
