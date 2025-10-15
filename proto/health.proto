@@ -16,6 +16,10 @@ enum L8HealthState {
   Unreachable = 3;
 }
 
+message L8HealthList {
+  repeated L8Health list = 1;
+}
+
 message L8Health {
   string a_uuid = 1;
   string z_uuid = 2;
