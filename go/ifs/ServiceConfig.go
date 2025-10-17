@@ -1,19 +1,19 @@
 package ifs
 
 type ServiceConfig struct {
-	ServiceName       string
-	ServiceArea       byte
-	ServiceItem       interface{}
-	ServiceItemList   interface{}
-	InitItems         []interface{}
-	PrimaryKey        []string
-	Store             IStorage
-	SendNotifications bool
-	Transaction       bool
-	Replication       bool
-	ReplicationCount  int
-	WebServiceDef     IWebService
-	Callback          IServiceCallback
+	ServiceName      string
+	ServiceArea      byte
+	ServiceItem      interface{}
+	ServiceItemList  interface{}
+	InitItems        []interface{}
+	PrimaryKey       []string
+	Store            IStorage
+	Voter            bool
+	Transaction      bool
+	Replication      bool
+	ReplicationCount int
+	WebServiceDef    IWebService
+	Callback         IServiceCallback
 }
 
 type IServiceCallback interface {
