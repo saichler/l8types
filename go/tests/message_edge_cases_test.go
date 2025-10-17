@@ -18,7 +18,7 @@ func TestMessageBoundaryConditions(t *testing.T) {
 		255, // max byte value
 		ifs.P1,
 		ifs.M_All,                              // multicast mode
-		ifs.Sync,                               // highest action value
+		ifs.Handle,                             // highest action value
 		"987654321098765432109876543210987654", // exactly 36 chars
 		"abcdefghijklmnopqrstuvwxyz1234567890", // exactly 36 chars
 		[]byte(""),

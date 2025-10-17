@@ -196,7 +196,7 @@ func TestActionStateBitManipulation(t *testing.T) {
 		{ifs.PATCH, ifs.Committed},
 		{ifs.Reply, ifs.Rollback},
 		{ifs.Notify, ifs.Failed},
-		{ifs.Sync, ifs.Cleanup},
+		{ifs.Handle, ifs.Cleanup},
 	}
 
 	for _, tc := range testCases {

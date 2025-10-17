@@ -343,7 +343,7 @@ func TestMessageUnmarshalDecryptionError(t *testing.T) {
 func TestAllActions(t *testing.T) {
 	resources := newMockResources()
 
-	actions := []ifs.Action{ifs.POST, ifs.PUT, ifs.PATCH, ifs.DELETE, ifs.GET, ifs.Reply, ifs.Notify, ifs.Sync, ifs.EndPoints}
+	actions := []ifs.Action{ifs.POST, ifs.PUT, ifs.PATCH, ifs.DELETE, ifs.GET, ifs.Reply, ifs.Notify, ifs.Handle, ifs.EndPoints}
 
 	for _, action := range actions {
 		msg := &ifs.Message{}

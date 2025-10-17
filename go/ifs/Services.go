@@ -82,5 +82,5 @@ type ITransactionConfig interface {
 	Replication() bool
 	ReplicationCount() int
 	KeyOf(IElements, IResources) string
-	ConcurrentGets() bool
+	Voter() bool
 }

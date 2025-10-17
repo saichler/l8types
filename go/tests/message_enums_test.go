@@ -60,7 +60,7 @@ func TestActionConstants(t *testing.T) {
 		ifs.GET:       "GET",
 		ifs.Reply:     "Reply",
 		ifs.Notify:    "Notify",
-		ifs.Sync:      "Sync",
+		ifs.Handle:    "Handle",
 		ifs.EndPoints: "EndPoints",
 	}
 
