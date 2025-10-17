@@ -18,6 +18,7 @@ enum L8HealthState {
 
 message L8HealthList {
   repeated L8Health list = 1;
+  map<string,int32> stats = 2;
 }
 
 message L8Health {

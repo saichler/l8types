@@ -15,6 +15,7 @@ enum TestEnum {
 
 message TestProtoList {
   repeated TestProto list = 1;
+  map<string, int32> stats = 2;
 }
 
 message TestProto {
