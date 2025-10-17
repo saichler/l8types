@@ -64,7 +64,6 @@ type IDistributedCache interface {
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 	ServiceName() string
 	ServiceArea() byte
-	Sync()
 	Fetch(int, int, IQuery) []interface{}
 	Stats() map[string]int32
 	AddStatFunc(string, func(interface{}) bool)
