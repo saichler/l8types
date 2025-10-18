@@ -24,6 +24,25 @@ func NewServiceLevelAgreement(serviceHandlerInstance IServiceHandler, serviceNam
 }
 
 // Getters and Setters for attributes not in constructor
+func (s *ServiceLevelAgreement) ServiceName() string {
+	return s.serviceName
+}
+
+func (s *ServiceLevelAgreement) ServiceArea() byte {
+	return s.serviceArea
+}
+
+func (s *ServiceLevelAgreement) Stateful() bool {
+	return s.stateful
+}
+
+func (s *ServiceLevelAgreement) ServiceHandlerInstance() IServiceHandler {
+	return s.serviceHandlerInstance
+}
+
+func (s *ServiceLevelAgreement) Callback() IServiceCallback {
+	return s.callback
+}
 
 func (s *ServiceLevelAgreement) ServiceItem() interface{} {
 	return s.serviceItem
