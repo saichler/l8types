@@ -74,6 +74,7 @@ type IVNic interface {
 	WaitForConnection()
 	Running() bool
 	RegisterServiceLink(link *l8services.L8ServiceLink)
+	SetResponse(*Message, IElements)
 }
 
 type ServiceAPI interface {
