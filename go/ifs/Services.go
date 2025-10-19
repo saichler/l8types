@@ -10,7 +10,7 @@ type IServices interface {
 	// Add a service point type so compiling will pull the code for it
 	RegisterServiceHandlerType(IServiceHandler)
 	// Activate a service point
-	Activate(ServiceLevelAgreement, IVNic) (IServiceHandler, error)
+	Activate(*ServiceLevelAgreement, IVNic) (IServiceHandler, error)
 	DeActivate(string, byte, IResources, IServiceCacheListener) error
 	// Handle a message and forward to the handler
 	Handle(IElements, Action, IVNic, *Message) IElements
@@ -27,7 +27,7 @@ type IServices interface {
 }
 
 type IServiceHandler interface {
-	Activate(ServiceLevelAgreement, IVNic) error
+	Activate(*ServiceLevelAgreement, IVNic) error
 	DeActivate() error
 	Post(IElements, IVNic) IElements
 	Put(IElements, IVNic) IElements
