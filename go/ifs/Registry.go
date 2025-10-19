@@ -21,6 +21,7 @@ type IRegistry interface {
 	Enum(string) int32
 	//Unregister an instance
 	UnRegister(string) (bool, error)
+	NewOf(interface{}) interface{}
 }
 
 type IInfo interface {
