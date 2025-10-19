@@ -7,16 +7,19 @@ type ServiceLevelAgreement struct {
 	stateful               bool
 	callback               IServiceCallback
 
-	serviceItem      interface{}
-	serviceItemList  interface{}
-	initItems        []interface{}
-	primaryKeys      []string
-	store            IStorage
+	serviceItem     interface{}
+	serviceItemList interface{}
+	initItems       []interface{}
+	primaryKeys     []string
+	store           IStorage
+
 	voter            bool
 	transactional    bool
 	replication      bool
 	replicationCount int
-	webServiceDef    IWebService
+
+	webService IWebService
+	args       []interface{}
 }
 
 func NewServiceLevelAgreement(serviceHandlerInstance IServiceHandler, serviceName string, serviceArea byte, stateful bool, callback IServiceCallback) *ServiceLevelAgreement {
@@ -116,12 +119,20 @@ func (s *ServiceLevelAgreement) SetReplicationCount(replicationCount int) {
 	s.replicationCount = replicationCount
 }
 
-func (s *ServiceLevelAgreement) WebServiceDef() IWebService {
-	return s.webServiceDef
+func (s *ServiceLevelAgreement) WebService() IWebService {
+	return s.webService
 }
 
-func (s *ServiceLevelAgreement) SetWebServiceDef(webServiceDef IWebService) {
-	s.webServiceDef = webServiceDef
+func (s *ServiceLevelAgreement) SetWebService(webService IWebService) {
+	s.webService = webService
+}
+
+func (s *ServiceLevelAgreement) Args() []interface{} {
+	return s.args
+}
+
+func (s *ServiceLevelAgreement) SetArgs(args ...interface{}) {
+	s.args = args
 }
 
 type IServiceCallback interface {
