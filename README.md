@@ -4,7 +4,14 @@ A foundational library for Layer 8 distributed networking systems, providing Pro
 
 ## 🚀 Recent Updates
 
-### Latest Features (v1.2.0)
+### Latest Features (v1.3.0)
+- **Service Level Agreement (SLA) Framework**: Complete refactoring of service activation with new ServiceLevelAgreement structure
+- **Dynamic Type Creation**: Added `NewOf()` method to IRegistry for dynamic type instantiation
+- **Improved API Ergonomics**: Variadic parameters for `SetPrimaryKeys()` and `SetArgs()` methods
+- **Simplified Service Activation**: Streamlined `Activate()` method using SLA encapsulation
+- **Web Service Integration**: Renamed WebServiceDef to WebService for consistency
+
+### Previous Release (v1.2.0)
 - **Enhanced Authentication System**: Token-based authentication with validation and activation mechanisms
 - **Improved Security**: Added hash-based security functions and error handling for auth operations
 - **Logging Enhancements**: Comprehensive logging system for debugging and monitoring
@@ -142,6 +149,59 @@ cd go
 go test ./...
 ```
 
+## API Migration Guide
+
+### Breaking Changes in v1.3.0
+
+#### 1. Service Activation Refactor
+The `Activate()` method has been significantly simplified:
+
+**Before:**
+```go
+handler, err := service.Activate(serviceName, serviceArea, priority,
+    resources, listener, args...)
+```
+
+**After:**
+```go
+sla := &ServiceLevelAgreement{}
+sla.SetServiceName("my-service")
+sla.SetServiceArea(1)
+sla.SetArgs(args...)
+handler, err := service.Activate(sla, vnic)
+```
+
+#### 2. Primary Keys API Change
+**Before:**
+```go
+sla.SetPrimaryKeys([]string{"id", "name"})
+```
+
+**After:**
+```go
+sla.SetPrimaryKeys("id", "name")  // Variadic parameters
+```
+
+#### 3. Registry Enhancement
+**New Method:**
+```go
+// Create a new instance of a registered type dynamically
+newInstance := registry.NewOf(existingInstance)
+```
+
+#### 4. Web Service Definition Rename
+**Before:**
+```go
+webServiceDef := sla.WebServiceDef()
+sla.SetWebServiceDef(webService)
+```
+
+**After:**
+```go
+webService := sla.WebService()
+sla.SetWebService(webService)
+```
+
 ## Usage Examples
 
 ### Service Registration and VNic Setup
@@ -168,6 +228,35 @@ ifs.AddService(config, "auth-service", 2)
 // Create VNic for networking
 vnic := NewVNic(config, resources)
 vnic.Start()
+```
+
+### Service Level Agreement Configuration (v1.3.0+)
+
+```go
+// Create Service Level Agreement
+sla := &ifs.ServiceLevelAgreement{}
+sla.SetServiceName("user-service")
+sla.SetServiceArea(1)
+sla.SetStateful(true)
+sla.SetTransactional(true)
+sla.SetReplication(true)
+sla.SetReplicationCount(3)
+sla.SetPrimaryKeys("userId", "email")  // Variadic parameters
+sla.SetArgs(dbConnection, cacheLayer)  // Variadic parameters
+
+// Activate service with SLA
+handler, err := services.Activate(sla, vnic)
+if err != nil {
+    log.Fatal("Failed to activate service:", err)
+}
+
+// Dynamic type creation using registry
+registry := ifs.NewRegistry()
+userType := &User{}
+registry.Register(userType)
+
+// Create new instances dynamically
+newUser := registry.NewOf(userType).(*User)
 ```
 
 ### Message Communication Patterns
@@ -320,14 +409,27 @@ data, err := serializer.Serialize(instance)
 The project includes comprehensive test coverage for all major components:
 
 ```bash
-# Run all tests with coverage
+# Quick test with automated coverage report
 cd go
+./test.sh  # Runs tests and opens coverage report automatically
+
+# Or run tests manually
 go test -v -cover ./...
 
 # Generate coverage report
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html
+
+# View coverage report in browser
+open coverage.html  # or cover.html
 ```
+
+### Test Coverage
+- **Current Coverage**: 95% overall test coverage
+- **Coverage Reports Available**:
+  - `go/coverage.html` - Detailed HTML coverage report
+  - `go/cover.html` - Alternative coverage visualization
+  - `go/coverage.out` - Raw coverage data
 
 ### Test Coverage Areas
 - **Message Operations**: Marshal/unmarshal, cloning, edge cases
@@ -335,16 +437,67 @@ go tool cover -html=coverage.out -o coverage.html
 - **Network Protocol**: Read/write operations, protocol handling
 - **Type Conversion**: String conversion functions and type safety
 - **Authentication**: Token validation, activation, and error handling
+- **Service Level Agreement**: SLA configuration and activation flows
+- **Registry Operations**: Dynamic type creation and registration
+
+## Documentation
+
+### Web Documentation
+The project includes an interactive web-based documentation site (`web.html`) featuring:
+- Interactive architecture visualizations
+- Live code examples
+- Feature showcase with animations
+- Quick start guide
+- API documentation links
+
+To view the documentation locally:
+```bash
+# Open the documentation website
+open web.html
+# Or serve it with a local web server
+python3 -m http.server 8000
+# Then navigate to http://localhost:8000/web.html
+```
 
 ## Dependencies
 
 ### Go Modules
-- `github.com/google/uuid`: UUID generation for node identification
-- `google.golang.org/protobuf`: Protocol Buffer runtime and code generation
+- `github.com/google/uuid` v1.6.0: UUID generation for node identification
+- `google.golang.org/protobuf` v1.36.10: Protocol Buffer runtime and code generation
 
 ### Build Tools
 - **Docker**: Protocol Buffer code generation via containerized protoc
 - **Go 1.23.8+**: Core language runtime and build tools
+
+## Changelog
+
+### Version 1.3.0 (Current)
+- **Service Level Agreement (SLA) Framework** - Complete refactoring of service activation
+- **Dynamic Type Creation** - Added `NewOf()` method to IRegistry
+- **API Improvements** - Variadic parameters for better ergonomics
+- **Code Quality** - 95% test coverage with comprehensive reporting
+- **Documentation** - Interactive web documentation with visualizations
+
+### Version 1.2.0
+- Enhanced authentication system with token validation
+- Improved security with hash-based functions
+- Comprehensive logging system
+- Flexible sorting mechanisms for queries
+- Secure token lifecycle management
+
+### Version 1.1.0
+- Initial release with core networking features
+- Protocol Buffer schemas
+- Virtual Network Interface (VNic)
+- Service discovery and health monitoring
+
+## Contributing
+
+We welcome contributions! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Run tests with `./test.sh` to ensure 95%+ coverage
+4. Submit a pull request with clear description of changes
 
 ## License
 
