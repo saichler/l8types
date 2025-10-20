@@ -75,7 +75,7 @@ func (s *ServiceLevelAgreement) PrimaryKeys() []string {
 	return s.primaryKeys
 }
 
-func (s *ServiceLevelAgreement) SetPrimaryKeys(primaryKeys []string) {
+func (s *ServiceLevelAgreement) SetPrimaryKeys(primaryKeys ...string) {
 	s.primaryKeys = primaryKeys
 }
 
