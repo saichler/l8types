@@ -14,8 +14,9 @@ const (
 )
 
 const (
-	SysMsg  = "sysMsg"
-	SysArea = byte(99)
+	SysMsg           = "sysMsg"
+	SysAreaPrimary   = byte(99)
+	SysAreaSecondary = byte(98)
 )
 
 var networkMode NetworkMode = NETWORK_NATIVE
