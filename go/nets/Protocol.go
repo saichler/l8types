@@ -68,6 +68,18 @@ func ExecuteProtocol(conn net.Conn, config *l8sysconfig.L8SysConfig, security if
 	}
 	config.Services = BytesToServices(services)
 
+	err = WriteEncrypted(conn, []byte(config.RemoteVnet), config, security)
+	if err != nil {
+		conn.Close()
+		return err
+	}
+
+	remoteVnet, err := ReadEncrypted(conn, config, security)
+	if err != nil {
+		conn.Close()
+		return err
+	}
+	config.RemoteVnet = remoteVnet
 	return nil
 }
 
