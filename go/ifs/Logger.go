@@ -10,6 +10,8 @@ const (
 	Error_Level   LogLevel = 5
 )
 
+var LogToFiles = false
+
 func (l LogLevel) String() string {
 	switch l {
 	case Trace_Level:
