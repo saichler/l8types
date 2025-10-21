@@ -36,4 +36,6 @@ message L8SysConfig {
   l8services.L8Services services = 11;
   //Keep Alive interval in Seconds
   int64 keep_alive_interval_seconds = 12;
+  //is this a remote vnic
+  string remote_vnet = 13;
 }

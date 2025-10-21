@@ -35,4 +35,5 @@ type ILogger interface {
 	Empty() bool
 	Fail(interface{}, ...interface{})
 	SetLogLevel(LogLevel)
+	Finalize()
 }
