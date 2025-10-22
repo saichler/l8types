@@ -76,6 +76,7 @@ type IVNic interface {
 	Running() bool
 	RegisterServiceLink(link *l8services.L8ServiceLink)
 	SetResponse(*Message, IElements)
+	IsRemote() bool
 }
 
 type ServiceAPI interface {
