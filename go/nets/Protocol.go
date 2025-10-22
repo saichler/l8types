@@ -79,7 +79,9 @@ func ExecuteProtocol(conn net.Conn, config *l8sysconfig.L8SysConfig, security if
 		conn.Close()
 		return err
 	}
-	config.RemoteVnet = remoteVnet
+	if config.RemoteVnet == "" {
+		config.RemoteVnet = remoteVnet
+	}
 	return nil
 }
 
