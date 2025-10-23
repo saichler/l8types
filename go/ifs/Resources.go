@@ -2,7 +2,6 @@ package ifs
 
 import (
 	"github.com/google/uuid"
-	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8services"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
@@ -19,7 +18,6 @@ type IResources interface {
 	AddService(string, int32)
 	Set(interface{})
 	Copy(IResources)
-	DefaultUser() *l8api.AuthUser
 }
 
 func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32) {
