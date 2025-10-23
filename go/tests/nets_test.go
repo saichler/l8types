@@ -569,6 +569,7 @@ func TestExecuteProtocol(t *testing.T) {
 			LocalAlias:    "local-alias",
 			ForceExternal: false,
 			MaxDataSize:   1024,
+			RemoteVnet:    "10.0.0.0/8",
 			Services: &l8services.L8Services{
 				ServiceToAreas: map[string]*l8services.L8ServiceAreas{
 					"test-service": {
@@ -582,6 +583,7 @@ func TestExecuteProtocol(t *testing.T) {
 		remoteUuid := "remote-uuid-456"
 		remoteAlias := "remote-alias"
 		forceExternal := "false"
+		remoteVnet := "192.168.0.0/16"
 
 		// Prepare the read buffer with all expected responses
 		var responses [][]byte
@@ -602,6 +604,10 @@ func TestExecuteProtocol(t *testing.T) {
 		servicesData := nets.ServicesToBytes(config.Services)
 		servicesSize := ifs.Long2Bytes(int64(len(servicesData)))
 		responses = append(responses, append(servicesSize, servicesData...))
+
+		// RemoteVnet response
+		vnetSize := ifs.Long2Bytes(int64(len(remoteVnet)))
+		responses = append(responses, append(vnetSize, []byte(remoteVnet)...))
 
 		// Combine all responses
 		allResponses := bytes.Join(responses, []byte{})
@@ -693,6 +699,7 @@ func TestExecuteProtocol(t *testing.T) {
 			LocalAlias:    "local-alias",
 			ForceExternal: true, // Test true case
 			MaxDataSize:   1024,
+			RemoteVnet:    "172.16.0.0/12",
 			Services:      &l8services.L8Services{},
 		}
 
@@ -700,6 +707,7 @@ func TestExecuteProtocol(t *testing.T) {
 		remoteUuid := "remote-uuid"
 		remoteAlias := "remote-alias"
 		forceExternal := "true"
+		remoteVnet := "10.10.0.0/16"
 
 		var responses [][]byte
 
@@ -719,6 +727,10 @@ func TestExecuteProtocol(t *testing.T) {
 		servicesData := nets.ServicesToBytes(config.Services)
 		servicesSize := ifs.Long2Bytes(int64(len(servicesData)))
 		responses = append(responses, append(servicesSize, servicesData...))
+
+		// RemoteVnet response
+		vnetSize := ifs.Long2Bytes(int64(len(remoteVnet)))
+		responses = append(responses, append(vnetSize, []byte(remoteVnet)...))
 
 		allResponses := bytes.Join(responses, []byte{})
 		conn.SetReadData(allResponses)
@@ -799,6 +811,7 @@ func TestExecuteProtocol(t *testing.T) {
 			LocalAlias:    "local-alias",
 			ForceExternal: false,
 			MaxDataSize:   1024,
+			RemoteVnet:    "10.20.0.0/16",
 		}
 
 		// Prepare responses for first two exchanges
@@ -830,6 +843,10 @@ func TestExecuteProtocol(t *testing.T) {
 		servicesData := nets.ServicesToBytes(&l8services.L8Services{})
 		servicesSize := ifs.Long2Bytes(int64(len(servicesData)))
 		responses = append(responses, append(servicesSize, servicesData...))
+
+		remoteVnet := "172.20.0.0/16"
+		vnetSize := ifs.Long2Bytes(int64(len(remoteVnet)))
+		responses = append(responses, append(vnetSize, []byte(remoteVnet)...))
 
 		allResponses = bytes.Join(responses, []byte{})
 		conn.SetReadData(allResponses)
