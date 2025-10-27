@@ -40,6 +40,7 @@ type IQuery interface {
 	Descending() bool
 	Text() string
 	Hash() string
+	ValueForParameter(string) string
 }
 
 type IProperty interface {
