@@ -35,7 +35,7 @@ type ISecurityProviderActivate interface {
 }
 
 func LoadSecurityProvider(args ...interface{}) (ISecurityProvider, error) {
-	loaderFile, err := plugin.Open("./loader.so")
+	loaderFile, err := plugin.Open("/var/loader.so")
 	if err != nil {
 		fmt.Println("Failed to load security provider #1: ", err.Error())
 		return nil, errors.New("Failed to load security provider #1: " + err.Error())
