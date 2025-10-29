@@ -51,6 +51,14 @@ type IServiceHandlerCache interface {
 	Size() int
 }
 
+type IMapReduceService interface {
+	MapR_Post(IElements, IVNic) IElements
+	MapR_Put(IElements, IVNic) IElements
+	MapR_Patch(IElements, IVNic) IElements
+	MapR_Delete(IElements, IVNic) IElements
+	MapR_Get(IElements, IVNic) IElements
+}
+
 type IServiceCacheListener interface {
 	PropertyChangeNotification(set *l8notify.L8NotificationSet)
 }
