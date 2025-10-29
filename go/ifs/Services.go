@@ -13,8 +13,8 @@ type IServices interface {
 	Activate(*ServiceLevelAgreement, IVNic) (IServiceHandler, error)
 	DeActivate(string, byte, IResources, IServiceCacheListener) error
 	// Handle a message and forward to the handler
-	Handle(IElements, Action, IVNic, *Message) IElements
-	TransactionHandle(IElements, Action, IVNic, *Message) IElements
+	Handle(IElements, *Message, IVNic) IElements
+	TransactionHandle(IElements, *Message, IVNic) IElements
 	// Handle a notification message, massage it to a change set and forward to the handler
 	Notify(IElements, IVNic, *Message, bool) IElements
 	// Return the service point handler for the service name and area
