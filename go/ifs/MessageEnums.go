@@ -51,11 +51,11 @@ const (
 	ServiceUnregister Action = 18 // Announce: "I'm no longer hosting this service"
 	ServiceQuery      Action = 19 // Query: "Who is hosting this service?"
 
-	MapR_POST   Action = 1
-	MapR_PUT    Action = 2
-	MapR_PATCH  Action = 3
-	MapR_DELETE Action = 4
-	MapR_GET    Action = 5
+	MapR_POST   Action = 21
+	MapR_PUT    Action = 22
+	MapR_PATCH  Action = 23
+	MapR_DELETE Action = 24
+	MapR_GET    Action = 25
 )
 
 type TransactionState uint8
