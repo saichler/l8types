@@ -18,6 +18,7 @@ message L8Query {
   int32 page = 8;
   bool match_case = 9;
   string schema = 10;
+  bool map_reduce = 11;
 }
 
 message L8Expression {

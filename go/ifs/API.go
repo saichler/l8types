@@ -38,6 +38,7 @@ type IQuery interface {
 	SortByValue(interface{}) interface{}
 	MatchCase() bool
 	Descending() bool
+	MapReduce() bool
 	Text() string
 	Hash() string
 	ValueForParameter(string) string
