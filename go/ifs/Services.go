@@ -52,11 +52,7 @@ type IServiceHandlerCache interface {
 }
 
 type IMapReduceService interface {
-	MapR_Post(IElements, IVNic) IElements
-	MapR_Put(IElements, IVNic) IElements
-	MapR_Patch(IElements, IVNic) IElements
-	MapR_Delete(IElements, IVNic) IElements
-	MapR_Get(IElements, IVNic) IElements
+	MapReduce() bool
 }
 
 type IServiceCacheListener interface {
