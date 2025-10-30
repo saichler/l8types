@@ -52,7 +52,7 @@ type IServiceHandlerCache interface {
 }
 
 type IMapReduceService interface {
-	MapReduce() bool
+	Merge(map[string]IElements) IElements
 }
 
 type IServiceCacheListener interface {
