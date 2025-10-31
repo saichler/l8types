@@ -24,6 +24,7 @@ type IServices interface {
 	GetLeader(string, byte) string
 	GetParticipants(string, byte) map[string]byte
 	RoundRobinParticipants(string, byte, int) map[string]byte
+	TriggerElections(nic IVNic)
 }
 
 type IServiceHandler interface {
