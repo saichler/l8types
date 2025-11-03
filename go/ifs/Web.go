@@ -15,6 +15,8 @@ type IWebServer interface {
 }
 
 type IWebService interface {
+	Vnet() uint32
+
 	ServiceName() string
 	ServiceArea() byte
 
