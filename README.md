@@ -4,14 +4,24 @@ A foundational library for Layer 8 distributed networking systems, providing Pro
 
 ## 🚀 Recent Updates
 
-### Latest Features (v1.3.0)
-- **Service Level Agreement (SLA) Framework**: Complete refactoring of service activation with new ServiceLevelAgreement structure
-- **Dynamic Type Creation**: Added `NewOf()` method to IRegistry for dynamic type instantiation
-- **Improved API Ergonomics**: Variadic parameters for `SetPrimaryKeys()` and `SetArgs()` methods
-- **Simplified Service Activation**: Streamlined `Activate()` method using SLA encapsulation
-- **Web Service Integration**: Renamed WebServiceDef to WebService for consistency
+### Latest Features (v1.4.0)
+- **Map-Reduce Framework**: Added distributed Map-Reduce capabilities for parallel data processing
+  - New `IMapReduceService` interface for distributed computation
+  - `MapReduce()` flag in query system for distributed aggregation
+  - `Collect()` method for data collection and filtering across services
+- **Leader Election**: Implemented leader-based communication patterns
+  - `Leader()` and `LeaderRequest()` methods in VNic for leader-only messaging
+  - Automatic leader election and failover support
+  - Leader destination routing with `DESTINATION_Leader` constant
+- **Remote VNet Support**: Enhanced multi-network connectivity
+  - Added `Vnet()` field to web services for cross-network operations
+  - Protocol enhancements for remote VNet communication
+  - Improved service discovery across network boundaries
+- **Protocol Enhancements**: Additional utilities for service serialization
+  - `ServicesToBytes()` and `BytesToServices()` helper functions
+  - Optimized network protocol handling
 
-### Previous Release (v1.2.0)
+### Previous Release (v1.3.0)
 - **Enhanced Authentication System**: Token-based authentication with validation and activation mechanisms
 - **Improved Security**: Added hash-based security functions and error handling for auth operations
 - **Logging Enhancements**: Comprehensive logging system for debugging and monitoring
@@ -23,8 +33,9 @@ A foundational library for Layer 8 distributed networking systems, providing Pro
 Layer 8 Types serves as the core type system and interface library for Layer 8 networking applications, offering:
 
 - **Protocol Buffer Schemas**: Comprehensive type definitions for distributed system components
-- **Virtual Network Interface (VNic)**: Advanced networking abstractions for service communication
+- **Virtual Network Interface (VNic)**: Advanced networking abstractions with leader election and cross-network support
 - **Service Discovery & Management**: Built-in service registration, discovery, and area-based routing
+- **Distributed Computing**: Map-Reduce framework for parallel data processing and aggregation
 - **Health Monitoring**: Real-time system health tracking with Unix `top`-style output formatting
 - **Transaction Management**: Distributed transaction support with state tracking
 - **Notification System**: Property change notifications and event propagation
@@ -35,6 +46,8 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 
 ### Virtual Networking (VNic)
 - **Multiple Communication Patterns**: Unicast, Multicast, Round-robin, Proximity-based, Leader selection
+- **Leader Election**: Automatic leader election with failover support (v1.4.0)
+- **Remote VNet Support**: Cross-network service discovery and communication (v1.4.0)
 - **Network Mode Support**: Native, Docker, and Kubernetes networking modes
 - **Service API**: RESTful service interfaces (POST, PUT, PATCH, DELETE, GET)
 - **Message Priorities**: 8-level priority system (P1-P8) for message handling
@@ -45,6 +58,7 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **Health States**: Up, Down, Unreachable status tracking with statistics
 - **Replication**: Service replication with endpoint scoring and key-based routing
 - **Dynamic Service Registration**: Runtime service addition and removal
+- **Map-Reduce Framework**: Distributed computation and aggregation across services (v1.4.0)
 
 ### Type System & Reflection
 - **Dynamic Type Registry**: Runtime type registration and introspection
@@ -273,6 +287,10 @@ response := vnic.Request("node-789", "data-service", 1, ifs.GET, query)
 
 // Multicast to all service providers
 err := vnic.Multicast("notification-service", 1, ifs.Notify, event)
+
+// Leader-based communication (v1.4.0+)
+err := vnic.Leader("consensus-service", 1, ifs.POST, proposal)
+leaderResponse := vnic.LeaderRequest("state-service", 1, ifs.GET, stateQuery, timeout)
 ```
 
 ### Query System
@@ -305,7 +323,36 @@ query := &types.Query{
     Descending: false,
     Limit: 100,
     Page: 1,
+    MapReduce: true, // Enable distributed Map-Reduce processing (v1.4.0+)
 }
+```
+
+### Map-Reduce Operations (v1.4.0+)
+
+```go
+// Implement IMapReduceService for distributed computation
+type MyMapReduceService struct {
+    cache IDistributedCache
+}
+
+func (s *MyMapReduceService) Merge(results map[string]IElements) IElements {
+    // Merge results from multiple nodes
+    merged := NewElements()
+    for nodeId, elements := range results {
+        // Custom merging logic
+        merged.Combine(elements)
+    }
+    return merged
+}
+
+// Use Collect for distributed data filtering and aggregation
+results := cache.Collect(func(item interface{}) (bool, interface{}) {
+    user := item.(*User)
+    if user.Age > 18 && user.Status == "active" {
+        return true, user.Summary() // Include in results with transformation
+    }
+    return false, nil // Exclude from results
+})
 ```
 
 ### Health Monitoring
@@ -471,7 +518,14 @@ python3 -m http.server 8000
 
 ## Changelog
 
-### Version 1.3.0 (Current)
+### Version 1.4.0 (Current)
+- **Map-Reduce Framework** - Distributed computation and data aggregation
+- **Leader Election** - Leader-based communication patterns and automatic failover
+- **Remote VNet Support** - Cross-network connectivity and service discovery
+- **Protocol Enhancements** - Improved serialization utilities for services
+- **Query System Enhancement** - Added MapReduce flag for distributed queries
+
+### Version 1.3.0
 - **Service Level Agreement (SLA) Framework** - Complete refactoring of service activation
 - **Dynamic Type Creation** - Added `NewOf()` method to IRegistry
 - **API Improvements** - Variadic parameters for better ergonomics
