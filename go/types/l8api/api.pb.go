@@ -454,6 +454,100 @@ func (x *AuthToken) GetError() string {
 	return ""
 }
 
+type L8Maps struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Maps map[string]*L8Map `protobuf:"bytes,1,rep,name=maps,proto3" json:"maps,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *L8Maps) Reset() {
+	*x = L8Maps{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8Maps) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8Maps) ProtoMessage() {}
+
+func (x *L8Maps) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8Maps.ProtoReflect.Descriptor instead.
+func (*L8Maps) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *L8Maps) GetMaps() map[string]*L8Map {
+	if x != nil {
+		return x.Maps
+	}
+	return nil
+}
+
+type L8Map struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Mp map[string]string `protobuf:"bytes,1,rep,name=mp,proto3" json:"mp,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *L8Map) Reset() {
+	*x = L8Map{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8Map) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8Map) ProtoMessage() {}
+
+func (x *L8Map) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8Map.ProtoReflect.Descriptor instead.
+func (*L8Map) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *L8Map) GetMp() map[string]string {
+	if x != nil {
+		return x.Mp
+	}
+	return nil
+}
+
 var File_api_proto protoreflect.FileDescriptor
 
 var file_api_proto_rawDesc = []byte{
@@ -509,10 +603,24 @@ var file_api_proto_rawDesc = []byte{
 	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x65,
 	0x72, 0x72, 0x6f, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f,
-	0x72, 0x42, 0x29, 0x0a, 0x0f, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c,
-	0x38, 0x61, 0x70, 0x69, 0x42, 0x05, 0x4c, 0x38, 0x41, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x0d, 0x2e,
-	0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x22, 0x7c, 0x0a, 0x06, 0x4c, 0x38, 0x4d, 0x61, 0x70, 0x73, 0x12, 0x2b, 0x0a, 0x04, 0x6d,
+	0x61, 0x70, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x6c, 0x38, 0x61, 0x70,
+	0x69, 0x2e, 0x4c, 0x38, 0x4d, 0x61, 0x70, 0x73, 0x2e, 0x4d, 0x61, 0x70, 0x73, 0x45, 0x6e, 0x74,
+	0x72, 0x79, 0x52, 0x04, 0x6d, 0x61, 0x70, 0x73, 0x1a, 0x45, 0x0a, 0x09, 0x4d, 0x61, 0x70, 0x73,
+	0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x22, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c,
+	0x38, 0x4d, 0x61, 0x70, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22,
+	0x64, 0x0a, 0x05, 0x4c, 0x38, 0x4d, 0x61, 0x70, 0x12, 0x24, 0x0a, 0x02, 0x6d, 0x70, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x38, 0x4d,
+	0x61, 0x70, 0x2e, 0x4d, 0x70, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x02, 0x6d, 0x70, 0x1a, 0x35,
+	0x0a, 0x07, 0x4d, 0x70, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x3a, 0x02, 0x38, 0x01, 0x42, 0x29, 0x0a, 0x0f, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70,
+	0x65, 0x73, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x42, 0x05, 0x4c, 0x38, 0x41, 0x70, 0x69, 0x50,
+	0x01, 0x5a, 0x0d, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c, 0x38, 0x61, 0x70, 0x69,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -527,7 +635,7 @@ func file_api_proto_rawDescGZIP() []byte {
 	return file_api_proto_rawDescData
 }
 
-var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_api_proto_goTypes = []interface{}{
 	(*L8Query)(nil),      // 0: l8api.L8Query
 	(*L8Expression)(nil), // 1: l8api.L8Expression
@@ -535,6 +643,10 @@ var file_api_proto_goTypes = []interface{}{
 	(*L8Comparator)(nil), // 3: l8api.L8Comparator
 	(*AuthUser)(nil),     // 4: l8api.AuthUser
 	(*AuthToken)(nil),    // 5: l8api.AuthToken
+	(*L8Maps)(nil),       // 6: l8api.L8Maps
+	(*L8Map)(nil),        // 7: l8api.L8Map
+	nil,                  // 8: l8api.L8Maps.MapsEntry
+	nil,                  // 9: l8api.L8Map.MpEntry
 }
 var file_api_proto_depIdxs = []int32{
 	1, // 0: l8api.L8Query.criteria:type_name -> l8api.L8Expression
@@ -543,11 +655,14 @@ var file_api_proto_depIdxs = []int32{
 	1, // 3: l8api.L8Expression.child:type_name -> l8api.L8Expression
 	3, // 4: l8api.L8Condition.comparator:type_name -> l8api.L8Comparator
 	2, // 5: l8api.L8Condition.next:type_name -> l8api.L8Condition
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	8, // 6: l8api.L8Maps.maps:type_name -> l8api.L8Maps.MapsEntry
+	9, // 7: l8api.L8Map.mp:type_name -> l8api.L8Map.MpEntry
+	7, // 8: l8api.L8Maps.MapsEntry.value:type_name -> l8api.L8Map
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_api_proto_init() }
@@ -628,6 +743,30 @@ func file_api_proto_init() {
 				return nil
 			}
 		}
+		file_api_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8Maps); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8Map); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -635,7 +774,7 @@ func file_api_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
