@@ -8,6 +8,7 @@ option java_package = "com.types.l8health";
 option go_package = "./types/l8health";
 
 import "services.proto";
+import "api.proto";
 
 enum L8HealthState {
   Invalid_State = 0;
@@ -18,7 +19,7 @@ enum L8HealthState {
 
 message L8HealthList {
   repeated L8Health list = 1;
-  map<string,int32> stats = 2;
+  l8api.L8Counts counts = 2;
 }
 
 message L8Health {
