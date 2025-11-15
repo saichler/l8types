@@ -70,7 +70,7 @@ type IDistributedCache interface {
 	ServiceName() string
 	ServiceArea() byte
 	Fetch(int, int, IQuery) ([]interface{}, *l8api.L8Counts)
-	AddCountFunc(string, func(interface{}) bool)
+	AddCountFunc(string, func(interface{}) (bool, string))
 }
 
 type IReplicationCache interface {
