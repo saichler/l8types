@@ -20,6 +20,8 @@ type ServiceLevelAgreement struct {
 
 	webService IWebService
 	args       []interface{}
+
+	metadataFunc map[string]func(interface{}) (bool, string)
 }
 
 func NewServiceLevelAgreement(serviceHandlerInstance IServiceHandler, serviceName string, serviceArea byte, stateful bool, callback IServiceCallback) *ServiceLevelAgreement {
@@ -27,112 +29,123 @@ func NewServiceLevelAgreement(serviceHandlerInstance IServiceHandler, serviceNam
 }
 
 // Getters and Setters for attributes not in constructor
-func (s *ServiceLevelAgreement) ServiceName() string {
-	return s.serviceName
+func (this *ServiceLevelAgreement) ServiceName() string {
+	return this.serviceName
 }
 
-func (s *ServiceLevelAgreement) ServiceArea() byte {
-	return s.serviceArea
+func (this *ServiceLevelAgreement) ServiceArea() byte {
+	return this.serviceArea
 }
 
-func (s *ServiceLevelAgreement) Stateful() bool {
-	return s.stateful
+func (this *ServiceLevelAgreement) Stateful() bool {
+	return this.stateful
 }
 
-func (s *ServiceLevelAgreement) ServiceHandlerInstance() IServiceHandler {
-	return s.serviceHandlerInstance
+func (this *ServiceLevelAgreement) ServiceHandlerInstance() IServiceHandler {
+	return this.serviceHandlerInstance
 }
 
-func (s *ServiceLevelAgreement) Callback() IServiceCallback {
-	return s.callback
+func (this *ServiceLevelAgreement) Callback() IServiceCallback {
+	return this.callback
 }
 
-func (s *ServiceLevelAgreement) ServiceItem() interface{} {
-	return s.serviceItem
+func (this *ServiceLevelAgreement) ServiceItem() interface{} {
+	return this.serviceItem
 }
 
-func (s *ServiceLevelAgreement) SetServiceItem(serviceItem interface{}) {
-	s.serviceItem = serviceItem
+func (this *ServiceLevelAgreement) SetServiceItem(serviceItem interface{}) {
+	this.serviceItem = serviceItem
 }
 
-func (s *ServiceLevelAgreement) ServiceItemList() interface{} {
-	return s.serviceItemList
+func (this *ServiceLevelAgreement) ServiceItemList() interface{} {
+	return this.serviceItemList
 }
 
-func (s *ServiceLevelAgreement) SetServiceItemList(serviceItemList interface{}) {
-	s.serviceItemList = serviceItemList
+func (this *ServiceLevelAgreement) SetServiceItemList(serviceItemList interface{}) {
+	this.serviceItemList = serviceItemList
 }
 
-func (s *ServiceLevelAgreement) InitItems() []interface{} {
-	return s.initItems
+func (this *ServiceLevelAgreement) InitItems() []interface{} {
+	return this.initItems
 }
 
-func (s *ServiceLevelAgreement) SetInitItems(initItems []interface{}) {
-	s.initItems = initItems
+func (this *ServiceLevelAgreement) SetInitItems(initItems []interface{}) {
+	this.initItems = initItems
 }
 
-func (s *ServiceLevelAgreement) PrimaryKeys() []string {
-	return s.primaryKeys
+func (this *ServiceLevelAgreement) PrimaryKeys() []string {
+	return this.primaryKeys
 }
 
-func (s *ServiceLevelAgreement) SetPrimaryKeys(primaryKeys ...string) {
-	s.primaryKeys = primaryKeys
+func (this *ServiceLevelAgreement) SetPrimaryKeys(primaryKeys ...string) {
+	this.primaryKeys = primaryKeys
 }
 
-func (s *ServiceLevelAgreement) Store() IStorage {
-	return s.store
+func (this *ServiceLevelAgreement) Store() IStorage {
+	return this.store
 }
 
-func (s *ServiceLevelAgreement) SetStore(store IStorage) {
-	s.store = store
+func (this *ServiceLevelAgreement) SetStore(store IStorage) {
+	this.store = store
 }
 
-func (s *ServiceLevelAgreement) Voter() bool {
-	return s.voter
+func (this *ServiceLevelAgreement) Voter() bool {
+	return this.voter
 }
 
-func (s *ServiceLevelAgreement) SetVoter(voter bool) {
-	s.voter = voter
+func (this *ServiceLevelAgreement) SetVoter(voter bool) {
+	this.voter = voter
 }
 
-func (s *ServiceLevelAgreement) Transactional() bool {
-	return s.transactional
+func (this *ServiceLevelAgreement) Transactional() bool {
+	return this.transactional
 }
 
-func (s *ServiceLevelAgreement) SetTransactional(transactional bool) {
-	s.transactional = transactional
+func (this *ServiceLevelAgreement) SetTransactional(transactional bool) {
+	this.transactional = transactional
 }
 
-func (s *ServiceLevelAgreement) Replication() bool {
-	return s.replication
+func (this *ServiceLevelAgreement) Replication() bool {
+	return this.replication
 }
 
-func (s *ServiceLevelAgreement) SetReplication(replication bool) {
-	s.replication = replication
+func (this *ServiceLevelAgreement) SetReplication(replication bool) {
+	this.replication = replication
 }
 
-func (s *ServiceLevelAgreement) ReplicationCount() int {
-	return s.replicationCount
+func (this *ServiceLevelAgreement) ReplicationCount() int {
+	return this.replicationCount
 }
 
-func (s *ServiceLevelAgreement) SetReplicationCount(replicationCount int) {
-	s.replicationCount = replicationCount
+func (this *ServiceLevelAgreement) SetReplicationCount(replicationCount int) {
+	this.replicationCount = replicationCount
 }
 
-func (s *ServiceLevelAgreement) WebService() IWebService {
-	return s.webService
+func (this *ServiceLevelAgreement) WebService() IWebService {
+	return this.webService
 }
 
-func (s *ServiceLevelAgreement) SetWebService(webService IWebService) {
-	s.webService = webService
+func (this *ServiceLevelAgreement) SetWebService(webService IWebService) {
+	this.webService = webService
 }
 
-func (s *ServiceLevelAgreement) Args() []interface{} {
-	return s.args
+func (this *ServiceLevelAgreement) Args() []interface{} {
+	return this.args
 }
 
-func (s *ServiceLevelAgreement) SetArgs(args ...interface{}) {
-	s.args = args
+func (this *ServiceLevelAgreement) SetArgs(args ...interface{}) {
+	this.args = args
+}
+
+func (this *ServiceLevelAgreement) AddMetadataFunc(name string, f func(interface{}) (bool, string)) {
+	if this.metadataFunc == nil {
+		this.metadataFunc = make(map[string]func(interface{}) (bool, string))
+	}
+	this.metadataFunc[name] = f
+}
+
+func (this *ServiceLevelAgreement) MetadataFunc() map[string]func(interface{}) (bool, string) {
+	return this.metadataFunc
 }
 
 type IServiceCallback interface {

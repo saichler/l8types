@@ -46,7 +46,7 @@ type IServiceHandlerCache interface {
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 	All() map[string]interface{}
 	Fetch(int, int, IQuery) ([]interface{}, *l8api.L8MetaData)
-	AddCountFunc(string, func(interface{}) (bool, string))
+	AddMetadataFunc(string, func(interface{}) (bool, string))
 	ServiceName() string
 	ServiceArea() byte
 	Size() int
@@ -70,7 +70,7 @@ type IDistributedCache interface {
 	ServiceName() string
 	ServiceArea() byte
 	Fetch(int, int, IQuery) ([]interface{}, *l8api.L8MetaData)
-	AddCountFunc(string, func(interface{}) (bool, string))
+	AddMetadataFunc(string, func(interface{}) (bool, string))
 }
 
 type IReplicationCache interface {

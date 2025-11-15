@@ -7,6 +7,8 @@ option java_outer_classname = "Tests";
 option java_package = "com.shared.tests";
 option go_package = "./testtypes";
 
+import "api.proto";
+
 enum TestEnum {
   ValueInvalid = 0;
   ValueOne = 1;
@@ -15,7 +17,7 @@ enum TestEnum {
 
 message TestProtoList {
   repeated TestProto list = 1;
-  map<string, int32> stats = 2;
+  l8api.L8MetaData metadata = 2;
 }
 
 message TestProto {
