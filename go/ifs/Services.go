@@ -1,6 +1,7 @@
 package ifs
 
 import (
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8notify"
 	"github.com/saichler/l8types/go/types/l8services"
 )
@@ -44,9 +45,8 @@ type IServiceHandlerCache interface {
 	IServiceHandler
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
 	All() map[string]interface{}
-	Fetch(int, int, IQuery) []interface{}
-	Stats() map[string]int32
-	AddStatFunc(string, func(interface{}) bool)
+	Fetch(int, int, IQuery) ([]interface{}, *l8api.L8Counts)
+	AddCountFunc(string, func(interface{}) bool)
 	ServiceName() string
 	ServiceArea() byte
 	Size() int
