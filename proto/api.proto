@@ -50,11 +50,11 @@ message AuthToken {
   string error = 2;
 }
 
-message L8Counts {
-  L8ValueCount counts = 1;
-  map<string, L8ValueCount> value_counts = 2;
+message L8MetaData {
+  L8Count key_count = 1;
+  map<string, L8Count> value_count = 2;
 }
 
-message L8ValueCount {
+message L8Count {
   map<string, int32> counts = 1;
 }

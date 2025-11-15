@@ -19,7 +19,7 @@ enum L8HealthState {
 
 message L8HealthList {
   repeated L8Health list = 1;
-  l8api.L8Counts counts = 2;
+  l8api.L8MetaData metadata = 2;
 }
 
 message L8Health {
