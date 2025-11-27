@@ -149,14 +149,14 @@ func (this *ServiceLevelAgreement) MetadataFunc() map[string]func(interface{}) (
 }
 
 type IServiceCallback interface {
-	BeforePost(IElements, IVNic) IElements
-	AfterPost(IElements, IVNic) IElements
-	BeforePut(IElements, IVNic) IElements
-	AfterPut(IElements, IVNic) IElements
-	BeforePatch(IElements, IVNic) IElements
-	AfterPatch(IElements, IVNic) IElements
-	BeforeDelete(IElements, IVNic) IElements
-	AfterDelete(IElements, IVNic) IElements
-	BeforeGet(IElements, IVNic) IElements
-	AfterGet(IElements, IVNic) IElements
+	BeforePost(interface{}, IVNic) interface{}
+	AfterPost(interface{}, IVNic) interface{}
+	BeforePut(interface{}, IVNic) interface{}
+	AfterPut(interface{}, IVNic) interface{}
+	BeforePatch(interface{}, IVNic) interface{}
+	AfterPatch(interface{}, IVNic) interface{}
+	BeforeDelete(interface{}, IVNic) interface{}
+	AfterDelete(interface{}, IVNic) interface{}
+	BeforeGet(interface{}, IVNic) interface{}
+	AfterGet(interface{}, IVNic) interface{}
 }
