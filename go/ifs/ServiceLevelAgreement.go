@@ -158,6 +158,6 @@ func (this *ServiceLevelAgreement) MetadataFunc() map[string]func(interface{}) (
 }
 
 type IServiceCallback interface {
-	Before(Action, bool) (interface{}, error)
-	After(Action, bool) (interface{}, error)
+	Before(Action, bool, IVNic) (interface{}, error)
+	After(Action, bool, IVNic) (interface{}, error)
 }
