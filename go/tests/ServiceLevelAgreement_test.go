@@ -25,16 +25,8 @@ func (m *mockServiceHandler) WebService() ifs.IWebService               { return
 
 type mockSLAServiceCallback struct{}
 
-func (m *mockSLAServiceCallback) BeforePost(interface{}, ifs.IVNic) interface{}   { return nil }
-func (m *mockSLAServiceCallback) AfterPost(interface{}, ifs.IVNic) interface{}    { return nil }
-func (m *mockSLAServiceCallback) BeforePut(interface{}, ifs.IVNic) interface{}    { return nil }
-func (m *mockSLAServiceCallback) AfterPut(interface{}, ifs.IVNic) interface{}     { return nil }
-func (m *mockSLAServiceCallback) BeforePatch(interface{}, ifs.IVNic) interface{}  { return nil }
-func (m *mockSLAServiceCallback) AfterPatch(interface{}, ifs.IVNic) interface{}   { return nil }
-func (m *mockSLAServiceCallback) BeforeDelete(interface{}, ifs.IVNic) interface{} { return nil }
-func (m *mockSLAServiceCallback) AfterDelete(interface{}, ifs.IVNic) interface{}  { return nil }
-func (m *mockSLAServiceCallback) BeforeGet(interface{}, ifs.IVNic) interface{}    { return nil }
-func (m *mockSLAServiceCallback) AfterGet(interface{}, ifs.IVNic) interface{}     { return nil }
+func (m *mockSLAServiceCallback) Before(ifs.Action, bool) (interface{}, error) { return nil, nil }
+func (m *mockSLAServiceCallback) After(ifs.Action, bool) (interface{}, error)  { return nil, nil }
 
 type mockSLAStorage struct{}
 
