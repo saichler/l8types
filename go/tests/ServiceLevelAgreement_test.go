@@ -25,8 +25,12 @@ func (m *mockServiceHandler) WebService() ifs.IWebService               { return
 
 type mockSLAServiceCallback struct{}
 
-func (m *mockSLAServiceCallback) Before(ifs.Action, bool) (interface{}, error) { return nil, nil }
-func (m *mockSLAServiceCallback) After(ifs.Action, bool) (interface{}, error)  { return nil, nil }
+func (m *mockSLAServiceCallback) Before(interface{}, ifs.Action, bool, ifs.IVNic) (interface{}, error) {
+	return nil, nil
+}
+func (m *mockSLAServiceCallback) After(interface{}, ifs.Action, bool, ifs.IVNic) (interface{}, error) {
+	return nil, nil
+}
 
 type mockSLAStorage struct{}
 
