@@ -60,10 +60,5 @@ message L8Count {
 }
 
 message L8TypeList {
-  repeated L8Type list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-message L8Type {
-  string name = 1;
+  repeated string list = 1;
 }

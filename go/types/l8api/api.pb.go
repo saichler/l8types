@@ -561,8 +561,7 @@ type L8TypeList struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	List     []*L8Type   `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	Metadata *L8MetaData `protobuf:"bytes,2,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	List []string `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
 }
 
 func (x *L8TypeList) Reset() {
@@ -597,65 +596,11 @@ func (*L8TypeList) Descriptor() ([]byte, []int) {
 	return file_api_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *L8TypeList) GetList() []*L8Type {
+func (x *L8TypeList) GetList() []string {
 	if x != nil {
 		return x.List
 	}
 	return nil
-}
-
-func (x *L8TypeList) GetMetadata() *L8MetaData {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
-}
-
-type L8Type struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-}
-
-func (x *L8Type) Reset() {
-	*x = L8Type{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_proto_msgTypes[9]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *L8Type) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*L8Type) ProtoMessage() {}
-
-func (x *L8Type) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[9]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use L8Type.ProtoReflect.Descriptor instead.
-func (*L8Type) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *L8Type) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
 }
 
 var File_api_proto protoreflect.FileDescriptor
@@ -733,18 +678,12 @@ var file_api_proto_rawDesc = []byte{
 	0x39, 0x0a, 0x0b, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10,
 	0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79,
 	0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x5e, 0x0a, 0x0a, 0x4c, 0x38,
-	0x54, 0x79, 0x70, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x21, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74,
-	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c,
-	0x38, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x12, 0x2d, 0x0a, 0x08, 0x6d,
-	0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e,
-	0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x38, 0x4d, 0x65, 0x74, 0x61, 0x44, 0x61, 0x74, 0x61,
-	0x52, 0x08, 0x6d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x22, 0x1c, 0x0a, 0x06, 0x4c, 0x38,
-	0x54, 0x79, 0x70, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x42, 0x29, 0x0a, 0x0f, 0x63, 0x6f, 0x6d, 0x2e,
-	0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x42, 0x05, 0x4c, 0x38, 0x41,
-	0x70, 0x69, 0x50, 0x01, 0x5a, 0x0d, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c, 0x38,
-	0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x20, 0x0a, 0x0a, 0x4c, 0x38,
+	0x54, 0x79, 0x70, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x42, 0x29, 0x0a, 0x0f,
+	0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x42,
+	0x05, 0x4c, 0x38, 0x41, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x0d, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65,
+	0x73, 0x2f, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -759,7 +698,7 @@ func file_api_proto_rawDescGZIP() []byte {
 	return file_api_proto_rawDescData
 }
 
-var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_api_proto_goTypes = []interface{}{
 	(*L8Query)(nil),      // 0: l8api.L8Query
 	(*L8Expression)(nil), // 1: l8api.L8Expression
@@ -770,9 +709,8 @@ var file_api_proto_goTypes = []interface{}{
 	(*L8MetaData)(nil),   // 6: l8api.L8MetaData
 	(*L8Count)(nil),      // 7: l8api.L8Count
 	(*L8TypeList)(nil),   // 8: l8api.L8TypeList
-	(*L8Type)(nil),       // 9: l8api.L8Type
-	nil,                  // 10: l8api.L8MetaData.ValueCountEntry
-	nil,                  // 11: l8api.L8Count.CountsEntry
+	nil,                  // 9: l8api.L8MetaData.ValueCountEntry
+	nil,                  // 10: l8api.L8Count.CountsEntry
 }
 var file_api_proto_depIdxs = []int32{
 	1,  // 0: l8api.L8Query.criteria:type_name -> l8api.L8Expression
@@ -782,16 +720,14 @@ var file_api_proto_depIdxs = []int32{
 	3,  // 4: l8api.L8Condition.comparator:type_name -> l8api.L8Comparator
 	2,  // 5: l8api.L8Condition.next:type_name -> l8api.L8Condition
 	7,  // 6: l8api.L8MetaData.key_count:type_name -> l8api.L8Count
-	10, // 7: l8api.L8MetaData.value_count:type_name -> l8api.L8MetaData.ValueCountEntry
-	11, // 8: l8api.L8Count.counts:type_name -> l8api.L8Count.CountsEntry
-	9,  // 9: l8api.L8TypeList.list:type_name -> l8api.L8Type
-	6,  // 10: l8api.L8TypeList.metadata:type_name -> l8api.L8MetaData
-	7,  // 11: l8api.L8MetaData.ValueCountEntry.value:type_name -> l8api.L8Count
-	12, // [12:12] is the sub-list for method output_type
-	12, // [12:12] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	9,  // 7: l8api.L8MetaData.value_count:type_name -> l8api.L8MetaData.ValueCountEntry
+	10, // 8: l8api.L8Count.counts:type_name -> l8api.L8Count.CountsEntry
+	7,  // 9: l8api.L8MetaData.ValueCountEntry.value:type_name -> l8api.L8Count
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_api_proto_init() }
@@ -908,18 +844,6 @@ func file_api_proto_init() {
 				return nil
 			}
 		}
-		file_api_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*L8Type); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -927,7 +851,7 @@ func file_api_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
