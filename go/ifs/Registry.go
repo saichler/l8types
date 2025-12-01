@@ -2,6 +2,8 @@ package ifs
 
 import (
 	"reflect"
+
+	"github.com/saichler/l8types/go/types/l8api"
 )
 
 /*
@@ -22,6 +24,7 @@ type IRegistry interface {
 	//Unregister an instance
 	UnRegister(string) (bool, error)
 	NewOf(interface{}) interface{}
+	TypeList() *l8api.L8TypeList
 }
 
 type IInfo interface {
