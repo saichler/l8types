@@ -38,4 +38,6 @@ message L8SysConfig {
   int64 keep_alive_interval_seconds = 12;
   //is this a remote vnic
   string remote_vnet = 13;
+  //is this a vnic for a vnet
+  bool i_am_vnet = 14
 }
