@@ -39,5 +39,5 @@ message L8SysConfig {
   //is this a remote vnic
   string remote_vnet = 13;
   //is this a vnic for a vnet
-  bool i_am_vnet = 14
+  bool i_am_vnet = 14;
 }
