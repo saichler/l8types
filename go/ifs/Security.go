@@ -24,6 +24,9 @@ type ISecurityProvider interface {
 
 	CanDoAction(Action, IElements, string, string, ...string) error
 	ScopeView(IElements, string, string, ...string) IElements
+
+	TFASetup(string) (string, []byte, error)
+	TFAVerify(string, string) error
 }
 
 type ISecurityProviderLoader interface {
