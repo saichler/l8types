@@ -26,7 +26,7 @@ type ISecurityProvider interface {
 	ScopeView(IElements, string, string, ...string) IElements
 
 	TFASetup(string) (string, []byte, error)
-	TFAVerify(string, string, string) error
+	TFAVerify(string, string, string, IVNic) error
 }
 
 type ISecurityProviderLoader interface {
