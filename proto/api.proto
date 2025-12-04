@@ -62,3 +62,23 @@ message L8Count {
 message L8TypeList {
   repeated string list = 1;
 }
+
+message L8TFASetup {
+  string userId = 1;
+}
+
+message L8TFASetupR {
+  string secret = 1;
+  bytes qr = 2;
+  string error = 3;
+}
+
+message L8TFAVerify {
+  string userId = 1;
+  string code = 2;
+}
+
+message L8TFAVerifyR {
+  bool ok = 1;
+}
+
