@@ -48,7 +48,8 @@ message AuthUser {
 message AuthToken {
   string token = 1;
   string error = 2;
-  bool tfa = 3;
+  bool setup_tfa = 3;
+  bool need_tfa = 4;
 }
 
 message L8MetaData {
