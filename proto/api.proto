@@ -43,6 +43,7 @@ message L8Comparator {
 message AuthUser {
   string user = 1;
   string pass = 2;
+  string captcha = 3;
 }
 
 message AuthToken {
@@ -85,3 +86,6 @@ message L8TFAVerifyR {
   bool ok = 1;
 }
 
+message Captcha {
+  bytes captcha = 1;
+}
