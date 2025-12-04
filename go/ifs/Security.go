@@ -27,6 +27,9 @@ type ISecurityProvider interface {
 
 	TFASetup(string, IVNic) (string, []byte, error)
 	TFAVerify(string, string, string, IVNic) error
+
+	Captcha() []byte
+	VerifyCaptcha(string) bool
 }
 
 type ISecurityProviderLoader interface {
