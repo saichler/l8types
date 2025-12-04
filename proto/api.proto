@@ -77,6 +77,7 @@ message L8TFASetupR {
 message L8TFAVerify {
   string userId = 1;
   string code = 2;
+  string bearer = 3;
 }
 
 message L8TFAVerifyR {

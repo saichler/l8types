@@ -10,7 +10,7 @@ import (
 )
 
 type ISecurityProvider interface {
-	Authenticate(string, string) (string, error)
+	Authenticate(string, string) (string, bool, error)
 	ValidateToken(string) (string, bool)
 
 	Message(string) (*Message, error)
@@ -26,7 +26,7 @@ type ISecurityProvider interface {
 	ScopeView(IElements, string, string, ...string) IElements
 
 	TFASetup(string) (string, []byte, error)
-	TFAVerify(string, string) error
+	TFAVerify(string, string, string) error
 }
 
 type ISecurityProviderLoader interface {
