@@ -29,7 +29,7 @@ type ISecurityProvider interface {
 	TFAVerify(string, string, string, IVNic) error
 
 	Captcha() []byte
-	Register(userId, password, captcha string) bool
+	Register(string, string, string, IVNic) bool
 }
 
 type ISecurityProviderLoader interface {
