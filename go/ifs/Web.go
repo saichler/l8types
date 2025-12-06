@@ -1,6 +1,8 @@
 package ifs
 
 import (
+	"net/http"
+
 	"github.com/saichler/l8types/go/types/l8web"
 )
 
@@ -43,4 +45,13 @@ type IWebService interface {
 
 type IPlugin interface {
 	Install(IVNic) error
+}
+
+type IWebProxy interface {
+	RegisterHandlers(mux *http.ServeMux)
+	ProxyRequest(w http.ResponseWriter, r *http.Request) error
+}
+
+type BearerValidator interface {
+	ValidateBearerToken(r *http.Request) error
 }
