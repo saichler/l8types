@@ -50,6 +50,7 @@ type IPlugin interface {
 type IWebProxy interface {
 	RegisterHandlers(mux *http.ServeMux)
 	ProxyRequest(w http.ResponseWriter, r *http.Request) error
+	SetValidator(BearerValidator)
 }
 
 type BearerValidator interface {
