@@ -20,6 +20,6 @@ type IIntrospector interface {
 	TableViews() []*l8reflect.L8TableView
 	Clean(string)
 
-	PrimaryKeyValue(*l8reflect.L8Node) (string, error)
-	UniqueKeyValue(*l8reflect.L8Node) (string, error)
+	PrimaryKeyValue(interface{}) (string, error)
+	UniqueKeyValue(interface{}) (string, error)
 }
