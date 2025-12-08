@@ -26,7 +26,7 @@ type IDecorators interface {
 	AddPrimaryKeyDecorator(interface{}, ...string) error
 	AddUniqueKeyDecorator(interface{}, ...string) error
 	AddAlwayOverwriteDecorator(string) error
-	AddNoNestedInspection(string) error
+	AddNoNestedInspection(interface{}) error
 
 	PrimaryKeyDecoratorValue(interface{}) (string, *l8reflect.L8Node, error)
 	UniqueKeyDecoratorValue(interface{}) (string, *l8reflect.L8Node, error)
