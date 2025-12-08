@@ -19,7 +19,19 @@ type IIntrospector interface {
 	TableView(string) (*l8reflect.L8TableView, bool)
 	TableViews() []*l8reflect.L8TableView
 	Clean(string)
+	Decorators() IDecorators
+}
 
-	PrimaryKeyValue(interface{}) (string, error)
-	UniqueKeyValue(interface{}) (string, error)
+type IDecorators interface {
+	AddPrimaryKeyDecorator(interface{}, ...string) error
+	AddUniqueKeyDecorator(interface{}, ...string) error
+	PrimaryKeyDecoratorValue(interface{}) (string, error)
+	UniqueKeyDecoratorValue(interface{}) (string, error)
+
+	AddAlwayOverwriteDecorator(interface{}) error
+	AddNoNestedInspection(interface{}) error
+	NoNestedInspection(interface{}) bool
+	AlwaysFullDecorator(interface{}) bool
+
+	NodeFor(interface{}) (*l8reflect.L8Node, reflect.Value, error)
 }
