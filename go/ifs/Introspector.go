@@ -34,4 +34,6 @@ type IDecorators interface {
 	AlwaysFullDecorator(interface{}) bool
 
 	NodeFor(interface{}) (*l8reflect.L8Node, reflect.Value, error)
+	BoolDecoratorValueFor(interface{}, l8reflect.L8DecoratorType) bool
+	BoolDecoratorValueForNode(*l8reflect.L8Node, l8reflect.L8DecoratorType) bool
 }
