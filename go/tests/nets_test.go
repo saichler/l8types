@@ -20,10 +20,13 @@ type MockSecurityProviderNets struct {
 	decryptError bool
 }
 
-func (m *MockSecurityProviderNets) Authenticate(string, string) (string, error) { return "", nil }
-func (m *MockSecurityProviderNets) Message(string) (*ifs.Message, error)        { return nil, nil }
-func (m *MockSecurityProviderNets) CanDial(string, uint32) (net.Conn, error)    { return nil, nil }
-func (m *MockSecurityProviderNets) CanAccept(net.Conn) error                    { return nil }
+func (m *MockSecurityProviderNets) Authenticate(string, string) (string, bool, bool, error) {
+	return "", false, false, nil
+}
+func (m *MockSecurityProviderNets) ValidateToken(string) (string, bool)      { return "", true }
+func (m *MockSecurityProviderNets) Message(string) (*ifs.Message, error)     { return nil, nil }
+func (m *MockSecurityProviderNets) CanDial(string, uint32) (net.Conn, error) { return nil, nil }
+func (m *MockSecurityProviderNets) CanAccept(net.Conn) error                 { return nil }
 func (m *MockSecurityProviderNets) ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error {
 	return nil
 }
@@ -33,7 +36,12 @@ func (m *MockSecurityProviderNets) CanDoAction(ifs.Action, ifs.IElements, string
 func (m *MockSecurityProviderNets) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
 	return nil
 }
-func (m *MockSecurityProviderNets) ValidateToken(string) (string, bool) { return "", true }
+func (m *MockSecurityProviderNets) TFASetup(string, ifs.IVNic) (string, []byte, error) {
+	return "", nil, nil
+}
+func (m *MockSecurityProviderNets) TFAVerify(string, string, string, ifs.IVNic) error { return nil }
+func (m *MockSecurityProviderNets) Captcha() []byte                                   { return nil }
+func (m *MockSecurityProviderNets) Register(string, string, string, ifs.IVNic) error  { return nil }
 
 func (m *MockSecurityProviderNets) Encrypt(data []byte) (string, error) {
 	if m.encryptError {

@@ -15,10 +15,13 @@ type MockSecurityProvider struct {
 	decryptError bool
 }
 
-func (m *MockSecurityProvider) Authenticate(string, string) (string, error) { return "", nil }
-func (m *MockSecurityProvider) Message(string) (*ifs.Message, error)        { return nil, nil }
-func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error)    { return nil, nil }
-func (m *MockSecurityProvider) CanAccept(net.Conn) error                    { return nil }
+func (m *MockSecurityProvider) Authenticate(string, string) (string, bool, bool, error) {
+	return "", false, false, nil
+}
+func (m *MockSecurityProvider) ValidateToken(string) (string, bool)      { return "", true }
+func (m *MockSecurityProvider) Message(string) (*ifs.Message, error)     { return nil, nil }
+func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error) { return nil, nil }
+func (m *MockSecurityProvider) CanAccept(net.Conn) error                 { return nil }
 func (m *MockSecurityProvider) ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error {
 	return nil
 }
@@ -28,7 +31,12 @@ func (m *MockSecurityProvider) CanDoAction(ifs.Action, ifs.IElements, string, st
 func (m *MockSecurityProvider) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
 	return nil
 }
-func (m *MockSecurityProvider) ValidateToken(string) (string, bool) { return "", true }
+func (m *MockSecurityProvider) TFASetup(string, ifs.IVNic) (string, []byte, error) {
+	return "", nil, nil
+}
+func (m *MockSecurityProvider) TFAVerify(string, string, string, ifs.IVNic) error { return nil }
+func (m *MockSecurityProvider) Captcha() []byte                                   { return nil }
+func (m *MockSecurityProvider) Register(string, string, string, ifs.IVNic) error  { return nil }
 
 func (m *MockSecurityProvider) Encrypt(data []byte) (string, error) {
 	if m.encryptError {
