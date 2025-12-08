@@ -36,4 +36,5 @@ type IDecorators interface {
 	NodeFor(interface{}) (*l8reflect.L8Node, reflect.Value, error)
 	BoolDecoratorValueFor(interface{}, l8reflect.L8DecoratorType) bool
 	BoolDecoratorValueForNode(*l8reflect.L8Node, l8reflect.L8DecoratorType) bool
+	Fields(*l8reflect.L8Node, l8reflect.L8DecoratorType) ([]string, error)
 }
