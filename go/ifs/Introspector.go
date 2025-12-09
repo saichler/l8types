@@ -29,6 +29,7 @@ type IDecorators interface {
 	AddNoNestedInspection(interface{}) error
 
 	PrimaryKeyDecoratorValue(interface{}) (string, *l8reflect.L8Node, error)
+	PrimaryKeyDecoratorFromValue(*l8reflect.L8Node, reflect.Value) (string, *l8reflect.L8Node, error)
 	UniqueKeyDecoratorValue(interface{}) (string, *l8reflect.L8Node, error)
 	NoNestedInspection(interface{}) bool
 	AlwaysFullDecorator(interface{}) bool
