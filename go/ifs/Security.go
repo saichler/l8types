@@ -32,7 +32,7 @@ type ISecurityProvider interface {
 	Captcha() []byte
 	Register(string, string, string, IVNic) error
 
-	Credentials(string) (*l8api.L8Credentials, error)
+	Credentials(string, IVNic) (*l8api.L8Credentials, error)
 }
 
 type ISecurityProviderLoader interface {
