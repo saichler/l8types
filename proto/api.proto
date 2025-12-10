@@ -90,23 +90,24 @@ message Captcha {
   bytes captcha = 1;
 }
 
-enum L8CredentialsType {
-  UserPass = 0;
-  SNMPv2 = 1;
-  DB = 2;
-}
-
 message L8Credential {
   string aside = 1;
   string zside = 2;
+  string yside = 3;
+}
+
+message L8CredentialsList {
+  repeated L8Credentials list = 1;
+  L8MetaData metadata = 2;
 }
 
 message L8Credentials {
   string id = 1;
-  map<int32, L8Credential> creds = 2;
+  string name = 2;
+  map<string, L8Credential> creds = 3;
 }
 
 message L8CredentialsMask {
   string id = 1;
-  map<int32, L8Credential> creds = 2;
+  bytes creds = 2;
 }
