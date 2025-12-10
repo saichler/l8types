@@ -20,6 +20,55 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type L8CredentialsType int32
+
+const (
+	L8CredentialsType_UserPass L8CredentialsType = 0
+	L8CredentialsType_SNMPv2   L8CredentialsType = 1
+	L8CredentialsType_DB       L8CredentialsType = 2
+)
+
+// Enum value maps for L8CredentialsType.
+var (
+	L8CredentialsType_name = map[int32]string{
+		0: "UserPass",
+		1: "SNMPv2",
+		2: "DB",
+	}
+	L8CredentialsType_value = map[string]int32{
+		"UserPass": 0,
+		"SNMPv2":   1,
+		"DB":       2,
+	}
+)
+
+func (x L8CredentialsType) Enum() *L8CredentialsType {
+	p := new(L8CredentialsType)
+	*p = x
+	return p
+}
+
+func (x L8CredentialsType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (L8CredentialsType) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_proto_enumTypes[0].Descriptor()
+}
+
+func (L8CredentialsType) Type() protoreflect.EnumType {
+	return &file_api_proto_enumTypes[0]
+}
+
+func (x L8CredentialsType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use L8CredentialsType.Descriptor instead.
+func (L8CredentialsType) EnumDescriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{0}
+}
+
 type L8Query struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -894,6 +943,171 @@ func (x *Captcha) GetCaptcha() []byte {
 	return nil
 }
 
+type L8Credential struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Aside string `protobuf:"bytes,1,opt,name=aside,proto3" json:"aside,omitempty"`
+	Zside string `protobuf:"bytes,2,opt,name=zside,proto3" json:"zside,omitempty"`
+}
+
+func (x *L8Credential) Reset() {
+	*x = L8Credential{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8Credential) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8Credential) ProtoMessage() {}
+
+func (x *L8Credential) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8Credential.ProtoReflect.Descriptor instead.
+func (*L8Credential) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *L8Credential) GetAside() string {
+	if x != nil {
+		return x.Aside
+	}
+	return ""
+}
+
+func (x *L8Credential) GetZside() string {
+	if x != nil {
+		return x.Zside
+	}
+	return ""
+}
+
+type L8Credentials struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id    string                  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Creds map[int32]*L8Credential `protobuf:"bytes,2,rep,name=creds,proto3" json:"creds,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *L8Credentials) Reset() {
+	*x = L8Credentials{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8Credentials) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8Credentials) ProtoMessage() {}
+
+func (x *L8Credentials) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8Credentials.ProtoReflect.Descriptor instead.
+func (*L8Credentials) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *L8Credentials) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *L8Credentials) GetCreds() map[int32]*L8Credential {
+	if x != nil {
+		return x.Creds
+	}
+	return nil
+}
+
+type L8CredentialsMask struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id    string                  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Creds map[int32]*L8Credential `protobuf:"bytes,2,rep,name=creds,proto3" json:"creds,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *L8CredentialsMask) Reset() {
+	*x = L8CredentialsMask{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8CredentialsMask) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8CredentialsMask) ProtoMessage() {}
+
+func (x *L8CredentialsMask) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8CredentialsMask.ProtoReflect.Descriptor instead.
+func (*L8CredentialsMask) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *L8CredentialsMask) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *L8CredentialsMask) GetCreds() map[int32]*L8Credential {
+	if x != nil {
+		return x.Creds
+	}
+	return nil
+}
+
 var File_api_proto protoreflect.FileDescriptor
 
 var file_api_proto_rawDesc = []byte{
@@ -993,10 +1207,39 @@ var file_api_proto_rawDesc = []byte{
 	0x69, 0x66, 0x79, 0x52, 0x12, 0x0e, 0x0a, 0x02, 0x6f, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08,
 	0x52, 0x02, 0x6f, 0x6b, 0x22, 0x23, 0x0a, 0x07, 0x43, 0x61, 0x70, 0x74, 0x63, 0x68, 0x61, 0x12,
 	0x18, 0x0a, 0x07, 0x63, 0x61, 0x70, 0x74, 0x63, 0x68, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c,
-	0x52, 0x07, 0x63, 0x61, 0x70, 0x74, 0x63, 0x68, 0x61, 0x42, 0x29, 0x0a, 0x0f, 0x63, 0x6f, 0x6d,
-	0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x42, 0x05, 0x4c, 0x38,
-	0x41, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x0d, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c,
-	0x38, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x07, 0x63, 0x61, 0x70, 0x74, 0x63, 0x68, 0x61, 0x22, 0x3a, 0x0a, 0x0c, 0x4c, 0x38, 0x43,
+	0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x12, 0x14, 0x0a, 0x05, 0x61, 0x73, 0x69,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x61, 0x73, 0x69, 0x64, 0x65, 0x12,
+	0x14, 0x0a, 0x05, 0x7a, 0x73, 0x69, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x7a, 0x73, 0x69, 0x64, 0x65, 0x22, 0xa5, 0x01, 0x0a, 0x0d, 0x4c, 0x38, 0x43, 0x72, 0x65, 0x64,
+	0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x35, 0x0a, 0x05, 0x63, 0x72, 0x65, 0x64, 0x73,
+	0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c,
+	0x38, 0x43, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x2e, 0x43, 0x72, 0x65,
+	0x64, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x05, 0x63, 0x72, 0x65, 0x64, 0x73, 0x1a, 0x4d,
+	0x0a, 0x0a, 0x43, 0x72, 0x65, 0x64, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03,
+	0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x29,
+	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e,
+	0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x38, 0x43, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69,
+	0x61, 0x6c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0xad, 0x01,
+	0x0a, 0x11, 0x4c, 0x38, 0x43, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x4d,
+	0x61, 0x73, 0x6b, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x02, 0x69, 0x64, 0x12, 0x39, 0x0a, 0x05, 0x63, 0x72, 0x65, 0x64, 0x73, 0x18, 0x02, 0x20, 0x03,
+	0x28, 0x0b, 0x32, 0x23, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x38, 0x43, 0x72, 0x65,
+	0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x4d, 0x61, 0x73, 0x6b, 0x2e, 0x43, 0x72, 0x65,
+	0x64, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x05, 0x63, 0x72, 0x65, 0x64, 0x73, 0x1a, 0x4d,
+	0x0a, 0x0a, 0x43, 0x72, 0x65, 0x64, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03,
+	0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x29,
+	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e,
+	0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x38, 0x43, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69,
+	0x61, 0x6c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x2a, 0x35, 0x0a,
+	0x11, 0x4c, 0x38, 0x43, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x54, 0x79,
+	0x70, 0x65, 0x12, 0x0c, 0x0a, 0x08, 0x55, 0x73, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x10, 0x00,
+	0x12, 0x0a, 0x0a, 0x06, 0x53, 0x4e, 0x4d, 0x50, 0x76, 0x32, 0x10, 0x01, 0x12, 0x06, 0x0a, 0x02,
+	0x44, 0x42, 0x10, 0x02, 0x42, 0x29, 0x0a, 0x0f, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65,
+	0x73, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x42, 0x05, 0x4c, 0x38, 0x41, 0x70, 0x69, 0x50, 0x01,
+	0x5a, 0x0d, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1011,41 +1254,52 @@ func file_api_proto_rawDescGZIP() []byte {
 	return file_api_proto_rawDescData
 }
 
-var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_api_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_api_proto_goTypes = []interface{}{
-	(*L8Query)(nil),      // 0: l8api.L8Query
-	(*L8Expression)(nil), // 1: l8api.L8Expression
-	(*L8Condition)(nil),  // 2: l8api.L8Condition
-	(*L8Comparator)(nil), // 3: l8api.L8Comparator
-	(*AuthUser)(nil),     // 4: l8api.AuthUser
-	(*AuthToken)(nil),    // 5: l8api.AuthToken
-	(*L8MetaData)(nil),   // 6: l8api.L8MetaData
-	(*L8Count)(nil),      // 7: l8api.L8Count
-	(*L8TypeList)(nil),   // 8: l8api.L8TypeList
-	(*L8TFASetup)(nil),   // 9: l8api.L8TFASetup
-	(*L8TFASetupR)(nil),  // 10: l8api.L8TFASetupR
-	(*L8TFAVerify)(nil),  // 11: l8api.L8TFAVerify
-	(*L8TFAVerifyR)(nil), // 12: l8api.L8TFAVerifyR
-	(*Captcha)(nil),      // 13: l8api.Captcha
-	nil,                  // 14: l8api.L8MetaData.ValueCountEntry
-	nil,                  // 15: l8api.L8Count.CountsEntry
+	(L8CredentialsType)(0),    // 0: l8api.L8CredentialsType
+	(*L8Query)(nil),           // 1: l8api.L8Query
+	(*L8Expression)(nil),      // 2: l8api.L8Expression
+	(*L8Condition)(nil),       // 3: l8api.L8Condition
+	(*L8Comparator)(nil),      // 4: l8api.L8Comparator
+	(*AuthUser)(nil),          // 5: l8api.AuthUser
+	(*AuthToken)(nil),         // 6: l8api.AuthToken
+	(*L8MetaData)(nil),        // 7: l8api.L8MetaData
+	(*L8Count)(nil),           // 8: l8api.L8Count
+	(*L8TypeList)(nil),        // 9: l8api.L8TypeList
+	(*L8TFASetup)(nil),        // 10: l8api.L8TFASetup
+	(*L8TFASetupR)(nil),       // 11: l8api.L8TFASetupR
+	(*L8TFAVerify)(nil),       // 12: l8api.L8TFAVerify
+	(*L8TFAVerifyR)(nil),      // 13: l8api.L8TFAVerifyR
+	(*Captcha)(nil),           // 14: l8api.Captcha
+	(*L8Credential)(nil),      // 15: l8api.L8Credential
+	(*L8Credentials)(nil),     // 16: l8api.L8Credentials
+	(*L8CredentialsMask)(nil), // 17: l8api.L8CredentialsMask
+	nil,                       // 18: l8api.L8MetaData.ValueCountEntry
+	nil,                       // 19: l8api.L8Count.CountsEntry
+	nil,                       // 20: l8api.L8Credentials.CredsEntry
+	nil,                       // 21: l8api.L8CredentialsMask.CredsEntry
 }
 var file_api_proto_depIdxs = []int32{
-	1,  // 0: l8api.L8Query.criteria:type_name -> l8api.L8Expression
-	2,  // 1: l8api.L8Expression.condition:type_name -> l8api.L8Condition
-	1,  // 2: l8api.L8Expression.next:type_name -> l8api.L8Expression
-	1,  // 3: l8api.L8Expression.child:type_name -> l8api.L8Expression
-	3,  // 4: l8api.L8Condition.comparator:type_name -> l8api.L8Comparator
-	2,  // 5: l8api.L8Condition.next:type_name -> l8api.L8Condition
-	7,  // 6: l8api.L8MetaData.key_count:type_name -> l8api.L8Count
-	14, // 7: l8api.L8MetaData.value_count:type_name -> l8api.L8MetaData.ValueCountEntry
-	15, // 8: l8api.L8Count.counts:type_name -> l8api.L8Count.CountsEntry
-	7,  // 9: l8api.L8MetaData.ValueCountEntry.value:type_name -> l8api.L8Count
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	2,  // 0: l8api.L8Query.criteria:type_name -> l8api.L8Expression
+	3,  // 1: l8api.L8Expression.condition:type_name -> l8api.L8Condition
+	2,  // 2: l8api.L8Expression.next:type_name -> l8api.L8Expression
+	2,  // 3: l8api.L8Expression.child:type_name -> l8api.L8Expression
+	4,  // 4: l8api.L8Condition.comparator:type_name -> l8api.L8Comparator
+	3,  // 5: l8api.L8Condition.next:type_name -> l8api.L8Condition
+	8,  // 6: l8api.L8MetaData.key_count:type_name -> l8api.L8Count
+	18, // 7: l8api.L8MetaData.value_count:type_name -> l8api.L8MetaData.ValueCountEntry
+	19, // 8: l8api.L8Count.counts:type_name -> l8api.L8Count.CountsEntry
+	20, // 9: l8api.L8Credentials.creds:type_name -> l8api.L8Credentials.CredsEntry
+	21, // 10: l8api.L8CredentialsMask.creds:type_name -> l8api.L8CredentialsMask.CredsEntry
+	8,  // 11: l8api.L8MetaData.ValueCountEntry.value:type_name -> l8api.L8Count
+	15, // 12: l8api.L8Credentials.CredsEntry.value:type_name -> l8api.L8Credential
+	15, // 13: l8api.L8CredentialsMask.CredsEntry.value:type_name -> l8api.L8Credential
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_api_proto_init() }
@@ -1222,19 +1476,56 @@ func file_api_proto_init() {
 				return nil
 			}
 		}
+		file_api_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8Credential); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8Credentials); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8CredentialsMask); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   16,
+			NumEnums:      1,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_api_proto_goTypes,
 		DependencyIndexes: file_api_proto_depIdxs,
+		EnumInfos:         file_api_proto_enumTypes,
 		MessageInfos:      file_api_proto_msgTypes,
 	}.Build()
 	File_api_proto = out.File

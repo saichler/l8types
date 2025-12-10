@@ -89,3 +89,24 @@ message L8TFAVerifyR {
 message Captcha {
   bytes captcha = 1;
 }
+
+enum L8CredentialsType {
+  UserPass = 0;
+  SNMPv2 = 1;
+  DB = 2;
+}
+
+message L8Credential {
+  string aside = 1;
+  string zside = 2;
+}
+
+message L8Credentials {
+  string id = 1;
+  map<int32, L8Credential> creds = 2;
+}
+
+message L8CredentialsMask {
+  string id = 1;
+  map<int32, L8Credential> creds = 2;
+}
