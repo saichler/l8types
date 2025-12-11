@@ -3,7 +3,6 @@ package ifs
 import (
 	"errors"
 	"fmt"
-	"github.com/saichler/l8types/go/types/l8api"
 	"net"
 	"plugin"
 
@@ -32,7 +31,7 @@ type ISecurityProvider interface {
 	Captcha() []byte
 	Register(string, string, string, IVNic) error
 
-	Credentials(string, IVNic) (*l8api.L8Credentials, error)
+	Credential(string, string, IVNic) (string, string, string, string, error)
 }
 
 type ISecurityProviderLoader interface {
