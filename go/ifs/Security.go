@@ -31,7 +31,7 @@ type ISecurityProvider interface {
 	Captcha() []byte
 	Register(string, string, string, IVNic) error
 
-	Credential(string, string, IVNic) (string, string, string, string, error)
+	Credential(string, string, IResources) (string, string, string, string, error)
 }
 
 type ISecurityProviderLoader interface {
