@@ -41,6 +41,11 @@ type IServiceHandler interface {
 	WebService() IWebService
 }
 
+type IServiceHandlerModifier interface {
+	Before(IElements, Action, IVNic) (IElements, error)
+	After(IElements, Action, IVNic) (IElements, error)
+}
+
 type IServiceHandlerCache interface {
 	IServiceHandler
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
