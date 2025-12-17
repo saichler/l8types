@@ -18,28 +18,11 @@ type IWebServer interface {
 
 type IWebService interface {
 	Vnet() uint32
-
 	ServiceName() string
 	ServiceArea() byte
-
-	PostBody() string
-	PostResp() string
-
-	PutBody() string
-	PutResp() string
-
-	PatchBody() string
-	PatchResp() string
-
-	DeleteBody() string
-	DeleteResp() string
-
-	GetBody() string
-	GetResp() string
-
+	EndPoint(string, Action) string
 	Serialize() *l8web.L8WebService
 	DeSerialize(*l8web.L8WebService)
-
 	Plugin() string
 }
 
