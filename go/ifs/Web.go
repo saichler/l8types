@@ -1,6 +1,7 @@
 package ifs
 
 import (
+	"google.golang.org/protobuf/proto"
 	"net/http"
 
 	"github.com/saichler/l8types/go/types/l8web"
@@ -20,7 +21,8 @@ type IWebService interface {
 	Vnet() uint32
 	ServiceName() string
 	ServiceArea() byte
-	EndPoint(string, Action) string
+	Protos(string, Action) (proto.Message, proto.Message, error)
+	AddEndpoint(proto.Message, Action, proto.Message)
 	Serialize() *l8web.L8WebService
 	DeSerialize(*l8web.L8WebService)
 	Plugin() string
