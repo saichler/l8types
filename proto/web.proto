@@ -11,13 +11,14 @@ option go_package = "./types/l8web";
 message L8WebService {
   string service_name = 1;
   int32 service_area = 2;
-  map<string, L8WebServiceEndpoint> endpoints = 3;
+  map<int32, L8WebServiceEndpoint> endpoints = 3;
   L8Plugin plugin = 4;
   uint32 vnet = 5;
 }
 
 message L8WebServiceEndpoint {
-  map<int32, string> actions = 1;
+  map<string, string> body2Response = 1;
+  string primaryBody = 2;
 }
 
 message L8Plugin {
