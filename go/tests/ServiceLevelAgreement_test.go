@@ -47,6 +47,7 @@ type mockSLAWebService struct{}
 func (m *mockSLAWebService) Vnet() uint32                              { return 0 }
 func (m *mockSLAWebService) ServiceName() string                       { return "" }
 func (m *mockSLAWebService) ServiceArea() byte                         { return 0 }
+func (m *mockSLAWebService) EndPoint(string, ifs.Action) string        { return "" }
 func (m *mockSLAWebService) PostBody() string                          { return "" }
 func (m *mockSLAWebService) PostResp() string                          { return "" }
 func (m *mockSLAWebService) PutBody() string                           { return "" }

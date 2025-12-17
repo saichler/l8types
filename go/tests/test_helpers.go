@@ -37,6 +37,9 @@ func (m *MockSecurityProvider) TFASetup(string, ifs.IVNic) (string, []byte, erro
 func (m *MockSecurityProvider) TFAVerify(string, string, string, ifs.IVNic) error { return nil }
 func (m *MockSecurityProvider) Captcha() []byte                                   { return nil }
 func (m *MockSecurityProvider) Register(string, string, string, ifs.IVNic) error  { return nil }
+func (m *MockSecurityProvider) Credential(string, string, ifs.IResources) (string, string, string, string, error) {
+	return "", "", "", "", nil
+}
 
 func (m *MockSecurityProvider) Encrypt(data []byte) (string, error) {
 	if m.encryptError {
