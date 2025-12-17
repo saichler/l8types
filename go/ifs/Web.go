@@ -24,7 +24,7 @@ type IWebService interface {
 	Protos(string, Action) (proto.Message, proto.Message, error)
 	AddEndpoint(proto.Message, Action, proto.Message)
 	Serialize() *l8web.L8WebService
-	DeSerialize(*l8web.L8WebService)
+	DeSerialize(*l8web.L8WebService, IRegistry) error
 	Plugin() string
 }
 
