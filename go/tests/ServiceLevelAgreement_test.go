@@ -5,6 +5,7 @@ import (
 
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8web"
+	"google.golang.org/protobuf/proto"
 )
 
 // Mock implementations for testing
@@ -25,11 +26,11 @@ func (m *mockServiceHandler) WebService() ifs.IWebService               { return
 
 type mockSLAServiceCallback struct{}
 
-func (m *mockSLAServiceCallback) Before(interface{}, ifs.Action, bool, ifs.IVNic) (interface{}, error) {
-	return nil, nil
+func (m *mockSLAServiceCallback) Before(interface{}, ifs.Action, bool, ifs.IVNic) (interface{}, bool, error) {
+	return nil, false, nil
 }
-func (m *mockSLAServiceCallback) After(interface{}, ifs.Action, bool, ifs.IVNic) (interface{}, error) {
-	return nil, nil
+func (m *mockSLAServiceCallback) After(interface{}, ifs.Action, bool, ifs.IVNic) (interface{}, bool, error) {
+	return nil, false, nil
 }
 
 type mockSLAStorage struct{}
@@ -44,23 +45,16 @@ func (m *mockSLAStorage) CacheEnabled() bool { return false }
 
 type mockSLAWebService struct{}
 
-func (m *mockSLAWebService) Vnet() uint32                              { return 0 }
-func (m *mockSLAWebService) ServiceName() string                       { return "" }
-func (m *mockSLAWebService) ServiceArea() byte                         { return 0 }
-func (m *mockSLAWebService) EndPoint(string, ifs.Action) string        { return "" }
-func (m *mockSLAWebService) PostBody() string                          { return "" }
-func (m *mockSLAWebService) PostResp() string                          { return "" }
-func (m *mockSLAWebService) PutBody() string                           { return "" }
-func (m *mockSLAWebService) PutResp() string                           { return "" }
-func (m *mockSLAWebService) PatchBody() string                         { return "" }
-func (m *mockSLAWebService) PatchResp() string                         { return "" }
-func (m *mockSLAWebService) DeleteBody() string                        { return "" }
-func (m *mockSLAWebService) DeleteResp() string                        { return "" }
-func (m *mockSLAWebService) GetBody() string                           { return "" }
-func (m *mockSLAWebService) GetResp() string                           { return "" }
-func (m *mockSLAWebService) Serialize() *l8web.L8WebService            { return nil }
-func (m *mockSLAWebService) DeSerialize(*l8web.L8WebService)           {}
-func (m *mockSLAWebService) Plugin() string                            { return "" }
+func (m *mockSLAWebService) Vnet() uint32        { return 0 }
+func (m *mockSLAWebService) ServiceName() string { return "" }
+func (m *mockSLAWebService) ServiceArea() byte   { return 0 }
+func (m *mockSLAWebService) Protos(string, ifs.Action) (proto.Message, proto.Message, error) {
+	return nil, nil, nil
+}
+func (m *mockSLAWebService) AddEndpoint(proto.Message, ifs.Action, proto.Message)    {}
+func (m *mockSLAWebService) Serialize() *l8web.L8WebService                          { return nil }
+func (m *mockSLAWebService) DeSerialize(*l8web.L8WebService, ifs.IRegistry) error    { return nil }
+func (m *mockSLAWebService) Plugin() string                                          { return "" }
 
 func TestNewServiceLevelAgreement(t *testing.T) {
 	handler := &mockServiceHandler{}
