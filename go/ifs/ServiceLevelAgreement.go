@@ -12,6 +12,7 @@ type ServiceLevelAgreement struct {
 	initItems       []interface{}
 	primaryKeys     []string
 	uniqueKeys      []string
+	nonuniqueKeys   []string
 	store           IStorage
 
 	voter            bool
@@ -82,12 +83,20 @@ func (this *ServiceLevelAgreement) UniqueKeys() []string {
 	return this.uniqueKeys
 }
 
+func (this *ServiceLevelAgreement) NonUniqueKeys() []string {
+	return this.nonuniqueKeys
+}
+
 func (this *ServiceLevelAgreement) SetPrimaryKeys(primaryKeys ...string) {
 	this.primaryKeys = primaryKeys
 }
 
 func (this *ServiceLevelAgreement) SetUniqueKeys(uniqueKeys ...string) {
 	this.uniqueKeys = uniqueKeys
+}
+
+func (this *ServiceLevelAgreement) SetNonUniqueKeys(nonuniqueKeys ...string) {
+	this.nonuniqueKeys = nonuniqueKeys
 }
 
 func (this *ServiceLevelAgreement) Store() IStorage {
