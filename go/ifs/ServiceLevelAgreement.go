@@ -13,6 +13,7 @@ type ServiceLevelAgreement struct {
 	primaryKeys     []string
 	uniqueKeys      []string
 	nonuniqueKeys   []string
+	alwaysOverwrite []string
 	store           IStorage
 
 	voter            bool
@@ -87,6 +88,10 @@ func (this *ServiceLevelAgreement) NonUniqueKeys() []string {
 	return this.nonuniqueKeys
 }
 
+func (this *ServiceLevelAgreement) AlwaysOverwrite() []string {
+	return this.alwaysOverwrite
+}
+
 func (this *ServiceLevelAgreement) SetPrimaryKeys(primaryKeys ...string) {
 	this.primaryKeys = primaryKeys
 }
@@ -97,6 +102,10 @@ func (this *ServiceLevelAgreement) SetUniqueKeys(uniqueKeys ...string) {
 
 func (this *ServiceLevelAgreement) SetNonUniqueKeys(nonuniqueKeys ...string) {
 	this.nonuniqueKeys = nonuniqueKeys
+}
+
+func (this *ServiceLevelAgreement) SetAlwaysOverwrite(alwaysOverwrite ...string) {
+	this.alwaysOverwrite = alwaysOverwrite
 }
 
 func (this *ServiceLevelAgreement) Store() IStorage {
