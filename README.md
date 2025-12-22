@@ -4,29 +4,46 @@ A foundational library for Layer 8 distributed networking systems, providing Pro
 
 ## 🚀 Recent Updates
 
-### Latest Features (v1.4.0)
-- **Map-Reduce Framework**: Added distributed Map-Reduce capabilities for parallel data processing
+### Latest Features (v1.5.0)
+- **Enhanced Security Framework**: Comprehensive security enhancements
+  - Two-Factor Authentication (TFA) with `TFASetup()` and `TFAVerify()` methods
+  - Captcha support for bot protection via `Captcha()` method
+  - User registration with `Register()` method
+  - Credential fetching with `Credential()` method for secure credential management
+- **Advanced SLA Decorators**: New Service Level Agreement capabilities
+  - Non-Unique Keys support with `SetNonUniqueKeys()` for flexible indexing
+  - Always Overwrite decorator with `SetAlwaysOverwrite()` for conflict resolution
+  - Metadata functions for custom service metadata handling
+- **Local Communication**: Same-VNic messaging optimization
+  - `Local()` and `LocalRequest()` methods for intra-VNic communication
+  - Reduced latency for co-located services
+- **Service Callbacks**: Enhanced callback system
+  - Continuation indication in `IServiceCallback.Before()` and `After()` methods
+  - Fine-grained control over service request/response lifecycle
+- **Web Service Refactoring**: Improved web service architecture
+  - Cleaner separation of concerns with refactored interfaces
+  - Enhanced plugin system with `IPlugin` interface
+  - Bearer token validation with `BearerValidator` interface
+- **Apache 2.0 Licensing**: All source files now include proper copyright headers
+
+### Previous Release (v1.4.0)
+- **Map-Reduce Framework**: Distributed Map-Reduce capabilities for parallel data processing
   - New `IMapReduceService` interface for distributed computation
   - `MapReduce()` flag in query system for distributed aggregation
   - `Collect()` method for data collection and filtering across services
-- **Leader Election**: Implemented leader-based communication patterns
+- **Leader Election**: Leader-based communication patterns
   - `Leader()` and `LeaderRequest()` methods in VNic for leader-only messaging
   - Automatic leader election and failover support
-  - Leader destination routing with `DESTINATION_Leader` constant
 - **Remote VNet Support**: Enhanced multi-network connectivity
   - Added `Vnet()` field to web services for cross-network operations
-  - Protocol enhancements for remote VNet communication
   - Improved service discovery across network boundaries
-- **Protocol Enhancements**: Additional utilities for service serialization
-  - `ServicesToBytes()` and `BytesToServices()` helper functions
-  - Optimized network protocol handling
 
 ### Previous Release (v1.3.0)
 - **Enhanced Authentication System**: Token-based authentication with validation and activation mechanisms
 - **Improved Security**: Added hash-based security functions and error handling for auth operations
 - **Logging Enhancements**: Comprehensive logging system for debugging and monitoring
 - **Sorting Capabilities**: Added flexible sorting mechanisms for query results
-- **Token Management**: Implement secure token generation, validation, and lifecycle management
+- **Token Management**: Secure token generation, validation, and lifecycle management
 
 ## Overview
 
@@ -45,7 +62,8 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 ## Key Features
 
 ### Virtual Networking (VNic)
-- **Multiple Communication Patterns**: Unicast, Multicast, Round-robin, Proximity-based, Leader selection
+- **Multiple Communication Patterns**: Unicast, Multicast, Round-robin, Proximity-based, Leader selection, Local
+- **Local Communication**: Same-VNic messaging for co-located services (v1.5.0)
 - **Leader Election**: Automatic leader election with failover support (v1.4.0)
 - **Remote VNet Support**: Cross-network service discovery and communication (v1.4.0)
 - **Network Mode Support**: Native, Docker, and Kubernetes networking modes
@@ -68,12 +86,16 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 
 ### Security & Configuration
 - **Token Authentication**: Secure token-based authentication with validation and activation
+- **Two-Factor Authentication**: TFA setup and verification for enhanced security (v1.5.0)
+- **Captcha Protection**: Bot protection with captcha challenge/response (v1.5.0)
+- **User Registration**: Secure user registration workflow (v1.5.0)
+- **Credential Management**: Secure credential fetching and handling (v1.5.0)
 - **AES Encryption**: Built-in symmetric encryption for secure communication
 - **Hash Functions**: Cryptographic hash support for data integrity and password security
 - **System Configuration**: Comprehensive configuration management with VNet settings
 - **Authentication Framework**: Enhanced AAA (Authentication, Authorization, Accounting) support
-- **Access Control**: Resource-based security with permission management
-- **Error Handling**: Robust error handling for security operations
+- **Access Control**: Resource-based security with permission management and scope views
+- **Bearer Token Validation**: HTTP bearer token validation for web services (v1.5.0)
 
 ## Protocol Buffer Schemas
 
@@ -291,6 +313,10 @@ err := vnic.Multicast("notification-service", 1, ifs.Notify, event)
 // Leader-based communication (v1.4.0+)
 err := vnic.Leader("consensus-service", 1, ifs.POST, proposal)
 leaderResponse := vnic.LeaderRequest("state-service", 1, ifs.GET, stateQuery, timeout)
+
+// Local communication - same VNic (v1.5.0+)
+err := vnic.Local("local-service", 1, ifs.POST, localData)
+localResponse := vnic.LocalRequest("local-service", 1, ifs.GET, query, timeout)
 ```
 
 ### Query System
@@ -398,6 +424,52 @@ if err == nil {
 // Use serialization
 serializer := info.Serializer(ifs.PROTOBUF)
 data, err := serializer.Serialize(instance)
+```
+
+### Two-Factor Authentication (v1.5.0+)
+
+```go
+// Setup TFA for a user
+qrCode, secret, err := securityProvider.TFASetup(userId, vnic)
+if err != nil {
+    log.Fatal("TFA setup failed:", err)
+}
+// Display QR code to user for authenticator app
+
+// Verify TFA code during login
+err = securityProvider.TFAVerify(userId, totpCode, sessionId, vnic)
+if err != nil {
+    log.Fatal("TFA verification failed:", err)
+}
+
+// Get captcha for bot protection
+captchaImage := securityProvider.Captcha()
+
+// Register new user
+err = securityProvider.Register(email, password, captchaResponse, vnic)
+```
+
+### Service Callbacks (v1.5.0+)
+
+```go
+// Implement IServiceCallback for lifecycle hooks
+type MyCallback struct{}
+
+func (c *MyCallback) Before(data interface{}, action ifs.Action, isLocal bool, vnic ifs.IVNic) (interface{}, bool, error) {
+    // Pre-process data before service handles it
+    // Return modified data, continue flag, and error
+    processedData := preProcess(data)
+    shouldContinue := true  // Set to false to stop processing
+    return processedData, shouldContinue, nil
+}
+
+func (c *MyCallback) After(data interface{}, action ifs.Action, isLocal bool, vnic ifs.IVNic) (interface{}, bool, error) {
+    // Post-process data after service handles it
+    return postProcess(data), true, nil
+}
+
+// Use in SLA
+sla := ifs.NewServiceLevelAgreement(handler, "my-service", 1, true, &MyCallback{})
 ```
 
 ## Architecture
@@ -518,7 +590,15 @@ python3 -m http.server 8000
 
 ## Changelog
 
-### Version 1.4.0 (Current)
+### Version 1.5.0 (Current)
+- **Enhanced Security Framework** - TFA, Captcha, Registration, and Credential management
+- **Advanced SLA Decorators** - Non-Unique Keys and Always Overwrite support
+- **Local Communication** - Same-VNic messaging with `Local()` and `LocalRequest()`
+- **Service Callbacks** - Continuation indication for fine-grained control
+- **Web Service Refactoring** - Improved architecture with plugin and bearer validation
+- **Apache 2.0 Licensing** - Proper copyright headers on all source files
+
+### Version 1.4.0
 - **Map-Reduce Framework** - Distributed computation and data aggregation
 - **Leader Election** - Leader-based communication patterns and automatic failover
 - **Remote VNet Support** - Cross-network connectivity and service discovery
