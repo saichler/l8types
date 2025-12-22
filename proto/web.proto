@@ -11,6 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// web.proto defines types for HTTP/REST web service integration.
+// Enables Layer 8 services to expose HTTP endpoints with configurable
+// request/response mappings and plugin support.
+
 syntax = "proto3";
 
 package l8web;
@@ -20,22 +24,35 @@ option java_outer_classname = "L8Web";
 option java_package = "com.types.l8web";
 option go_package = "./types/l8web";
 
-
+// L8WebService defines a web service configuration for exposing HTTP endpoints.
+// Maps HTTP methods to service handlers and manages plugin data.
 message L8WebService {
+  // Name of the backing Layer 8 service
   string service_name = 1;
+  // Service area to route requests to
   int32 service_area = 2;
+  // Map of HTTP method (ordinal) to endpoint configuration
   map<int32, L8WebServiceEndpoint> endpoints = 3;
+  // Plugin configuration for custom processing
   L8Plugin plugin = 4;
+  // Virtual network identifier for routing
   uint32 vnet = 5;
 }
 
+// L8WebServiceEndpoint configures the request/response mapping for an HTTP endpoint.
 message L8WebServiceEndpoint {
+  // Map of request body type to response type (fully qualified type names)
   map<string, string> body2Response = 1;
+  // Default/primary request body type when not explicitly specified
   string primaryBody = 2;
 }
 
+// L8Plugin contains arbitrary plugin configuration data.
+// Used by web service plugins for custom behavior.
 message L8Plugin {
+  // Plugin-specific configuration data (typically JSON or other serialized format)
   string data = 1;
 }
 
+// L8Empty is an empty message used as a placeholder for void requests/responses.
 message L8Empty{}

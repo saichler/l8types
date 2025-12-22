@@ -11,6 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// system.proto defines internal system messages for cluster management.
+// Used for route table updates and service registration/deregistration
+// across the Layer 8 distributed network.
+
 syntax = "proto3";
 
 package l8system;
@@ -20,29 +24,50 @@ option java_outer_classname = "L8System";
 option java_package = "com.types.l8system";
 option go_package = "./types/l8system";
 
+// L8SystemAction enumerates the types of system-level operations.
 enum L8SystemAction {
+  // Invalid or unspecified operation
   Invalid_Oper = 0;
+  // Add new routes to the routing table
   Routes_Add = 1;
+  // Remove routes from the routing table
   Routes_Remove = 2;
+  // Register a new service in the cluster
   Service_Add = 3;
+  // Deregister a service from the cluster
   Service_Remove = 4;
 }
 
+// L8SystemMessage is the envelope for system-level control messages.
+// Used for cluster topology changes and service discovery updates.
 message L8SystemMessage {
+  // The type of system action being performed
   L8SystemAction action = 1;
+  // If true, broadcast this message to all nodes; otherwise process locally
   bool publish = 2;
+  // The payload, which depends on the action type
   oneof data {
+    // Route table data for Routes_Add/Routes_Remove actions
     L8RouteTable route_table = 3;
+    // Service data for Service_Add/Service_Remove actions
     L8ServiceData service_data = 4;
   }
 }
 
+// L8RouteTable contains routing information for message delivery.
+// Maps destination identifiers to next-hop addresses.
 message L8RouteTable {
+  // Map of destination UUID to next-hop UUID/address
   map<string, string> rows = 1;
 }
 
-message L8ServiceData{
+// L8ServiceData contains information about a service instance.
+// Used for service registration and discovery.
+message L8ServiceData {
+  // UUID of the node hosting this service
   string service_uuid = 1;
+  // Name of the service
   string serviceName = 2;
+  // Area/partition of the service
   int32 serviceArea = 3;
 }

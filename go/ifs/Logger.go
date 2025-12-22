@@ -15,16 +15,18 @@ limitations under the License.
 
 package ifs
 
+// LogLevel defines the severity of log messages.
 type LogLevel int
 
 const (
-	Trace_Level   LogLevel = 1
-	Debug_Level   LogLevel = 2
-	Info_Level    LogLevel = 3
-	Warning_Level LogLevel = 4
-	Error_Level   LogLevel = 5
+	Trace_Level   LogLevel = 1 // Most verbose, for detailed debugging
+	Debug_Level   LogLevel = 2 // Debug information
+	Info_Level    LogLevel = 3 // General information
+	Warning_Level LogLevel = 4 // Warning conditions
+	Error_Level   LogLevel = 5 // Error conditions
 )
 
+// String returns the string representation of a log level.
 func (l LogLevel) String() string {
 	switch l {
 	case Trace_Level:
@@ -41,13 +43,22 @@ func (l LogLevel) String() string {
 	return ""
 }
 
+// ILogger defines the logging interface for the Layer 8 system.
 type ILogger interface {
+	// Trace logs at trace level (most verbose).
 	Trace(...interface{})
+	// Debug logs at debug level.
 	Debug(...interface{})
+	// Info logs at info level.
 	Info(...interface{})
+	// Warning logs at warning level.
 	Warning(...interface{})
+	// Error logs at error level and returns an error.
 	Error(...interface{}) error
+	// Empty returns true if no messages have been logged.
 	Empty() bool
+	// Fail logs a failure with context and panics.
 	Fail(interface{}, ...interface{})
+	// SetLogLevel sets the minimum log level to output.
 	SetLogLevel(LogLevel)
 }

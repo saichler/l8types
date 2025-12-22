@@ -11,6 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// services.proto defines types for service discovery, replication, and transactions
+// in the Layer 8 distributed system. Services are organized into areas for scalability
+// and can be replicated across multiple nodes for high availability.
+
 syntax = "proto3";
 
 package l8services;
@@ -20,42 +24,75 @@ option java_outer_classname = "L8Services";
 option java_package = "com.types.l8service";
 option go_package = "./types/l8services";
 
+// L8Services maps service names to their available service areas.
+// Used for service discovery and routing decisions.
 message L8Services {
+  // Map of service name to the areas where that service is available
   map<string, L8ServiceAreas> service_to_areas = 1;
 }
 
+// L8ServiceAreas represents a set of service area IDs.
+// Areas are used to partition services for scalability and locality.
 message L8ServiceAreas {
+  // Map of area ID to availability flag (true = available)
   map<sint32, bool> areas = 1;
 }
 
+// L8ReplicationIndex tracks replication state for a service area.
+// Maintains information about which data keys are stored where.
 message L8ReplicationIndex {
+  // Name of the service being replicated
   string service_name = 1;
+  // Service area this index belongs to
   sint32 service_area = 2;
+  // Map of data key to its replication information
   map<string, L8ReplicationKey> keys = 3;
+  // Map of keys that have been extracted/processed
   map<string, bool> extracted = 4;
 }
 
+// L8ReplicationKey contains replication location information for a single key.
 message L8ReplicationKey {
+  // Map of replica ID to location index
   map<string, int32> location = 1;
+  // The primary replica ID (replica 0)
   string replica0 = 2;
 }
 
+// L8Transaction represents a distributed transaction and its lifecycle.
+// Tracks the transaction through various states from creation to completion.
 message L8Transaction {
+  // Current transaction state (see TransactionState enum in interfaces)
   int32 State = 1;
+  // Unique transaction identifier
   string id = 2;
+  // Error message if transaction failed
   string err_msg = 3;
+  // Timestamp when transaction was created (Unix millis)
   int64 created = 4;
+  // Timestamp when transaction was queued for execution
   int64 queued = 5;
+  // Timestamp when transaction started running
   int64 running = 6;
+  // Timestamp when transaction completed
   int64 end = 7;
 }
 
+// L8ServiceLink defines a connection between two services for inter-service communication.
+// Used to establish communication channels between service areas.
 message L8ServiceLink {
+  // Name of the source service (A-side)
   string aside_service_name = 1;
+  // Area of the source service
   int32  aside_service_area = 2;
+  // Name of the target service (Z-side)
   string zside_service_name = 3;
+  // Area of the target service
   int32  zside_service_area = 4;
+  // Communication mode for this link
   int32 mode = 5;
+  // If true, this is a request link; otherwise it's a publish link
   bool request = 6;
+  // Polling/refresh interval in seconds
   uint32 interval = 7;
 }

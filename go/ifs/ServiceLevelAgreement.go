@@ -15,38 +15,52 @@ limitations under the License.
 
 package ifs
 
+// ServiceLevelAgreement (SLA) defines the configuration and behavior for a service.
+// It specifies how a service handles data, transactions, replication, and web endpoints.
 type ServiceLevelAgreement struct {
-	serviceHandlerInstance IServiceHandler
-	serviceName            string
-	serviceArea            byte
-	stateful               bool
-	callback               IServiceCallback
+	// Core service configuration
+	serviceHandlerInstance IServiceHandler  // The handler instance for this service
+	serviceName            string           // Unique name identifying this service
+	serviceArea            byte             // Service area/partition number
+	stateful               bool             // True if service maintains state
+	callback               IServiceCallback // Lifecycle callbacks for before/after operations
 
-	serviceItem     interface{}
-	serviceItemList interface{}
-	initItems       []interface{}
-	primaryKeys     []string
-	uniqueKeys      []string
-	nonuniqueKeys   []string
-	alwaysOverwrite []string
-	store           IStorage
+	// Data configuration
+	serviceItem     interface{}   // Prototype for single items
+	serviceItemList interface{}   // Prototype for item lists
+	initItems       []interface{} // Initial items to populate on activation
+	primaryKeys     []string      // Primary key field names for unique identification
+	uniqueKeys      []string      // Unique index field names
+	nonuniqueKeys   []string      // Non-unique index field names for lookups
+	alwaysOverwrite []string      // Fields that always overwrite (no merge)
+	store           IStorage      // Persistent storage backend
 
-	voter            bool
-	transactional    bool
-	replication      bool
-	replicationCount int
+	// Transaction and replication configuration
+	voter            bool // True if this service participates in voting
+	transactional    bool // True if operations are transactional
+	replication      bool // True if data is replicated
+	replicationCount int  // Number of replicas to maintain
 
-	webService IWebService
-	args       []interface{}
+	// Web service configuration
+	webService IWebService   // Web service endpoints
+	args       []interface{} // Additional arguments
 
+	// Metadata functions for aggregation
 	metadataFunc map[string]func(interface{}) (bool, string)
 }
 
+// NewServiceLevelAgreement creates a new SLA with the required configuration.
+// Parameters:
+//   - serviceHandlerInstance: The handler that processes requests for this service
+//   - serviceName: Unique name for the service
+//   - serviceArea: Partition/area number for the service
+//   - stateful: Whether the service maintains state (caches data)
+//   - callback: Optional lifecycle callbacks for before/after operations
 func NewServiceLevelAgreement(serviceHandlerInstance IServiceHandler, serviceName string, serviceArea byte, stateful bool, callback IServiceCallback) *ServiceLevelAgreement {
 	return &ServiceLevelAgreement{serviceHandlerInstance: serviceHandlerInstance, serviceName: serviceName, serviceArea: serviceArea, callback: callback, stateful: stateful}
 }
 
-// Getters and Setters for attributes not in constructor
+// Getters and Setters
 func (this *ServiceLevelAgreement) ServiceName() string {
 	return this.serviceName
 }
@@ -190,7 +204,14 @@ func (this *ServiceLevelAgreement) MetadataFunc() map[string]func(interface{}) (
 	return this.metadataFunc
 }
 
+// IServiceCallback provides lifecycle hooks for service operations.
+// Callbacks can modify data, abort operations, or perform side effects.
 type IServiceCallback interface {
+	// Before is called before an operation is executed.
+	// Returns: modified data, continue flag, error
+	// If continue is false, the operation is aborted.
 	Before(interface{}, Action, bool, IVNic) (interface{}, bool, error)
+	// After is called after an operation completes successfully.
+	// Returns: modified data, continue flag, error
 	After(interface{}, Action, bool, IVNic) (interface{}, bool, error)
 }

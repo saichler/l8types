@@ -21,31 +21,38 @@ import (
 	"github.com/saichler/l8types/go/types/l8api"
 )
 
-/*
-IRegistry - Interface for encapsulating a Type registry service so a struct instance
-can be instantiated based on the type name.
-*/
+// IRegistry provides a type registry for dynamic type instantiation.
+// Allows registering types by name and creating instances dynamically,
+// which is essential for deserializing data without compile-time type knowledge.
 type IRegistry interface {
-	//Register - receive as an input an instance and register, extract the Type and register it.
+	// Register registers a type from an instance, extracting the type information.
 	Register(interface{}) (bool, error)
-	//RegisterType - receive a reflect.Type instance and register it.
+	// RegisterType registers a type directly from a reflect.Type.
 	RegisterType(reflect.Type) (bool, error)
-	//Info Retrieve the registered entry for this type.
+	// Info retrieves the registration info for a type by name.
 	Info(string) (IInfo, error)
-	//Register Enum string to int32 values
+	// RegisterEnums registers enum string-to-int32 mappings.
 	RegisterEnums(map[string]int32)
-	//Get int32 value of an enum
+	// Enum returns the int32 value for an enum string.
 	Enum(string) int32
-	//Unregister an instance
+	// UnRegister removes a type from the registry.
 	UnRegister(string) (bool, error)
+	// NewOf creates a new instance of the same type as the provided instance.
 	NewOf(interface{}) interface{}
+	// TypeList returns a list of all registered type names.
 	TypeList() *l8api.L8TypeList
 }
 
+// IInfo provides information about a registered type.
 type IInfo interface {
+	// Type returns the reflect.Type for this registration.
 	Type() reflect.Type
+	// Name returns the registered type name.
 	Name() string
+	// Serializer returns a serializer for this type in the given mode.
 	Serializer(SerializerMode) ISerializer
+	// AddSerializer adds a custom serializer for this type.
 	AddSerializer(ISerializer)
+	// NewInstance creates a new zero-value instance of this type.
 	NewInstance() (interface{}, error)
 }

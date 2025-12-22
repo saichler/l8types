@@ -13,6 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Read.go provides network read operations for the Layer 8 protocol.
+// All reads use a length-prefixed format: 8 bytes (int64) size followed by data.
+
 package nets
 
 import (
@@ -53,6 +56,8 @@ func Read(conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte, error) {
 	return data, err
 }
 
+// ReadSize reads exactly 'size' bytes from the connection, handling partial reads.
+// Will retry reads until all bytes are received or an error occurs.
 func ReadSize(size int, conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte, error) {
 	data := make([]byte, size)
 	n, e := conn.Read(data)
@@ -74,6 +79,8 @@ func ReadSize(size int, conn net.Conn, config *l8sysconfig.L8SysConfig) ([]byte,
 	return data, nil
 }
 
+// ReadEncryptedBytes reads encrypted data from the connection and decrypts it.
+// Returns the decrypted data as bytes.
 func ReadEncryptedBytes(conn net.Conn, config *l8sysconfig.L8SysConfig,
 	securityProvider ifs.ISecurityProvider) ([]byte, error) {
 	inData, err := Read(conn, config)
@@ -90,6 +97,7 @@ func ReadEncryptedBytes(conn net.Conn, config *l8sysconfig.L8SysConfig,
 	return decData, nil
 }
 
+// ReadEncrypted reads encrypted data from the connection and returns it as a string.
 func ReadEncrypted(conn net.Conn, config *l8sysconfig.L8SysConfig,
 	securityProvider ifs.ISecurityProvider) (string, error) {
 	data, err := ReadEncryptedBytes(conn, config, securityProvider)

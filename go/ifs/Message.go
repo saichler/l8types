@@ -17,36 +17,44 @@ package ifs
 
 import "time"
 
+// Message represents a network message in the Layer 8 system.
+// It contains routing information, payload data, and optional transaction metadata.
+// Messages support various delivery modes (unicast, multicast, round-robin, etc.)
+// and can be part of distributed transactions.
 type Message struct {
-	source        string
-	vnet          string
-	destination   string
-	serviceName   string
-	serviceArea   byte
-	priority      Priority
-	multicastMode MulticastMode
+	// Routing fields
+	source        string        // UUID of the sending node
+	vnet          string        // Virtual network identifier
+	destination   string        // UUID of the target node (empty for multicast)
+	serviceName   string        // Target service name
+	serviceArea   byte          // Target service area/partition
+	priority      Priority      // Message priority (P1-P8)
+	multicastMode MulticastMode // Delivery mode (unicast, multicast, etc.)
 
-	action      Action
-	tr_state    TransactionState
-	aaaId       string
-	sequence    uint32
-	timeout     uint16
-	request     bool
-	reply       bool
-	failMessage string
-	data        []byte
+	// Message metadata
+	action      Action           // Action type (POST, PUT, PATCH, DELETE, GET, etc.)
+	tr_state    TransactionState // Transaction state if transactional
+	aaaId       string           // Authentication/Authorization/Audit ID
+	sequence    uint32           // Message sequence number
+	timeout     uint16           // Request timeout in milliseconds
+	request     bool             // True if this is a request expecting response
+	reply       bool             // True if this is a reply to a request
+	failMessage string           // Error message if delivery failed
+	data        []byte           // Payload data
 
-	tr_id        string
-	tr_errMsg    string
-	tr_created   int64
-	tr_queued    int64
-	tr_running   int64
-	tr_end       int64
-	tr_timeout   int64
-	tr_replica   byte
-	tr_isReplica bool
+	// Transaction fields (only used when tr_state != NotATransaction)
+	tr_id        string // Transaction ID
+	tr_errMsg    string // Transaction error message
+	tr_created   int64  // Transaction creation timestamp (Unix seconds)
+	tr_queued    int64  // Transaction queued timestamp
+	tr_running   int64  // Transaction started running timestamp
+	tr_end       int64  // Transaction completion timestamp
+	tr_timeout   int64  // Transaction timeout value
+	tr_replica   byte   // Replica number for replicated data
+	tr_isReplica bool   // True if this is a replica operation
 }
 
+// Init initializes all fields of the message. Used for creating a fully-configured message.
 func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	priority Priority, multicastMode MulticastMode, action Action, source, vnet string, data []byte,
 	isRequest, isReply bool, msgNum uint32,
@@ -75,8 +83,9 @@ func (this *Message) Init(destination, serviceName string, serviceArea byte,
 	this.tr_isReplica = tr_isreplica
 }
 
-//Getters
+// Getters - Methods to retrieve message field values
 
+// Source returns the UUID of the sending node.
 func (this *Message) Source() string {
 	return this.source
 }
@@ -177,8 +186,9 @@ func (this *Message) Tr_IsReplica() bool {
 	return this.tr_isReplica
 }
 
-//Setters
+// Setters - Methods to modify message field values
 
+// SetSource sets the source UUID.
 func (this *Message) SetSource(source string) {
 	this.source = source
 }

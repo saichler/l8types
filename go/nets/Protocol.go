@@ -13,6 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package nets provides low-level network protocol operations for the Layer 8 system.
+// It handles connection establishment, handshake protocol execution, and
+// encrypted data transmission over TCP connections.
 package nets
 
 import (
@@ -24,6 +27,15 @@ import (
 	"net"
 )
 
+// ExecuteProtocol performs the connection handshake between two Layer 8 nodes.
+// This exchanges UUIDs, aliases, configuration flags, and service registrations.
+// All data is encrypted during transmission for security.
+// The protocol flow:
+//  1. Exchange local/remote UUIDs
+//  2. Exchange force-external flags
+//  3. Exchange aliases
+//  4. Exchange service registrations
+//  5. Exchange remote VNet information
 func ExecuteProtocol(conn net.Conn, config *l8sysconfig.L8SysConfig, security ifs.ISecurityProvider) error {
 	err := WriteEncrypted(conn, []byte(config.LocalUuid), config, security)
 	if err != nil {
@@ -100,6 +112,7 @@ func ExecuteProtocol(conn net.Conn, config *l8sysconfig.L8SysConfig, security if
 	return nil
 }
 
+// ServicesToBytes serializes a services registry to protobuf bytes.
 func ServicesToBytes(services *l8services.L8Services) []byte {
 	data, err := proto.Marshal(services)
 	if err != nil {
@@ -108,6 +121,7 @@ func ServicesToBytes(services *l8services.L8Services) []byte {
 	return data
 }
 
+// BytesToServices deserializes protobuf bytes to a services registry.
 func BytesToServices(data []byte) *l8services.L8Services {
 	services := &l8services.L8Services{}
 	err := proto.Unmarshal(data, services)

@@ -11,6 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// health.proto defines types for health monitoring and statistics collection
+// in the Layer 8 distributed system. Provides real-time visibility into
+// node status, resource usage, and message traffic.
+
 syntax = "proto3";
 
 package l8health;
@@ -23,39 +27,68 @@ option go_package = "./types/l8health";
 import "services.proto";
 import "api.proto";
 
+// L8HealthState represents the health status of a node or service.
 enum L8HealthState {
+  // Invalid or unknown state
   Invalid_State = 0;
+  // Node/service is healthy and responding
   Up = 1;
+  // Node/service is down (graceful shutdown or failure)
   Down = 2;
+  // Node/service cannot be reached (network issue)
   Unreachable = 3;
 }
 
+// L8HealthList is a paginated list of health records with metadata.
 message L8HealthList {
+  // List of health records
   repeated L8Health list = 1;
+  // Metadata for the result set
   l8api.L8MetaData metadata = 2;
 }
 
+// L8Health contains comprehensive health information for a node.
+// Includes identity, services, status, and performance statistics.
 message L8Health {
+  // UUID of the local endpoint (A-side)
   string a_uuid = 1;
+  // UUID of the remote endpoint (Z-side)
   string z_uuid = 2;
+  // Human-readable alias for the node
   string alias = 3;
+  // Services provided by this node
   l8services.L8Services services = 4;
+  // Current health status
   L8HealthState status = 5;
+  // Performance and usage statistics
   L8HealthStats stats = 6;
+  // Node start time (Unix timestamp in milliseconds)
   int64 start_time = 7;
+  // True if this node is a virtual network (VNet) switch
   bool is_vnet = 8;
 }
 
+// L8HealthStats contains performance and resource usage statistics.
 message L8HealthStats {
+  // Timestamp of last message received (Unix millis)
   int64 last_msg_time = 1;
+  // Total count of messages transmitted
   int64 tx_msg_count = 2;
+  // Total bytes of data transmitted
   int64 tx_data_count = 3;
+  // Total count of messages received
   int64 rx_msg_count = 4;
+  // Total bytes of data received
   int64 rx_data_cont = 5;
+  // Current memory usage in bytes
   uint64 memory_usage = 6;
+  // Current CPU usage as percentage (0.0 to 100.0)
   double cpu_usage = 7;
 }
 
+// L8Top aggregates health information from multiple nodes.
+// Provides a cluster-wide view of system health.
 message L8Top {
+  // Map of node UUID to health information
   map<string, L8Health> healths = 1;
 }

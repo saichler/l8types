@@ -17,20 +17,26 @@ package ifs
 
 import "reflect"
 
+// SerializerMode defines the serialization format.
 type SerializerMode int
 
 const (
-	BINARY SerializerMode = 1
-	JSON   SerializerMode = 2
-	STRING SerializerMode = 3
+	BINARY SerializerMode = 1 // Binary/protobuf serialization
+	JSON   SerializerMode = 2 // JSON serialization
+	STRING SerializerMode = 3 // String/text serialization
 )
 
+// ISerializer defines the interface for object serialization and deserialization.
 type ISerializer interface {
+	// Mode returns the serialization mode.
 	Mode() SerializerMode
+	// Marshal converts an object to bytes.
 	Marshal(interface{}, IResources) ([]byte, error)
+	// Unmarshal converts bytes back to an object.
 	Unmarshal([]byte, IResources) (interface{}, error)
 }
 
+// IsNil safely checks if an interface value is nil, handling pointer types.
 func IsNil(any interface{}) bool {
 	if any == nil {
 		return true
@@ -45,10 +51,16 @@ func IsNil(any interface{}) bool {
 	return isNil
 }
 
+// IStorage defines a key-value storage interface for persistent data.
 type IStorage interface {
+	// Put stores a value with the given key.
 	Put(string, interface{}) error
+	// Get retrieves a value by key.
 	Get(string) (interface{}, error)
+	// Delete removes a value by key and returns the deleted value.
 	Delete(string) (interface{}, error)
+	// Collect applies a filter function and returns matching key-value pairs.
 	Collect(f func(interface{}) (bool, interface{})) map[string]interface{}
+	// CacheEnabled returns true if in-memory caching is enabled.
 	CacheEnabled() bool
 }

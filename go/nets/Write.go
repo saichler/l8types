@@ -13,6 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Write.go provides network write operations for the Layer 8 protocol.
+// All writes use a length-prefixed format: 8 bytes (int64) size followed by data.
+
 package nets
 
 import (
@@ -51,6 +54,7 @@ func Write(data []byte, conn net.Conn, config *l8sysconfig.L8SysConfig) error {
 	return e
 }
 
+// WriteEncrypted encrypts data and writes it to the connection.
 func WriteEncrypted(conn net.Conn, data []byte, config *l8sysconfig.L8SysConfig,
 	securityProvider ifs.ISecurityProvider) error {
 	encData, err := securityProvider.Encrypt(data)

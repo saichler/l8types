@@ -13,16 +13,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// MessageUnmarshal.go provides message deserialization from bytes.
+// Uses unsafe string conversion for zero-copy performance.
+
 package ifs
 
 import (
 	"unsafe"
 )
 
+// unsafeString converts bytes to string without copying (zero-copy).
+// Warning: The returned string shares memory with the byte slice.
 func unsafeString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+// Unmarshal deserializes a message from bytes received over the network.
+// Decrypts the body using the security provider and populates all fields.
 func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) {
 
 	this.source = unsafeString(data[pSource:pVnet])
@@ -78,6 +85,8 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 	return nil, nil
 }
 
+// HeaderOf extracts header fields from raw message bytes without full deserialization.
+// Returns: source, vnet, destination, serviceName, serviceArea, priority, multicastMode
 func HeaderOf(data []byte) (string, string, string, string, byte, Priority, MulticastMode) {
 	return unsafeString(data[pSource:pVnet]),
 		unsafeString(data[pVnet:pDestination]),
@@ -88,6 +97,8 @@ func HeaderOf(data []byte) (string, string, string, string, byte, Priority, Mult
 		MulticastMode(data[PPriority] & 0x0F)
 }
 
+// ToDestination extracts the destination UUID from raw message bytes.
+// Returns empty string if destination is not set (multicast messages).
 func ToDestination(data []byte) string {
 	if data[pDestination] != 0 && data[pDestination+1] != 0 {
 		return unsafeString(data[pDestination:pServiceName])
@@ -95,6 +106,8 @@ func ToDestination(data []byte) string {
 	return ""
 }
 
+// ToServiceName extracts the service name from raw message bytes.
+// Handles null-terminated strings within the fixed-size field.
 func ToServiceName(data []byte) string {
 	start := pServiceName
 	end := start + sServiceName

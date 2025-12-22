@@ -11,6 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// sysconfig.proto defines system configuration types for the Layer 8 network.
+// Contains settings for message queues, network connections, and VNet configuration.
+
 syntax = "proto3";
 
 package l8sysconfig;
@@ -22,7 +25,8 @@ option go_package = "./types/l8sysconfig";
 
 import "services.proto";
 
-// A config for the messages limitation and data size
+// L8SysConfig contains system-wide configuration for message handling and network setup.
+// Used to configure VNic (Virtual Network Interface) connections and message limits.
 message L8SysConfig {
   // The maximum data size for a message
   uint64 max_data_size = 1;

@@ -11,6 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// api.proto defines the core API types for the Layer 8 distributed system.
+// This includes query DSL for data filtering, authentication and authorization,
+// two-factor authentication (TFA), captcha support, and credential management.
+
 syntax = "proto3";
 
 package l8api;
@@ -20,107 +24,186 @@ option java_outer_classname = "L8Api";
 option java_package = "com.types.l8api";
 option go_package = "./types/l8api";
 
+// L8Query represents a query request for filtering and retrieving data elements.
+// It supports expression-based criteria, sorting, pagination, and map-reduce operations.
 message L8Query {
+  // Free-text search string for full-text queries
   string text = 1;
+  // The root type name to query against
   string rootType = 2;
+  // List of property names to include in the result (projection)
   repeated string properties = 3;
+  // The filter criteria expression tree
   L8Expression criteria = 4;
+  // Property name to sort results by
   string sort_by = 5;
+  // If true, sort in descending order; otherwise ascending
   bool descending = 6;
+  // Maximum number of results to return per page
   int32 limit = 7;
+  // Page number for pagination (zero-based)
   int32 page = 8;
+  // If true, perform case-sensitive matching
   bool match_case = 9;
+  // Schema name to filter by (optional)
   string schema = 10;
+  // If true, execute as a distributed map-reduce operation
   bool map_reduce = 11;
 }
 
+// L8Expression represents a node in the query criteria expression tree.
+// Expressions can be chained using AND/OR logic and nested with child expressions.
 message L8Expression {
+  // The condition at this expression node
   L8Condition condition = 1;
+  // Logical operator to chain with next expression ("AND" or "OR")
   string and_or = 2;
+  // Next expression in the chain (sibling)
   L8Expression next = 3;
+  // Nested child expression (for grouping)
   L8Expression child = 4;
 }
 
+// L8Condition represents a condition within an expression.
+// Conditions contain comparators and can be chained together.
 message L8Condition {
+  // The comparator defining the comparison operation
   L8Comparator comparator = 1;
+  // Operator to chain with next condition
   string oper = 2;
+  // Next condition in the chain
   L8Condition next = 3;
 }
 
+// L8Comparator defines a single comparison operation.
+// Compares a left operand against a right operand using an operator.
 message L8Comparator {
+  // Left operand (typically a property name)
   string left = 1;
+  // Comparison operator (e.g., "=", "!=", ">", "<", ">=", "<=", "LIKE", "IN")
   string oper = 2;
+  // Right operand (the value to compare against)
   string right = 3;
 }
 
+// AuthUser contains user credentials for authentication requests.
 message AuthUser {
+  // Username or email for authentication
   string user = 1;
+  // Password (should be transmitted over secure channel)
   string pass = 2;
+  // Captcha response token for bot protection
   string captcha = 3;
 }
 
+// AuthToken is the response to an authentication request.
+// Contains the session token or error information.
 message AuthToken {
+  // The authentication token if successful
   string token = 1;
+  // Error message if authentication failed
   string error = 2;
+  // If true, user needs to set up two-factor authentication
   bool setup_tfa = 3;
+  // If true, user needs to provide TFA code to complete login
   bool need_tfa = 4;
 }
 
+// L8MetaData provides metadata and statistics about query results.
+// Used for aggregation and analysis of data distribution.
 message L8MetaData {
+  // Count statistics for primary keys
   L8Count key_count = 1;
+  // Count statistics per value, keyed by property name
   map<string, L8Count> value_count = 2;
 }
 
+// L8Count holds count statistics as a map of value to count.
 message L8Count {
+  // Map of value string to occurrence count
   map<string, int32> counts = 1;
 }
 
+// L8TypeList contains a list of type names.
 message L8TypeList {
+  // List of type name strings
   repeated string list = 1;
 }
 
+// L8TFASetup is a request to set up two-factor authentication for a user.
 message L8TFASetup {
+  // The user ID to set up TFA for
   string userId = 1;
 }
 
+// L8TFASetupR is the response to a TFA setup request.
+// Contains the secret and QR code for authenticator app configuration.
 message L8TFASetupR {
+  // The TOTP secret key (base32 encoded)
   string secret = 1;
+  // QR code image bytes for scanning with authenticator app
   bytes qr = 2;
+  // Error message if setup failed
   string error = 3;
 }
 
+// L8TFAVerify is a request to verify a two-factor authentication code.
 message L8TFAVerify {
+  // The user ID being verified
   string userId = 1;
+  // The TOTP code from the authenticator app
   string code = 2;
+  // Bearer token from initial authentication
   string bearer = 3;
 }
 
+// L8TFAVerifyR is the response to a TFA verification request.
 message L8TFAVerifyR {
+  // True if the code was valid and verification succeeded
   bool ok = 1;
 }
 
+// Captcha contains captcha challenge data for bot protection.
 message Captcha {
+  // Captcha image or challenge data bytes
   bytes captcha = 1;
 }
 
+// L8Credential represents a single credential with multiple sides/components.
+// Used for storing complex credentials like connection strings or API keys.
 message L8Credential {
+  // First component of the credential (e.g., host, username)
   string aside = 1;
+  // Second component of the credential (e.g., port, password)
   string zside = 2;
+  // Third component of the credential (e.g., database, token)
   string yside = 3;
 }
 
+// L8CredentialsList is a paginated list of credentials with metadata.
 message L8CredentialsList {
+  // List of credential sets
   repeated L8Credentials list = 1;
+  // Metadata for the result set
   L8MetaData metadata = 2;
 }
 
+// L8Credentials represents a named set of credentials.
+// Groups related credentials under a single identifier.
 message L8Credentials {
+  // Unique identifier for this credential set
   string id = 1;
+  // Human-readable name for the credential set
   string name = 2;
+  // Map of credential key to credential value
   map<string, L8Credential> creds = 3;
 }
 
+// L8CredentialsMask represents credentials with masked/encrypted values.
+// Used for secure transmission of credential data.
 message L8CredentialsMask {
+  // Unique identifier for the credential set
   string id = 1;
+  // Encrypted or masked credential data
   bytes creds = 2;
 }

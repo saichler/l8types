@@ -13,8 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// MessageClone.go provides methods for cloning Message instances.
+// Cloning is essential for message routing where the same message may need
+// to be sent to multiple destinations with slight modifications.
+
 package ifs
 
+// Clone creates an exact copy of the message.
 func (this *Message) Clone() *Message {
 	clone := &Message{}
 	clone.source = this.source
@@ -45,6 +50,8 @@ func (this *Message) Clone() *Message {
 	return clone
 }
 
+// CloneReply creates a reply message by cloning and swapping source/destination.
+// Used when creating a response to a request message.
 func (this *Message) CloneReply(localUuid, remoteUuid string) *Message {
 	clone := &Message{}
 	clone.source = localUuid
@@ -75,6 +82,8 @@ func (this *Message) CloneReply(localUuid, remoteUuid string) *Message {
 	return clone
 }
 
+// CloneFail creates a failure message with an error description.
+// Used when message delivery or processing fails.
 func (this *Message) CloneFail(failMessage, remoteUuid string) *Message {
 	clone := &Message{}
 	clone.source = this.destination

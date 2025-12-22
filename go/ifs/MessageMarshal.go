@@ -13,8 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// MessageMarshal.go provides message serialization to bytes.
+// The message format consists of a header (routing info, unencrypted) and
+// a body (action, data, transaction info, encrypted).
+
 package ifs
 
+// Message wire format constants - define byte positions in serialized messages
 const (
 	sUuid        = 36
 	sServiceName = 10
@@ -39,6 +44,9 @@ const (
 	pFailMessage     = pFailMessageSize + sByte
 )
 
+// Marshal serializes the message to bytes for network transmission.
+// The header (source, vnet, destination, service, area, priority) is unencrypted.
+// The body (action, AAA ID, sequence, timeout, data, transaction info) is encrypted.
 func (this *Message) Marshal(any interface{}, resources IResources) ([]byte, error) {
 	failMessageSize := len(this.failMessage)
 	dataSize := len(this.data)

@@ -21,20 +21,35 @@ import (
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
 
+// IResources provides access to all shared resources in the Layer 8 system.
+// It acts as a dependency injection container for core services.
 type IResources interface {
+	// Registry returns the type registry.
 	Registry() IRegistry
+	// Services returns the service manager.
 	Services() IServices
+	// Security returns the security provider.
 	Security() ISecurityProvider
+	// DataListener returns the data listener for incoming messages.
 	DataListener() IDatatListener
+	// Serializer returns a serializer for the given mode.
 	Serializer(SerializerMode) ISerializer
+	// Logger returns the logger instance.
 	Logger() ILogger
+	// SysConfig returns the system configuration.
 	SysConfig() *l8sysconfig.L8SysConfig
+	// Introspector returns the type introspector.
 	Introspector() IIntrospector
+	// AddService registers a service in the system config.
 	AddService(string, int32)
+	// Set sets a custom resource value.
 	Set(interface{})
+	// Copy copies resources from another IResources instance.
 	Copy(IResources)
 }
 
+// AddService registers a service in the system configuration.
+// Creates the service areas map if it doesn't exist.
 func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32) {
 	if sysConfig == nil {
 		return
@@ -56,6 +71,7 @@ func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceA
 	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = true
 }
 
+// RemoveService removes a service from the services registry.
 func RemoveService(services *l8services.L8Services, serviceName string, serviceArea int32) {
 	if services == nil {
 		return
@@ -73,6 +89,7 @@ func RemoveService(services *l8services.L8Services, serviceName string, serviceA
 	}
 }
 
+// NewUuid generates a new random UUID string.
 func NewUuid() string {
 	return uuid.New().String()
 }

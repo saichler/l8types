@@ -15,7 +15,9 @@ limitations under the License.
 
 package ifs
 
-// Optimized Convert.go - Maintaining full API compatibility with performance improvements
+// Convert.go provides optimized byte conversion utilities for message serialization.
+// These functions convert between Go primitive types and their byte representations
+// using efficient bitwise operations. Used by MessageMarshal and MessageUnmarshal.
 // Key optimizations:
 // - Bitwise OR instead of addition for better performance
 // - Slice literals instead of make() + assignments for better memory efficiency

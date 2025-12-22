@@ -11,6 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// notification.proto defines types for property change notifications in the Layer 8 system.
+// Enables real-time data synchronization by broadcasting changes to subscribed clients.
+
 syntax = "proto3";
 
 package l8notify;
@@ -20,28 +23,50 @@ option java_outer_classname = "L8Notify";
 option java_package = "com.types.l8notify";
 option go_package = "./types/l8notify";
 
+// L8NotificationType represents the type of change operation that triggered a notification.
 enum L8NotificationType {
+  // Invalid or unspecified notification type
   Invalid_Notify = 0;
+  // New entity was created
   Post = 1;
+  // Entity was fully replaced
   Put = 2;
+  // Entity was partially updated
   Patch = 3;
+  // Entity was deleted
   Delete = 4;
 }
 
+// L8NotificationSet groups multiple property change notifications for a single entity.
+// Provides batched delivery of changes for efficiency.
 message L8NotificationSet {
+  // Source identifier (typically the UUID of the originating node)
   string source = 1;
+  // Timestamp when the changes occurred (Unix millis)
   int64 time = 2;
+  // Sequence number for ordering notifications
   uint32 sequence = 3;
+  // Name of the service that owns this data
   string service_name = 4;
+  // Service area where the change occurred
   int32 service_area = 5;
+  // Type name of the modified model/entity
   string model_type = 6;
+  // Primary key of the modified model/entity
   string model_key = 7;
+  // Type of change operation (Post, Put, Patch, Delete)
   L8NotificationType type = 8;
+  // List of individual property changes
   repeated L8Notification notification_list = 9;
 }
 
+// L8Notification represents a single property change within an entity.
+// Contains the old and new values for delta tracking.
 message L8Notification {
+  // Unique identifier for the property that changed
   string property_id = 1;
+  // Previous value (serialized bytes, empty for new properties)
   bytes oldValue = 2;
+  // New value (serialized bytes, empty for deleted properties)
   bytes newValue = 3;
 }

@@ -11,6 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// reflect.proto defines types for runtime type introspection and reflection.
+// Enables dynamic type inspection, field decoration, and table view generation
+// for building adaptive UIs and data processing pipelines.
+
 syntax = "proto3";
 
 package l8reflect;
@@ -20,48 +24,70 @@ option java_outer_classname = "L8Reflect";
 option java_package = "com.types.l8reflect";
 option go_package = "./types/l8reflect";
 
+// L8Node represents a node in the type reflection tree.
+// Describes the structure of a type including its fields, nested types, and decorators.
 message L8Node {
-  // The type name, in case of a map, this is the value type.
+  // The type name. For maps, this is the value type.
   string type_name = 1;
-  // In case this attribute is a cell in a map or a slice, this is the key type
+  // For maps or slices, this is the key/index type
   string key_type_name = 2;
-  // The parent node, nil if root.
+  // Reference to the parent node (nil for root)
   L8Node parent = 3;
-  // The attribute name in the parent
+  // The field name in the parent type
   string field_name = 4;
-  // In case this attribute is a struct, a map between the attribute name and the child registry node.
+  // For struct types, maps field names to their child nodes
   map<string, L8Node> attributes = 5;
-  // If this attribute is a map
+  // True if this field is a map type
   bool is_map = 6;
-  // If this attribute is a slice
+  // True if this field is a slice/array type
   bool is_slice = 7;
-  //The cached key so we won't need to calculate it all the time.
+  // Cached unique key for efficient lookups
   string cached_key = 8;
-  //Decorators
+  // Field decorators keyed by decorator type ordinal
   map<int32, L8Decorator> decorators = 9;
-  // If the attribute is struct or map/slice to struct.
+  // True if this is a struct type or contains structs
   bool is_struct = 10;
 }
 
+// L8Decorator contains decorator metadata for a field.
+// Decorators provide hints for UI rendering, indexing, and validation.
 message L8Decorator {
+  // List of field names or values associated with this decorator
   repeated string fields = 1;
 }
 
+// L8TableView defines a table structure for displaying hierarchical data.
+// Used for generating UI components and export formats.
 message L8TableView {
-  L8Node  table = 1;
+  // The root node defining the table structure
+  L8Node table = 1;
+  // Column definitions for the table
   repeated L8Node columns = 2;
+  // Nested sub-tables for hierarchical data
   repeated L8Node sub_tables = 3;
 }
 
+// L8DecoratorType enumerates the available field decorator types.
+// Decorators control indexing, UI rendering, and serialization behavior.
 enum L8DecoratorType {
+  // Invalid or unspecified decorator
   Invalid = 0;
+  // Primary key field - used for unique identification
   Primary = 1;
+  // Unique field - enforces uniqueness constraint
   Unique = 2;
+  // Non-unique indexed field - for efficient lookups without uniqueness
   NonUnique = 3;
+  // Display title field - shown as the entity label in UIs
   Title = 4;
+  // Editor hint - specifies custom editor component
   Editor = 5;
+  // Skip nested inspection - don't recurse into this field
   NoNestedInspection = 6;
+  // Completely ignore this field in processing
   Ignore = 7;
+  // Ignore specific attributes within this field
   IgnoreAttr = 8;
+  // Always serialize/send the full value (no delta compression)
   AlwaysFull = 9;
 }
