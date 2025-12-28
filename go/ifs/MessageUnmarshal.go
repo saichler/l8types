@@ -30,12 +30,13 @@ func unsafeString(b []byte) string {
 
 // Unmarshal deserializes a message from bytes received over the network.
 // Decrypts the body using the security provider and populates all fields.
+// Note: Uses string() instead of unsafeString to copy data and allow GC of original buffers.
 func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, error) {
 
-	this.source = unsafeString(data[pSource:pVnet])
-	this.vnet = unsafeString(data[pVnet:pDestination])
-	this.destination = ToDestination(data)
-	this.serviceName = ToServiceName(data)
+	this.source = string(data[pSource:pVnet])
+	this.vnet = string(data[pVnet:pDestination])
+	this.destination = toDestinationSafe(data)
+	this.serviceName = toServiceNameSafe(data)
 	this.serviceArea = data[pServiceArea]
 	this.priority, this.multicastMode = ByteToPriorityMulticastMode(data[PPriority])
 
@@ -46,23 +47,24 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 
 	this.action = Action(body[pAction])
 	this.tr_state = TransactionState(body[pTrState])
-	this.aaaId = unsafeString(body[pAaaId:pSequence])
+	this.aaaId = string(body[pAaaId:pSequence])
 	this.sequence = Bytes2UInt32(body[pSequence:pTimeout])
 	this.timeout = Bytes2UInt16(body[pTimeout:pRequestReply])
 	this.request, this.reply = BoolOf(body[pRequestReply])
 
 	failMessageSize := int(body[pFailMessageSize])
 	pDataSize := pFailMessage + failMessageSize
-	this.failMessage = unsafeString(body[pFailMessage:pDataSize])
+	this.failMessage = string(body[pFailMessage:pDataSize])
 
 	pData := pDataSize + sUint32
 	dataSize := int(Bytes2UInt32(body[pDataSize:pData]))
 	pTrId := pData + dataSize
-	this.data = body[pData:pTrId]
+	// Copy data slice to allow GC of the decrypted body buffer
+	this.data = append([]byte(nil), body[pData:pTrId]...)
 
 	if this.tr_state != NotATransaction {
 		pTrErrMsgSize := pTrId + sUuid
-		this.tr_id = unsafeString(body[pTrId:pTrErrMsgSize])
+		this.tr_id = string(body[pTrId:pTrErrMsgSize])
 		trErrMsgSize := int(body[pTrErrMsgSize])
 		pTrErrMsg := pTrErrMsgSize + sByte
 		pTrCreated := pTrErrMsg + trErrMsgSize
@@ -72,7 +74,7 @@ func (this *Message) Unmarshal(data []byte, resources IResources) (interface{}, 
 		pTrTimeout := pTrEnd + 8
 		pTrReplica := pTrTimeout + 8
 		pTrIsReplica := pTrReplica + sByte
-		this.tr_errMsg = unsafeString(body[pTrErrMsg:pTrCreated])
+		this.tr_errMsg = string(body[pTrErrMsg:pTrCreated])
 		this.tr_created = Bytes2Long(body[pTrCreated:pTrQueued])
 		this.tr_queued = Bytes2Long(body[pTrQueued:pTrRunning])
 		this.tr_running = Bytes2Long(body[pTrRunning:pTrEnd])
@@ -121,4 +123,28 @@ func ToServiceName(data []byte) string {
 		}
 	}
 	return unsafeString(data[start:end])
+}
+
+// toDestinationSafe extracts destination with a copy (for Unmarshal where data is retained).
+func toDestinationSafe(data []byte) string {
+	if data[pDestination] != 0 && data[pDestination+1] != 0 {
+		return string(data[pDestination:pServiceName])
+	}
+	return ""
+}
+
+// toServiceNameSafe extracts service name with a copy (for Unmarshal where data is retained).
+func toServiceNameSafe(data []byte) string {
+	start := pServiceName
+	end := start + sServiceName
+	if end > len(data) {
+		end = len(data)
+	}
+
+	for i := start; i < end; i++ {
+		if data[i] == 0 {
+			return string(data[start:i])
+		}
+	}
+	return string(data[start:end])
 }
