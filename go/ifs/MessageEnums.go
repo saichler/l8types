@@ -35,17 +35,18 @@ type VNicMethod byte
 type MulticastMode byte
 
 const (
-	Unicast           VNicMethod = 0
-	Request           VNicMethod = 1
-	Multicast         VNicMethod = 2
-	RoundRobin        VNicMethod = 3
-	RoundRobinRequest VNicMethod = 4
-	Proximity         VNicMethod = 5
-	ProximityRequest  VNicMethod = 6
-	Leader            VNicMethod = 7
-	LeaderRequest     VNicMethod = 8
-	Local             VNicMethod = 9
-	LocalRequest      VNicMethod = 10
+	Invalid_VNICMethod VNicMethod = 0
+	Unicast            VNicMethod = 1
+	Request            VNicMethod = 2
+	Multicast          VNicMethod = 3
+	RoundRobin         VNicMethod = 4
+	RoundRobinRequest  VNicMethod = 5
+	Proximity          VNicMethod = 6
+	ProximityRequest   VNicMethod = 7
+	Leader             VNicMethod = 8
+	LeaderRequest      VNicMethod = 9
+	Local              VNicMethod = 10
+	LocalRequest       VNicMethod = 11
 
 	M_All        MulticastMode = 0   // Send to all providers
 	M_RoundRobin MulticastMode = 1   // Send to one provider in round-robin order
