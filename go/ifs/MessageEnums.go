@@ -31,9 +31,22 @@ const (
 )
 
 // MulticastMode defines how messages are routed to service providers.
+type VNicMethod byte
 type MulticastMode byte
 
 const (
+	Unicast           VNicMethod = 0
+	Request           VNicMethod = 1
+	Multicast         VNicMethod = 2
+	RoundRobin        VNicMethod = 3
+	RoundRobinRequest VNicMethod = 4
+	Proximity         VNicMethod = 5
+	ProximityRequest  VNicMethod = 6
+	Leader            VNicMethod = 7
+	LeaderRequest     VNicMethod = 8
+	Local             VNicMethod = 9
+	LocalRequest      VNicMethod = 10
+
 	M_All        MulticastMode = 0   // Send to all providers
 	M_RoundRobin MulticastMode = 1   // Send to one provider in round-robin order
 	M_Proximity  MulticastMode = 2   // Send to nearest (lowest latency) provider
