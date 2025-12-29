@@ -77,22 +77,3 @@ message L8Transaction {
   // Timestamp when transaction completed
   int64 end = 7;
 }
-
-// L8ServiceLink defines a connection between two services for inter-service communication.
-// Used to establish communication channels between service areas.
-message L8ServiceLink {
-  // Name of the source service (A-side)
-  string aside_service_name = 1;
-  // Area of the source service
-  int32  aside_service_area = 2;
-  // Name of the target service (Z-side)
-  string zside_service_name = 3;
-  // Area of the target service
-  int32  zside_service_area = 4;
-  // Communication mode for this link
-  int32 mode = 5;
-  // If true, this is a request link; otherwise it's a publish link
-  bool request = 6;
-  // Polling/refresh interval in seconds
-  uint32 interval = 7;
-}

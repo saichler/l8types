@@ -17,7 +17,6 @@ package ifs
 
 import (
 	"github.com/saichler/l8types/go/types/l8notify"
-	"github.com/saichler/l8types/go/types/l8services"
 )
 
 // NetworkMode defines the deployment environment for network configuration.
@@ -126,8 +125,6 @@ type IVNic interface {
 	WaitForConnection()
 	// Running returns true if the VNic is active.
 	Running() bool
-	// RegisterServiceLink registers a link between services for inter-service communication.
-	RegisterServiceLink(link *l8services.L8ServiceLink)
 	// SetResponse stores a response for a pending request.
 	SetResponse(*Message, IElements)
 	// IsVnet returns true if this VNic is a VNet switch.
@@ -156,26 +153,4 @@ type IDatatListener interface {
 	HandleData([]byte, IVNic)
 	// Failed is called when message delivery fails.
 	Failed([]byte, IVNic, string)
-}
-
-// NewServiceLink creates a new service link configuration for inter-service communication.
-// Parameters:
-//   - asideN: source service name
-//   - zsideN: target service name
-//   - asideA: source service area
-//   - zsideA: target service area
-//   - mode: multicast mode for the link
-//   - interval: polling interval in seconds
-//   - request: true if this is a request link, false for publish
-func NewServiceLink(asideN, zsideN string, asideA, zsideA byte, mode MulticastMode, interval int, request bool) *l8services.L8ServiceLink {
-	link := &l8services.L8ServiceLink{}
-	link.AsideServiceName = asideN
-	link.ZsideServiceName = zsideN
-	link.AsideServiceArea = int32(asideA)
-	link.ZsideServiceArea = int32(zsideA)
-	link.Interval = uint32(interval)
-	link.Request = request
-	link.Mode = int32(mode)
-	return link
-
 }

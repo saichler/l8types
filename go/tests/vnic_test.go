@@ -61,37 +61,3 @@ func TestNetworkMode(t *testing.T) {
 	// Reset to native for other tests
 	ifs.SetNetworkMode(ifs.NETWORK_NATIVE)
 }
-
-func TestNewServiceLink(t *testing.T) {
-	asideName := "service-a"
-	zsideName := "service-z"
-	asideArea := byte(1)
-	zsideArea := byte(2)
-	mode := ifs.M_RoundRobin
-	interval := 100
-	request := true
-
-	link := ifs.NewServiceLink(asideName, zsideName, asideArea, zsideArea, mode, interval, request)
-
-	if link.AsideServiceName != asideName {
-		t.Errorf("Expected AsideServiceName %s, got %s", asideName, link.AsideServiceName)
-	}
-	if link.ZsideServiceName != zsideName {
-		t.Errorf("Expected ZsideServiceName %s, got %s", zsideName, link.ZsideServiceName)
-	}
-	if link.AsideServiceArea != int32(asideArea) {
-		t.Errorf("Expected AsideServiceArea %d, got %d", asideArea, link.AsideServiceArea)
-	}
-	if link.ZsideServiceArea != int32(zsideArea) {
-		t.Errorf("Expected ZsideServiceArea %d, got %d", zsideArea, link.ZsideServiceArea)
-	}
-	if link.Interval != uint32(interval) {
-		t.Errorf("Expected Interval %d, got %d", interval, link.Interval)
-	}
-	if link.Request != request {
-		t.Errorf("Expected Request %v, got %v", request, link.Request)
-	}
-	if link.Mode != int32(mode) {
-		t.Errorf("Expected Mode %d, got %d", mode, link.Mode)
-	}
-}
