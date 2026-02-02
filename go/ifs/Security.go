@@ -16,12 +16,8 @@ limitations under the License.
 package ifs
 
 import (
-	"errors"
-	"fmt"
-	"net"
-	"plugin"
-
 	"github.com/saichler/l8types/go/types/l8sysconfig"
+	"net"
 )
 
 // ISecurityProvider defines the security interface for authentication, authorization,
@@ -79,26 +75,4 @@ type ISecurityProviderLoader interface {
 type ISecurityProviderActivate interface {
 	// Activate initializes the security provider with a VNic.
 	Activate(IVNic)
-}
-
-// LoadSecurityProvider loads the security provider plugin from /var/loader.so.
-// This function uses Go's plugin system to dynamically load the security implementation.
-func LoadSecurityProvider(args ...interface{}) (ISecurityProvider, error) {
-	loaderFile, err := plugin.Open("/var/loader.so")
-	if err != nil {
-		fmt.Println("Failed to load security provider #1: ", err.Error())
-		return nil, errors.New("Failed to load security provider #1: " + err.Error())
-	}
-	loader, err := loaderFile.Lookup("Loader")
-	if err != nil {
-		fmt.Println("Failed to load security provider #2: ", err.Error())
-		return nil, errors.New("Failed to load security provider #2: " + err.Error())
-	}
-	if loader == nil {
-		fmt.Println("Failed to load security provider #3: Nil Loader")
-		return nil, errors.New("Failed to load security provider #3: Nil Loader")
-	}
-	loaderInterface := *loader.(*ISecurityProviderLoader)
-	securityLoader := loaderInterface.(ISecurityProviderLoader).(ISecurityProviderLoader)
-	return securityLoader.LoadSecurityProvider(args...)
 }
