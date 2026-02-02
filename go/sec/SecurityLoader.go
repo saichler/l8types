@@ -12,7 +12,7 @@ import (
 // This function uses Go's plugin system to dynamically load the security implementation.
 func LoadSecurityProvider(args ...interface{}) (ifs.ISecurityProvider, error) {
 	loaderFile, err := plugin.Open("/var/loader.so")
-	sp := &ShallowSecurityProvider{}
+	sp := NewShallowSecurityProvider()
 	if err != nil {
 		return sp, errors.New("Failed to load security provider #1: " + err.Error())
 	}
