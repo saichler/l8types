@@ -84,10 +84,6 @@ message L8Comparator {
   string oper = 2;
   // Right operand (the value to compare against)
   string right = 3;
-  // original left for case sensitive
-  string oleft = 4;
-  // original right for case sensitive
-  string oright = 5;
 }
 
 // AuthUser contains user credentials for authentication requests.

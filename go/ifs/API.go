@@ -147,14 +147,10 @@ type ICondition interface {
 type IComparator interface {
 	// Left returns the left operand string (typically a property name).
 	Left() string
-	// Original Left value for match case
-	OLeft() string
 	// LeftProperty returns the left operand as a property accessor.
 	LeftProperty() IProperty
 	// Right returns the right operand string (the value to compare).
 	Right() string
-	// Oritiginal Right value for match case
-	ORight() string
 	// RightProperty returns the right operand as a property accessor.
 	RightProperty() IProperty
 	// Operator returns the comparison operator (=, !=, >, <, etc.).
