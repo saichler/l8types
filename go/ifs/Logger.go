@@ -18,9 +18,6 @@ package ifs
 // LogLevel defines the severity of log messages.
 type LogLevel int
 
-var LogsLocation = "/data/logs"
-var LogsDbLocation = "/data/logsdb"
-
 const (
 	Trace_Level   LogLevel = 1 // Most verbose, for detailed debugging
 	Debug_Level   LogLevel = 2 // Debug information
