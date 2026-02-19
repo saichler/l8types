@@ -207,3 +207,36 @@ message L8CredentialsMask {
   // Encrypted or masked credential data
   bytes creds = 2;
 }
+
+enum L8PeriodType {
+  invalid_period_type = 0;
+  Yearly = 1;
+  Quarterly = 2;
+  Monthly = 3;
+}
+
+enum L8PeriodValue {
+  invalid_period_value = 0;
+  January = 1;
+  February = 2;
+  March = 3;
+  April = 4;
+  May = 5;
+  June = 6;
+  July = 7;
+  August = 8;
+  September = 9;
+  October = 10;
+  November = 11;
+  December = 12;
+  Q1 = 13;
+  Q2 = 14;
+  Q3 = 15;
+  Q4 = 16;
+}
+
+message L8Period {
+  L8PeriodType period_type = 1;
+  int32 period_year = 2;
+  L8PeriodValue period_value = 3;
+}

@@ -37,6 +37,149 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type L8PeriodType int32
+
+const (
+	L8PeriodType_invalid_period_type L8PeriodType = 0
+	L8PeriodType_Yearly              L8PeriodType = 1
+	L8PeriodType_Quarterly           L8PeriodType = 2
+	L8PeriodType_Monthly             L8PeriodType = 3
+)
+
+// Enum value maps for L8PeriodType.
+var (
+	L8PeriodType_name = map[int32]string{
+		0: "invalid_period_type",
+		1: "Yearly",
+		2: "Quarterly",
+		3: "Monthly",
+	}
+	L8PeriodType_value = map[string]int32{
+		"invalid_period_type": 0,
+		"Yearly":              1,
+		"Quarterly":           2,
+		"Monthly":             3,
+	}
+)
+
+func (x L8PeriodType) Enum() *L8PeriodType {
+	p := new(L8PeriodType)
+	*p = x
+	return p
+}
+
+func (x L8PeriodType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (L8PeriodType) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_proto_enumTypes[0].Descriptor()
+}
+
+func (L8PeriodType) Type() protoreflect.EnumType {
+	return &file_api_proto_enumTypes[0]
+}
+
+func (x L8PeriodType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use L8PeriodType.Descriptor instead.
+func (L8PeriodType) EnumDescriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{0}
+}
+
+type L8PeriodValue int32
+
+const (
+	L8PeriodValue_invalid_period_value L8PeriodValue = 0
+	L8PeriodValue_January              L8PeriodValue = 1
+	L8PeriodValue_February             L8PeriodValue = 2
+	L8PeriodValue_March                L8PeriodValue = 3
+	L8PeriodValue_April                L8PeriodValue = 4
+	L8PeriodValue_May                  L8PeriodValue = 5
+	L8PeriodValue_June                 L8PeriodValue = 6
+	L8PeriodValue_July                 L8PeriodValue = 7
+	L8PeriodValue_August               L8PeriodValue = 8
+	L8PeriodValue_September            L8PeriodValue = 9
+	L8PeriodValue_October              L8PeriodValue = 10
+	L8PeriodValue_November             L8PeriodValue = 11
+	L8PeriodValue_December             L8PeriodValue = 12
+	L8PeriodValue_Q1                   L8PeriodValue = 13
+	L8PeriodValue_Q2                   L8PeriodValue = 14
+	L8PeriodValue_Q3                   L8PeriodValue = 15
+	L8PeriodValue_Q4                   L8PeriodValue = 16
+)
+
+// Enum value maps for L8PeriodValue.
+var (
+	L8PeriodValue_name = map[int32]string{
+		0:  "invalid_period_value",
+		1:  "January",
+		2:  "February",
+		3:  "March",
+		4:  "April",
+		5:  "May",
+		6:  "June",
+		7:  "July",
+		8:  "August",
+		9:  "September",
+		10: "October",
+		11: "November",
+		12: "December",
+		13: "Q1",
+		14: "Q2",
+		15: "Q3",
+		16: "Q4",
+	}
+	L8PeriodValue_value = map[string]int32{
+		"invalid_period_value": 0,
+		"January":              1,
+		"February":             2,
+		"March":                3,
+		"April":                4,
+		"May":                  5,
+		"June":                 6,
+		"July":                 7,
+		"August":               8,
+		"September":            9,
+		"October":              10,
+		"November":             11,
+		"December":             12,
+		"Q1":                   13,
+		"Q2":                   14,
+		"Q3":                   15,
+		"Q4":                   16,
+	}
+)
+
+func (x L8PeriodValue) Enum() *L8PeriodValue {
+	p := new(L8PeriodValue)
+	*p = x
+	return p
+}
+
+func (x L8PeriodValue) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (L8PeriodValue) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_proto_enumTypes[1].Descriptor()
+}
+
+func (L8PeriodValue) Type() protoreflect.EnumType {
+	return &file_api_proto_enumTypes[1]
+}
+
+func (x L8PeriodValue) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use L8PeriodValue.Descriptor instead.
+func (L8PeriodValue) EnumDescriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{1}
+}
+
 // L8Query represents a query request for filtering and retrieving data elements.
 // It supports expression-based criteria, sorting, pagination, and map-reduce operations.
 type L8Query struct {
@@ -1226,6 +1369,69 @@ func (x *L8CredentialsMask) GetCreds() []byte {
 	return nil
 }
 
+type L8Period struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	PeriodType  L8PeriodType  `protobuf:"varint,1,opt,name=period_type,json=periodType,proto3,enum=l8api.L8PeriodType" json:"period_type,omitempty"`
+	PeriodYear  int32         `protobuf:"varint,2,opt,name=period_year,json=periodYear,proto3" json:"period_year,omitempty"`
+	PeriodValue L8PeriodValue `protobuf:"varint,3,opt,name=period_value,json=periodValue,proto3,enum=l8api.L8PeriodValue" json:"period_value,omitempty"`
+}
+
+func (x *L8Period) Reset() {
+	*x = L8Period{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *L8Period) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*L8Period) ProtoMessage() {}
+
+func (x *L8Period) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use L8Period.ProtoReflect.Descriptor instead.
+func (*L8Period) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *L8Period) GetPeriodType() L8PeriodType {
+	if x != nil {
+		return x.PeriodType
+	}
+	return L8PeriodType_invalid_period_type
+}
+
+func (x *L8Period) GetPeriodYear() int32 {
+	if x != nil {
+		return x.PeriodYear
+	}
+	return 0
+}
+
+func (x *L8Period) GetPeriodValue() L8PeriodValue {
+	if x != nil {
+		return x.PeriodValue
+	}
+	return L8PeriodValue_invalid_period_value
+}
+
 var File_api_proto protoreflect.FileDescriptor
 
 var file_api_proto_rawDesc = []byte{
@@ -1353,10 +1559,38 @@ var file_api_proto_rawDesc = []byte{
 	0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x4d, 0x61, 0x73, 0x6b, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x72,
 	0x65, 0x64, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x63, 0x72, 0x65, 0x64, 0x73,
-	0x42, 0x29, 0x0a, 0x0f, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c, 0x38,
-	0x61, 0x70, 0x69, 0x42, 0x05, 0x4c, 0x38, 0x41, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x0d, 0x2e, 0x2f,
-	0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x22, 0x9a, 0x01, 0x0a, 0x08, 0x4c, 0x38, 0x50, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x12, 0x34, 0x0a,
+	0x0b, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0e, 0x32, 0x13, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x38, 0x50, 0x65, 0x72,
+	0x69, 0x6f, 0x64, 0x54, 0x79, 0x70, 0x65, 0x52, 0x0a, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x54,
+	0x79, 0x70, 0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x5f, 0x79, 0x65,
+	0x61, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64,
+	0x59, 0x65, 0x61, 0x72, 0x12, 0x37, 0x0a, 0x0c, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x5f, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x14, 0x2e, 0x6c, 0x38, 0x61,
+	0x70, 0x69, 0x2e, 0x4c, 0x38, 0x50, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x56, 0x61, 0x6c, 0x75, 0x65,
+	0x52, 0x0b, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x2a, 0x4f, 0x0a,
+	0x0c, 0x4c, 0x38, 0x50, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x54, 0x79, 0x70, 0x65, 0x12, 0x17, 0x0a,
+	0x13, 0x69, 0x6e, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x5f, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x5f,
+	0x74, 0x79, 0x70, 0x65, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x59, 0x65, 0x61, 0x72, 0x6c, 0x79,
+	0x10, 0x01, 0x12, 0x0d, 0x0a, 0x09, 0x51, 0x75, 0x61, 0x72, 0x74, 0x65, 0x72, 0x6c, 0x79, 0x10,
+	0x02, 0x12, 0x0b, 0x0a, 0x07, 0x4d, 0x6f, 0x6e, 0x74, 0x68, 0x6c, 0x79, 0x10, 0x03, 0x2a, 0xdb,
+	0x01, 0x0a, 0x0d, 0x4c, 0x38, 0x50, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x56, 0x61, 0x6c, 0x75, 0x65,
+	0x12, 0x18, 0x0a, 0x14, 0x69, 0x6e, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x5f, 0x70, 0x65, 0x72, 0x69,
+	0x6f, 0x64, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x4a, 0x61,
+	0x6e, 0x75, 0x61, 0x72, 0x79, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x46, 0x65, 0x62, 0x72, 0x75,
+	0x61, 0x72, 0x79, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x4d, 0x61, 0x72, 0x63, 0x68, 0x10, 0x03,
+	0x12, 0x09, 0x0a, 0x05, 0x41, 0x70, 0x72, 0x69, 0x6c, 0x10, 0x04, 0x12, 0x07, 0x0a, 0x03, 0x4d,
+	0x61, 0x79, 0x10, 0x05, 0x12, 0x08, 0x0a, 0x04, 0x4a, 0x75, 0x6e, 0x65, 0x10, 0x06, 0x12, 0x08,
+	0x0a, 0x04, 0x4a, 0x75, 0x6c, 0x79, 0x10, 0x07, 0x12, 0x0a, 0x0a, 0x06, 0x41, 0x75, 0x67, 0x75,
+	0x73, 0x74, 0x10, 0x08, 0x12, 0x0d, 0x0a, 0x09, 0x53, 0x65, 0x70, 0x74, 0x65, 0x6d, 0x62, 0x65,
+	0x72, 0x10, 0x09, 0x12, 0x0b, 0x0a, 0x07, 0x4f, 0x63, 0x74, 0x6f, 0x62, 0x65, 0x72, 0x10, 0x0a,
+	0x12, 0x0c, 0x0a, 0x08, 0x4e, 0x6f, 0x76, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x10, 0x0b, 0x12, 0x0c,
+	0x0a, 0x08, 0x44, 0x65, 0x63, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x10, 0x0c, 0x12, 0x06, 0x0a, 0x02,
+	0x51, 0x31, 0x10, 0x0d, 0x12, 0x06, 0x0a, 0x02, 0x51, 0x32, 0x10, 0x0e, 0x12, 0x06, 0x0a, 0x02,
+	0x51, 0x33, 0x10, 0x0f, 0x12, 0x06, 0x0a, 0x02, 0x51, 0x34, 0x10, 0x10, 0x42, 0x29, 0x0a, 0x0f,
+	0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x42,
+	0x05, 0x4c, 0x38, 0x41, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x0d, 0x2e, 0x2f, 0x74, 0x79, 0x70, 0x65,
+	0x73, 0x2f, 0x6c, 0x38, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1371,50 +1605,56 @@ func file_api_proto_rawDescGZIP() []byte {
 	return file_api_proto_rawDescData
 }
 
-var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_api_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_api_proto_goTypes = []interface{}{
-	(*L8Query)(nil),           // 0: l8api.L8Query
-	(*L8Expression)(nil),      // 1: l8api.L8Expression
-	(*L8Condition)(nil),       // 2: l8api.L8Condition
-	(*L8Comparator)(nil),      // 3: l8api.L8Comparator
-	(*AuthUser)(nil),          // 4: l8api.AuthUser
-	(*AuthToken)(nil),         // 5: l8api.AuthToken
-	(*L8MetaData)(nil),        // 6: l8api.L8MetaData
-	(*L8Count)(nil),           // 7: l8api.L8Count
-	(*L8TypeList)(nil),        // 8: l8api.L8TypeList
-	(*L8TFASetup)(nil),        // 9: l8api.L8TFASetup
-	(*L8TFASetupR)(nil),       // 10: l8api.L8TFASetupR
-	(*L8TFAVerify)(nil),       // 11: l8api.L8TFAVerify
-	(*L8TFAVerifyR)(nil),      // 12: l8api.L8TFAVerifyR
-	(*Captcha)(nil),           // 13: l8api.Captcha
-	(*L8Credential)(nil),      // 14: l8api.L8Credential
-	(*L8CredentialsList)(nil), // 15: l8api.L8CredentialsList
-	(*L8Credentials)(nil),     // 16: l8api.L8Credentials
-	(*L8CredentialsMask)(nil), // 17: l8api.L8CredentialsMask
-	nil,                       // 18: l8api.L8MetaData.ValueCountEntry
-	nil,                       // 19: l8api.L8Count.CountsEntry
-	nil,                       // 20: l8api.L8Credentials.CredsEntry
+	(L8PeriodType)(0),         // 0: l8api.L8PeriodType
+	(L8PeriodValue)(0),        // 1: l8api.L8PeriodValue
+	(*L8Query)(nil),           // 2: l8api.L8Query
+	(*L8Expression)(nil),      // 3: l8api.L8Expression
+	(*L8Condition)(nil),       // 4: l8api.L8Condition
+	(*L8Comparator)(nil),      // 5: l8api.L8Comparator
+	(*AuthUser)(nil),          // 6: l8api.AuthUser
+	(*AuthToken)(nil),         // 7: l8api.AuthToken
+	(*L8MetaData)(nil),        // 8: l8api.L8MetaData
+	(*L8Count)(nil),           // 9: l8api.L8Count
+	(*L8TypeList)(nil),        // 10: l8api.L8TypeList
+	(*L8TFASetup)(nil),        // 11: l8api.L8TFASetup
+	(*L8TFASetupR)(nil),       // 12: l8api.L8TFASetupR
+	(*L8TFAVerify)(nil),       // 13: l8api.L8TFAVerify
+	(*L8TFAVerifyR)(nil),      // 14: l8api.L8TFAVerifyR
+	(*Captcha)(nil),           // 15: l8api.Captcha
+	(*L8Credential)(nil),      // 16: l8api.L8Credential
+	(*L8CredentialsList)(nil), // 17: l8api.L8CredentialsList
+	(*L8Credentials)(nil),     // 18: l8api.L8Credentials
+	(*L8CredentialsMask)(nil), // 19: l8api.L8CredentialsMask
+	(*L8Period)(nil),          // 20: l8api.L8Period
+	nil,                       // 21: l8api.L8MetaData.ValueCountEntry
+	nil,                       // 22: l8api.L8Count.CountsEntry
+	nil,                       // 23: l8api.L8Credentials.CredsEntry
 }
 var file_api_proto_depIdxs = []int32{
-	1,  // 0: l8api.L8Query.criteria:type_name -> l8api.L8Expression
-	2,  // 1: l8api.L8Expression.condition:type_name -> l8api.L8Condition
-	1,  // 2: l8api.L8Expression.next:type_name -> l8api.L8Expression
-	1,  // 3: l8api.L8Expression.child:type_name -> l8api.L8Expression
-	3,  // 4: l8api.L8Condition.comparator:type_name -> l8api.L8Comparator
-	2,  // 5: l8api.L8Condition.next:type_name -> l8api.L8Condition
-	7,  // 6: l8api.L8MetaData.key_count:type_name -> l8api.L8Count
-	18, // 7: l8api.L8MetaData.value_count:type_name -> l8api.L8MetaData.ValueCountEntry
-	19, // 8: l8api.L8Count.counts:type_name -> l8api.L8Count.CountsEntry
-	16, // 9: l8api.L8CredentialsList.list:type_name -> l8api.L8Credentials
-	6,  // 10: l8api.L8CredentialsList.metadata:type_name -> l8api.L8MetaData
-	20, // 11: l8api.L8Credentials.creds:type_name -> l8api.L8Credentials.CredsEntry
-	7,  // 12: l8api.L8MetaData.ValueCountEntry.value:type_name -> l8api.L8Count
-	14, // 13: l8api.L8Credentials.CredsEntry.value:type_name -> l8api.L8Credential
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	3,  // 0: l8api.L8Query.criteria:type_name -> l8api.L8Expression
+	4,  // 1: l8api.L8Expression.condition:type_name -> l8api.L8Condition
+	3,  // 2: l8api.L8Expression.next:type_name -> l8api.L8Expression
+	3,  // 3: l8api.L8Expression.child:type_name -> l8api.L8Expression
+	5,  // 4: l8api.L8Condition.comparator:type_name -> l8api.L8Comparator
+	4,  // 5: l8api.L8Condition.next:type_name -> l8api.L8Condition
+	9,  // 6: l8api.L8MetaData.key_count:type_name -> l8api.L8Count
+	21, // 7: l8api.L8MetaData.value_count:type_name -> l8api.L8MetaData.ValueCountEntry
+	22, // 8: l8api.L8Count.counts:type_name -> l8api.L8Count.CountsEntry
+	18, // 9: l8api.L8CredentialsList.list:type_name -> l8api.L8Credentials
+	8,  // 10: l8api.L8CredentialsList.metadata:type_name -> l8api.L8MetaData
+	23, // 11: l8api.L8Credentials.creds:type_name -> l8api.L8Credentials.CredsEntry
+	0,  // 12: l8api.L8Period.period_type:type_name -> l8api.L8PeriodType
+	1,  // 13: l8api.L8Period.period_value:type_name -> l8api.L8PeriodValue
+	9,  // 14: l8api.L8MetaData.ValueCountEntry.value:type_name -> l8api.L8Count
+	16, // 15: l8api.L8Credentials.CredsEntry.value:type_name -> l8api.L8Credential
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_api_proto_init() }
@@ -1639,19 +1879,32 @@ func file_api_proto_init() {
 				return nil
 			}
 		}
+		file_api_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*L8Period); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   21,
+			NumEnums:      2,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_api_proto_goTypes,
 		DependencyIndexes: file_api_proto_depIdxs,
+		EnumInfos:         file_api_proto_enumTypes,
 		MessageInfos:      file_api_proto_msgTypes,
 	}.Build()
 	File_api_proto = out.File
