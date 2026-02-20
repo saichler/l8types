@@ -240,3 +240,8 @@ message L8Period {
   int32 period_year = 2;
   L8PeriodValue period_value = 3;
 }
+
+message L8TimeSeriesPoint {
+  int64 stamp = 1;
+  double value = 2;
+}
