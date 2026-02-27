@@ -114,5 +114,5 @@ func (this *ShallowSecurityProvider) Register(userId, password, captcha string, 
 }
 
 func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResources) (string, string, string, string, error) {
-	return "admin", "admin", "admin", "admin", nil
+	return "admin", "admin", "admin", "5432", nil
 }
