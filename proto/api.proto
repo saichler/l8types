@@ -245,3 +245,15 @@ message L8TimeSeriesPoint {
   int64 stamp = 1;
   double value = 2;
 }
+
+message L8CsvExportRequest {
+  string model_type = 1;      // Protobuf type name (e.g., "Employee")
+  string service_name = 2;    // ServiceName constant (e.g., "Employee")
+  int32 service_area = 3;     // ServiceArea (e.g., 30 for HCM)
+}
+
+message L8CsvExportResponse {
+  string csv_data = 1;        // Full CSV content (headers + rows)
+  string filename = 2;        // Suggested filename (e.g., "Employee_2026-02-28.csv")
+  int32 row_count = 3;        // Total rows exported
+}
