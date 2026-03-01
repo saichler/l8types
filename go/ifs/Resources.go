@@ -19,7 +19,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/saichler/l8types/go/types/l8services"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
+	"sync"
 )
+
+var serviceMtx = &sync.Mutex{}
 
 // IResources provides access to all shared resources in the Layer 8 system.
 // It acts as a dependency injection container for core services.
@@ -51,6 +54,8 @@ type IResources interface {
 // AddService registers a service in the system configuration.
 // Creates the service areas map if it doesn't exist.
 func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32) {
+	serviceMtx.Lock()
+	defer serviceMtx.Unlock()
 	if sysConfig == nil {
 		return
 	}
@@ -73,6 +78,8 @@ func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceA
 
 // RemoveService removes a service from the services registry.
 func RemoveService(services *l8services.L8Services, serviceName string, serviceArea int32) {
+	serviceMtx.Lock()
+	defer serviceMtx.Unlock()
 	if services == nil {
 		return
 	}
