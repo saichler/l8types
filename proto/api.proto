@@ -257,3 +257,30 @@ message L8CsvExportResponse {
   string filename = 2;        // Suggested filename (e.g., "Employee_2026-02-28.csv")
   int32 row_count = 3;        // Total rows exported
 }
+
+message L8FileUploadRequest {
+  string file_name = 1;       // Original filename
+  string mime_type = 2;       // e.g., "application/pdf"
+  bytes file_data = 3;        // File content (base64 in JSON, max 5MB)
+  string document_id = 4;     // For storage path organization
+  int32 version = 5;          // Version number
+}
+
+message L8FileUploadResponse {
+  string storage_path = 1;    // Server path where file was stored
+  string file_name = 2;       // Original filename
+  int64 file_size = 3;        // Size in bytes
+  string mime_type = 4;       // MIME type
+  string checksum = 5;        // SHA-256 hash
+}
+
+message L8FileDownloadRequest {
+  string storage_path = 1;    // Path to retrieve
+}
+
+message L8FileDownloadResponse {
+  bytes file_data = 1;        // File content (base64 in JSON)
+  string file_name = 2;       // Original filename
+  string mime_type = 3;       // MIME type
+  int64 file_size = 4;        // Size in bytes
+}
