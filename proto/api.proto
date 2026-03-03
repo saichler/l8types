@@ -284,3 +284,138 @@ message L8FileDownloadResponse {
   string mime_type = 3;       // MIME type
   int64 file_size = 4;        // Size in bytes
 }
+
+// ========================================
+// Data Import
+// ========================================
+
+// An import mapping template — maps source columns to target model fields
+message L8ImportTemplate {
+  string template_id = 1;
+  string name = 2;                                    // e.g., "SAP Employee Import"
+  string description = 3;
+  string target_model_type = 4;                       // Protobuf type name (e.g., "Employee")
+  string target_service_name = 5;                     // ServiceName constant
+  int32 target_service_area = 6;                      // ServiceArea
+  string source_format = 7;                           // "csv", "json", "xml"
+  repeated L8ImportColumnMapping column_mappings = 8;
+  repeated L8ImportValueTransform value_transforms = 9;
+  map<string, string> default_values = 10;            // target_field → default value string
+}
+
+message L8ImportTemplateList {
+  repeated L8ImportTemplate list = 1;
+  L8MetaData metadata = 2;
+}
+
+// Maps one source column to one target field
+message L8ImportColumnMapping {
+  string source_column = 1;       // Header name in source file
+  string target_field = 2;        // JSON field name on target protobuf
+  bool skip = 3;                  // True = ignore this source column
+}
+
+// Value transformation rule for a mapped field
+message L8ImportValueTransform {
+  string target_field = 1;                // Which target field this applies to
+  L8ImportTransformType transform_type = 2;
+  string format_pattern = 3;              // e.g., "MM/DD/YYYY" for date parsing
+  map<string, string> value_map = 4;      // e.g., {"Active": "1", "Inactive": "2"}
+  string default_value = 5;               // Fallback when source is empty
+  string concatenate_separator = 6;       // For CONCATENATE type
+  repeated string concatenate_fields = 7; // Source columns to join
+}
+
+enum L8ImportTransformType {
+  IMPORT_TRANSFORM_UNSPECIFIED = 0;
+  IMPORT_TRANSFORM_DATE_FORMAT = 1;   // Parse date using format_pattern
+  IMPORT_TRANSFORM_ENUM_MAP = 2;      // Map text labels to enum int values
+  IMPORT_TRANSFORM_UNIT_CONVERT = 3;  // e.g., dollars→cents (multiply by 100)
+  IMPORT_TRANSFORM_TRIM = 4;
+  IMPORT_TRANSFORM_UPPERCASE = 5;
+  IMPORT_TRANSFORM_LOWERCASE = 6;
+  IMPORT_TRANSFORM_DEFAULT = 7;       // Use default_value when source is empty
+  IMPORT_TRANSFORM_CONCATENATE = 8;   // Join multiple source columns
+  IMPORT_TRANSFORM_SPLIT = 9;         // Split one source column into target field
+  IMPORT_TRANSFORM_MONEY = 10;        // Parse currency string into Money
+}
+
+// Request AI to suggest column mappings
+message L8ImportAIMappingRequest {
+  string target_model_type = 1;
+  string target_service_name = 2;
+  int32 target_service_area = 3;
+  repeated string source_columns = 4;    // Headers from uploaded file
+  repeated string sample_values = 5;     // First row values (helps AI infer types)
+  string source_format = 6;             // "csv", "json", "xml"
+}
+
+message L8ImportAIMappingResponse {
+  repeated L8ImportColumnMapping suggested_mappings = 1;
+  repeated L8ImportValueTransform suggested_transforms = 2;
+  float confidence = 3;                  // 0.0-1.0 overall confidence
+  string explanation = 4;                // AI explanation of mapping rationale
+}
+
+// Execute data import using a template
+message L8ImportExecuteRequest {
+  string template_id = 1;
+  string file_data = 2;                 // Base64-encoded file content
+  string file_name = 3;
+}
+
+message L8ImportExecuteResponse {
+  int32 total_rows = 1;
+  int32 imported_rows = 2;
+  int32 failed_rows = 3;
+  repeated L8ImportRowError row_errors = 4;
+}
+
+message L8ImportRowError {
+  int32 row_number = 1;
+  string field = 2;
+  string error_message = 3;
+  string source_value = 4;
+}
+
+// Returns target model field metadata for the mapping UI
+message L8ImportModelInfoRequest {
+  string model_type = 1;
+}
+
+message L8ImportModelInfoResponse {
+  string model_type = 1;
+  repeated L8ImportFieldInfo fields = 2;
+}
+
+message L8ImportFieldInfo {
+  string field_name = 1;                 // JSON name (camelCase)
+  string field_type = 2;                 // "string", "int32", "int64", "bool", "float", "enum", "money", "date"
+  bool is_required = 3;
+  bool is_primary_key = 4;
+  map<string, int32> enum_values = 5;    // If enum: label→value
+}
+
+// Export templates as a portable bundle
+message L8ImportTemplateExportRequest {
+  repeated string template_ids = 1;
+}
+
+message L8ImportTemplateExportResponse {
+  string export_data = 1;               // JSON string of templates
+  string filename = 2;
+  int32 template_count = 3;
+}
+
+// Import templates from a previously exported bundle
+message L8ImportTemplateImportRequest {
+  string import_data = 1;               // JSON string from export
+  bool overwrite_existing = 2;
+}
+
+message L8ImportTemplateImportResponse {
+  int32 imported_count = 1;
+  int32 skipped_count = 2;
+  repeated string imported_names = 3;
+  repeated string skipped_names = 4;
+}
