@@ -66,6 +66,8 @@ message L8Health {
   int64 start_time = 7;
   // True if this node is a virtual network (VNet) switch
   bool is_vnet = 8;
+  // The pprof data when explicitly retrieved
+  bytes pprof = 9;
 }
 
 // L8HealthStats contains performance and resource usage statistics.
