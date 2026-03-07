@@ -25,12 +25,12 @@ import (
 type ISecurityProvider interface {
 	// Authenticate validates user credentials and returns a token.
 	// Returns: token, needsTFASetup, needsTFAVerify, error
-	Authenticate(string, string) (string, bool, bool, error)
+	Authenticate(string, string, IVNic) (string, bool, bool, error)
 	// ValidateToken checks if a token is valid and returns the user ID.
-	ValidateToken(string) (string, bool)
+	ValidateToken(string, IVNic) (string, bool)
 
 	// Message creates a message from an AAA ID for audit/tracking.
-	Message(string) (*Message, error)
+	Message(string, IVNic) (*Message, error)
 
 	// CanDial validates if a connection to the address:port is allowed.
 	CanDial(string, uint32) (net.Conn, error)
