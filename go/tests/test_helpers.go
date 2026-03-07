@@ -30,17 +30,17 @@ type MockSecurityProvider struct {
 	decryptError bool
 }
 
-func (m *MockSecurityProvider) Authenticate(string, string) (string, bool, bool, error) {
+func (m *MockSecurityProvider) Authenticate(string, string, ifs.IVNic) (string, bool, bool, error) {
 	return "", false, false, nil
 }
-func (m *MockSecurityProvider) ValidateToken(string) (string, bool)      { return "", true }
-func (m *MockSecurityProvider) Message(string) (*ifs.Message, error)     { return nil, nil }
-func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error) { return nil, nil }
-func (m *MockSecurityProvider) CanAccept(net.Conn) error                 { return nil }
+func (m *MockSecurityProvider) ValidateToken(string, ifs.IVNic) (string, bool)      { return "", true }
+func (m *MockSecurityProvider) Message(string, ifs.IVNic) (*ifs.Message, error)     { return nil, nil }
+func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error)            { return nil, nil }
+func (m *MockSecurityProvider) CanAccept(net.Conn) error                            { return nil }
 func (m *MockSecurityProvider) ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error {
 	return nil
 }
-func (m *MockSecurityProvider) CanDoAction(ifs.Action, ifs.IElements, string, string, ...string) error {
+func (m *MockSecurityProvider) CanDoAction(ifs.IVNic, ifs.Action, ifs.IElements, string, string, ...string) error {
 	return nil
 }
 func (m *MockSecurityProvider) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
