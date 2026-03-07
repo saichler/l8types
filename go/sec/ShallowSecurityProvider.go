@@ -78,7 +78,7 @@ func (this *ShallowSecurityProvider) Decrypt(data string) ([]byte, error) {
 }
 
 // CanDoAction always permits any action (permissive authorization).
-func (this *ShallowSecurityProvider) CanDoAction(action ifs.Action, o ifs.IElements, uuid string, token string, salts ...string) error {
+func (this *ShallowSecurityProvider) CanDoAction(vnic ifs.IVNic, action ifs.Action, o ifs.IElements, uuid string, token string, salts ...string) error {
 	return nil
 }
 
@@ -88,15 +88,15 @@ func (this *ShallowSecurityProvider) ScopeView(o ifs.IElements, uuid string, tok
 }
 
 // Authenticate always succeeds with a dummy bearer token (testing only).
-func (this *ShallowSecurityProvider) Authenticate(user string, pass string) (string, bool, bool, error) {
+func (this *ShallowSecurityProvider) Authenticate(user string, pass string, vnic ifs.IVNic) (string, bool, bool, error) {
 	return "bearer token", false, false, nil
 }
 
 // ValidateToken always validates tokens successfully (permissive).
-func (this *ShallowSecurityProvider) ValidateToken(token string) (string, bool) {
+func (this *ShallowSecurityProvider) ValidateToken(token string, vnic ifs.IVNic) (string, bool) {
 	return ifs.NewUuid(), true
 }
-func (this *ShallowSecurityProvider) Message(string) (*ifs.Message, error) {
+func (this *ShallowSecurityProvider) Message(aaaid string, vnic ifs.IVNic) (*ifs.Message, error) {
 	return &ifs.Message{}, nil
 }
 
