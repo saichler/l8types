@@ -45,7 +45,7 @@ type ISecurityProvider interface {
 	Decrypt(string) ([]byte, error)
 
 	// CanDoAction checks if an action is authorized for the given user/scope.
-	CanDoAction(Action, IElements, string, string, ...string) error
+	CanDoAction(IVNic, Action, IElements, string, string, ...string) error
 	// ScopeView filters elements based on user permissions.
 	ScopeView(IElements, string, string, ...string) IElements
 
