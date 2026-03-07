@@ -15,6 +15,10 @@ limitations under the License.
 
 package ifs
 
+const (
+	SystemServiceGroup = "System"
+)
+
 // ServiceLevelAgreement (SLA) defines the configuration and behavior for a service.
 // It specifies how a service handles data, transactions, replication, and web endpoints.
 type ServiceLevelAgreement struct {
@@ -23,6 +27,7 @@ type ServiceLevelAgreement struct {
 	serviceName            string           // Unique name identifying this service
 	serviceArea            byte             // Service area/partition number
 	stateful               bool             // True if service maintains state
+	serviceGroup           string           // Group name for shared elections; blank = use serviceName
 	callback               IServiceCallback // Lifecycle callbacks for before/after operations
 
 	// Data configuration
@@ -71,6 +76,17 @@ func (this *ServiceLevelAgreement) ServiceArea() byte {
 
 func (this *ServiceLevelAgreement) Stateful() bool {
 	return this.stateful
+}
+
+func (this *ServiceLevelAgreement) ServiceGroup() string {
+	if this.serviceGroup == "" {
+		return this.serviceName
+	}
+	return this.serviceGroup
+}
+
+func (this *ServiceLevelAgreement) SetServiceGroup(serviceGroup string) {
+	this.serviceGroup = serviceGroup
 }
 
 func (this *ServiceLevelAgreement) ServiceHandlerInstance() IServiceHandler {
