@@ -70,6 +70,8 @@ message L8Health {
   bytes pprof_memory = 9;
   // The pprof cpu data when explicitly retrieved
   bytes pprof_cpu = 10;
+  // Flag to collect mem data
+  bool pprof_collect = 11;
 }
 
 // L8HealthStats contains performance and resource usage statistics.
