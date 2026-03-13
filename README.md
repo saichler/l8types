@@ -2,29 +2,45 @@
 
 A foundational library for Layer 8 distributed networking systems, providing Protocol Buffer-based type definitions, Go interfaces, and utilities for building distributed applications with service discovery, health monitoring, and secure communication.
 
-## 🚀 Recent Updates
+## Recent Updates
 
-### Latest Features (v1.5.0)
-- **Enhanced Security Framework**: Comprehensive security enhancements
-  - Two-Factor Authentication (TFA) with `TFASetup()` and `TFAVerify()` methods
-  - Captcha support for bot protection via `Captcha()` method
-  - User registration with `Register()` method
-  - Credential fetching with `Credential()` method for secure credential management
-- **Advanced SLA Decorators**: New Service Level Agreement capabilities
-  - Non-Unique Keys support with `SetNonUniqueKeys()` for flexible indexing
-  - Always Overwrite decorator with `SetAlwaysOverwrite()` for conflict resolution
-  - Metadata functions for custom service metadata handling
-- **Local Communication**: Same-VNic messaging optimization
-  - `Local()` and `LocalRequest()` methods for intra-VNic communication
-  - Reduced latency for co-located services
-- **Service Callbacks**: Enhanced callback system
-  - Continuation indication in `IServiceCallback.Before()` and `After()` methods
-  - Fine-grained control over service request/response lifecycle
-- **Web Service Refactoring**: Improved web service architecture
-  - Cleaner separation of concerns with refactored interfaces
-  - Enhanced plugin system with `IPlugin` interface
-  - Bearer token validation with `BearerValidator` interface
-- **Apache 2.0 Licensing**: All source files now include proper copyright headers
+### Latest Features (v1.6.0)
+- **Time-Series Database (TSDB) Support**: Built-in time-series data collection and querying
+  - New `ITSDBService` interface with `AddTSDB()` and `GetTSDB()` methods
+  - `L8TimeSeriesPoint` message for timestamped data points
+  - `L8TSDBQuery` for time-range queries with property filtering
+  - `L8TSDBNotification` for real-time time-series change events
+- **Data Import/Export Framework**: Comprehensive ETL and data migration system
+  - `L8ImportTemplate` with column mappings and value transforms
+  - 10 transform types: date format, enum mapping, unit conversion, trim, case conversion, default values, concatenation, split, and money formatting
+  - AI-assisted column mapping with confidence scoring (`L8ImportAIMappingRequest/Response`)
+  - Import execution with per-row error reporting
+  - Template export/import for portable migration bundles
+- **File Upload/Download**: Document management primitives
+  - `L8FileUploadRequest/Response` with metadata, MIME types, and SHA-256 checksums
+  - `L8FileDownloadRequest/Response` for file retrieval by storage path
+- **CSV Export**: Data export for reporting and analysis
+  - `L8CsvExportRequest/Response` with model-based export and suggested filenames
+- **Service Groups**: Shared leader election across related services
+  - `SetServiceGroup()` / `ServiceGroup()` on SLA for group-based coordination
+  - Multiple services can share a single leader election (e.g., all Financial services)
+  - `SystemServiceGroup` constant for system-level coordination
+- **Performance Profiling (pprof)**: Integrated Go profiling data in health monitoring
+  - `pprof_memory` and `pprof_cpu` fields on `L8Health` for runtime profiling
+  - `pprof_collect` flag to control when profiling data is gathered
+- **Fiscal Period Model**: Business period modeling
+  - `L8Period` message with type (Yearly/Quarterly/Monthly), year, and value
+  - `L8PeriodType` and `L8PeriodValue` enums covering months (January-December) and quarters (Q1-Q4)
+- **Configurable Logs Directory**: Per-deployment log path configuration
+  - `logs_directory` field in `L8SysConfig` for per-product log segregation
+
+### Previous Release (v1.5.0)
+- **Enhanced Security Framework**: TFA, Captcha, Registration, and Credential management
+- **Advanced SLA Decorators**: Non-Unique Keys and Always Overwrite support
+- **Local Communication**: Same-VNic messaging with `Local()` and `LocalRequest()`
+- **Service Callbacks**: Continuation indication for fine-grained lifecycle control
+- **Web Service Refactoring**: Improved plugin and bearer validation architecture
+- **Apache 2.0 Licensing**: Proper copyright headers on all source files
 
 ### Previous Release (v1.4.0)
 - **Map-Reduce Framework**: Distributed Map-Reduce capabilities for parallel data processing
@@ -53,10 +69,13 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **Virtual Network Interface (VNic)**: Advanced networking abstractions with leader election and cross-network support
 - **Service Discovery & Management**: Built-in service registration, discovery, and area-based routing
 - **Distributed Computing**: Map-Reduce framework for parallel data processing and aggregation
-- **Health Monitoring**: Real-time system health tracking with Unix `top`-style output formatting
+- **Time-Series Database (TSDB)**: Built-in time-series data collection and querying for metrics and monitoring
+- **Data Import/Export**: ETL framework with templates, transforms, AI-assisted mapping, and CSV export
+- **File Management**: Upload/download primitives with checksums and metadata
+- **Health Monitoring**: Real-time system health tracking with pprof profiling and Unix `top`-style output
 - **Transaction Management**: Distributed transaction support with state tracking
-- **Notification System**: Property change notifications and event propagation
-- **Security Framework**: Enhanced authentication with token validation, authorization, and encryption
+- **Notification System**: Property change and time-series notifications with event propagation
+- **Security Framework**: Enhanced authentication with TFA, captcha, token validation, and encryption
 - **Multi-Language Support**: Go implementation with Zig bindings
 
 ## Key Features
@@ -73,10 +92,21 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 
 ### Service Discovery & Management
 - **Service Areas**: Logical service grouping and area-based routing
+- **Service Groups**: Shared leader election across related services (v1.6.0)
 - **Health States**: Up, Down, Unreachable status tracking with statistics
+- **Performance Profiling**: Integrated pprof memory and CPU profiling in health data (v1.6.0)
 - **Replication**: Service replication with endpoint scoring and key-based routing
 - **Dynamic Service Registration**: Runtime service addition and removal
 - **Map-Reduce Framework**: Distributed computation and aggregation across services (v1.4.0)
+- **Time-Series Database**: `ITSDBService` for collecting and querying time-series data (v1.6.0)
+
+### Data Import/Export (v1.6.0)
+- **Import Templates**: Column mappings with 10 transform types (date, enum, unit, trim, case, etc.)
+- **AI-Assisted Mapping**: Automatic column-to-field mapping with confidence scores
+- **Import Execution**: Batch import with per-row error reporting
+- **CSV Export**: Model-based data export with suggested filenames
+- **File Upload/Download**: Document storage with SHA-256 checksums and MIME type support
+- **Template Portability**: Export/import template bundles across environments
 
 ### Type System & Reflection
 - **Dynamic Type Registry**: Runtime type registration and introspection
@@ -100,33 +130,39 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 ## Protocol Buffer Schemas
 
 ### Core Types
-- **`api.proto`**: Query expressions, conditions, comparators, and routing tables
+- **`api.proto`**: Query expressions, conditions, comparators, time-series points, period model, data import/export framework, file upload/download, and CSV export
 - **`services.proto`**: Service discovery, areas, replication indices, and transactions
-- **`health.proto`**: Health monitoring, statistics, and system status tracking
-- **`config.proto`**: System configuration, VNet settings, and connection parameters
-- **`notification.proto`**: Property change notifications and event propagation
+- **`health.proto`**: Health monitoring, statistics, pprof profiling data, and system status tracking
+- **`sysconfig.proto`**: System configuration, VNet settings, logs directory, and connection parameters
+- **`notification.proto`**: Property change notifications, TSDB notifications, and event propagation
 - **`web.proto`**: Web service definitions and plugin system
 - **`reflect.proto`**: Type reflection, nodes, decorators, and table views
+- **`system.proto`**: System messages and route tables
 
 ### Message Types
 - **Query**: Advanced search with criteria, sorting, pagination, and schema filtering
-- **Health**: Process health with statistics (CPU, memory, message counts)
+- **TSDB**: Time-series data points and range-based queries (v1.6.0)
+- **Import/Export**: Templates, column mappings, transforms, AI mapping, file upload/download, CSV export (v1.6.0)
+- **Period**: Fiscal/business period modeling with yearly, quarterly, monthly support (v1.6.0)
+- **Health**: Process health with statistics (CPU, memory, message counts, pprof data)
 - **Services**: Service-to-area mappings and replication management
-- **SysConfig**: Network configuration including VNet ports, UUIDs, and keep-alive settings
-- **NotificationSet**: Batched property change notifications with sequencing
+- **SysConfig**: Network configuration including VNet ports, UUIDs, logs directory, and keep-alive settings
+- **NotificationSet**: Batched property change and TSDB notifications with sequencing
 
 ## Project Structure
 
 ```
 l8types/
 ├── proto/                      # Protocol Buffer definitions
-│   ├── api.proto              # Query system and routing
+│   ├── api.proto              # Query system, TSDB, import/export, file management, periods
 │   ├── services.proto         # Service discovery and management
-│   ├── health.proto           # Health monitoring and statistics
-│   ├── config.proto           # System configuration
-│   ├── notification.proto     # Event notification system
+│   ├── health.proto           # Health monitoring, statistics, and pprof profiling
+│   ├── sysconfig.proto        # System configuration and logs directory
+│   ├── notification.proto     # Event and TSDB notification system
 │   ├── web.proto              # Web service interfaces
 │   ├── reflect.proto          # Type reflection system
+│   ├── system.proto           # System messages and route tables
+│   ├── tests.proto            # Test-specific type definitions
 │   └── make-bindings.sh       # Code generation script
 ├── go/                        # Go implementation
 │   ├── ifs/                   # Core interfaces
@@ -153,7 +189,7 @@ l8types/
 ## Getting Started
 
 ### Prerequisites
-- **Go 1.23.8+**: Core implementation language
+- **Go 1.25.4+**: Core implementation language
 - **Docker**: Required for Protocol Buffer code generation
 - **Protocol Buffers**: For schema compilation (handled via Docker)
 - **Zig** (optional): For Zig language bindings
@@ -426,6 +462,39 @@ serializer := info.Serializer(ifs.PROTOBUF)
 data, err := serializer.Serialize(instance)
 ```
 
+### Time-Series Database (v1.6.0+)
+
+```go
+// Add time-series data points
+notifications := []*l8notify.L8TSDBNotification{
+    {
+        PropertyId: "cpu.usage.node-123",
+        Point: &l8api.L8TimeSeriesPoint{
+            Timestamp: time.Now().Unix(),
+            Value:     72.5,
+        },
+    },
+}
+tsdbService.AddTSDB(notifications)
+
+// Query time-series data for a time range
+points := tsdbService.GetTSDB("cpu.usage.node-123", startTime, endTime)
+for _, point := range points {
+    fmt.Printf("  %d: %.2f\n", point.Timestamp, point.Value)
+}
+```
+
+### Service Groups (v1.6.0+)
+
+```go
+// Multiple services share a leader election via service group
+sla := ifs.NewServiceLevelAgreement(handler, "fin-ledger", 40, true, callback)
+sla.SetServiceGroup("Financial")  // All Financial services share one leader
+
+sla2 := ifs.NewServiceLevelAgreement(handler2, "fin-budget", 40, true, callback2)
+sla2.SetServiceGroup("Financial")  // Same group = shared election
+```
+
 ### Two-Factor Authentication (v1.5.0+)
 
 ```go
@@ -582,15 +651,25 @@ python3 -m http.server 8000
 
 ### Go Modules
 - `github.com/google/uuid` v1.6.0: UUID generation for node identification
-- `google.golang.org/protobuf` v1.36.10: Protocol Buffer runtime and code generation
+- `google.golang.org/protobuf` v1.36.11: Protocol Buffer runtime and code generation
 
 ### Build Tools
 - **Docker**: Protocol Buffer code generation via containerized protoc
-- **Go 1.23.8+**: Core language runtime and build tools
+- **Go 1.25.4+**: Core language runtime and build tools
 
 ## Changelog
 
-### Version 1.5.0 (Current)
+### Version 1.6.0 (Current)
+- **Time-Series Database (TSDB)** - `ITSDBService` interface, `L8TimeSeriesPoint`, `L8TSDBQuery`, and TSDB notifications
+- **Data Import/Export Framework** - Templates, column mappings, 10 transform types, AI-assisted mapping, execution with error reporting
+- **File Upload/Download** - Document storage with metadata, MIME types, and SHA-256 checksums
+- **CSV Export** - Model-based data export with suggested filenames
+- **Service Groups** - Shared leader election across related services via `SetServiceGroup()`
+- **Performance Profiling** - Integrated pprof memory/CPU data in health monitoring
+- **Fiscal Period Model** - `L8Period` with yearly, quarterly, and monthly period support
+- **Configurable Logs Directory** - Per-deployment log path in `L8SysConfig`
+
+### Version 1.5.0
 - **Enhanced Security Framework** - TFA, Captcha, Registration, and Credential management
 - **Advanced SLA Decorators** - Non-Unique Keys and Always Overwrite support
 - **Local Communication** - Same-VNic messaging with `Local()` and `LocalRequest()`
