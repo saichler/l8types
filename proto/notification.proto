@@ -18,6 +18,8 @@ syntax = "proto3";
 
 package l8notify;
 
+import "api.proto";
+
 option java_multiple_files = true;
 option java_outer_classname = "L8Notify";
 option java_package = "com.types.l8notify";
@@ -69,4 +71,9 @@ message L8Notification {
   bytes oldValue = 2;
   // New value (serialized bytes, empty for deleted properties)
   bytes newValue = 3;
+}
+
+message L8TSDBNotification {
+  string property_id = 1;
+  l8api.L8TimeSeriesPoint point = 2;
 }
