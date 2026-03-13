@@ -167,6 +167,6 @@ type IServicePath interface {
 }
 
 type ITSDBService interface {
-	Add(notifications []*l8notify.L8TSDBNotification)
-	Get(propertyId string, start, end int64) []*l8api.L8TimeSeriesPoint
+	AddTSDB(notifications []*l8notify.L8TSDBNotification)
+	GetTSDB(propertyId string, start, end int64) []*l8api.L8TimeSeriesPoint
 }
