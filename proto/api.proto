@@ -49,6 +49,23 @@ message L8Query {
   string schema = 10;
   // If true, execute as a distributed map-reduce operation
   bool map_reduce = 11;
+  // Group-by field names for aggregation queries
+  repeated string group_by = 12;
+  // HAVING clause — filter on aggregate results (reuses L8Expression)
+  L8Expression having = 13;
+  // Parsed aggregate functions from the SELECT clause
+  repeated L8AggregateFunction aggregates = 14;
+}
+
+// L8AggregateFunction represents a parsed aggregate function from the SELECT clause.
+// Example: count(*), sum(salary), avg(amount)
+message L8AggregateFunction {
+  // Function name: "count", "sum", "avg", "min", "max"
+  string function = 1;
+  // Field name to aggregate ("*" for count(*))
+  string field = 2;
+  // Display alias for the result (e.g., "count", "sumSalary")
+  string alias = 3;
 }
 
 // L8Expression represents a node in the query criteria expression tree.
