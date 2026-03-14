@@ -17,6 +17,7 @@ package ifs
 
 import (
 	"github.com/google/uuid"
+	"github.com/saichler/l8types/go/types/l8health"
 	"github.com/saichler/l8types/go/types/l8services"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"sync"
@@ -93,6 +94,32 @@ func RemoveService(services *l8services.L8Services, serviceName string, serviceA
 	delete(services.ServiceToAreas[serviceName].Areas, serviceArea)
 	if len(services.ServiceToAreas[serviceName].Areas) == 0 {
 		delete(services.ServiceToAreas, serviceName)
+	}
+}
+
+// MergeServices merges services from src into the health record's service map.
+// It acquires serviceMtx to prevent concurrent map iteration/write panics
+// when multiple services are being activated in parallel.
+func MergeServices(hp *l8health.L8Health, services *l8services.L8Services) {
+	serviceMtx.Lock()
+	defer serviceMtx.Unlock()
+	if hp.Services == nil {
+		hp.Services = services
+		return
+	}
+	for serviceName, serviceAreas := range services.ServiceToAreas {
+		_, ok := hp.Services.ServiceToAreas[serviceName]
+		if !ok {
+			hp.Services.ServiceToAreas[serviceName] = serviceAreas
+			continue
+		}
+		if hp.Services.ServiceToAreas[serviceName].Areas == nil {
+			hp.Services.ServiceToAreas[serviceName].Areas = serviceAreas.Areas
+			continue
+		}
+		for svArea, score := range serviceAreas.Areas {
+			hp.Services.ServiceToAreas[serviceName].Areas[svArea] = score
+		}
 	}
 }
 
