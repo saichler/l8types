@@ -97,8 +97,8 @@ func (this *Message) CloneFail(failMessage, remoteUuid string) *Message {
 	clone.sequence = this.sequence
 	clone.action = this.action
 	clone.timeout = this.timeout
-	clone.reply = this.reply
-	clone.request = this.request
+	clone.reply = true
+	clone.request = false
 	clone.failMessage = failMessage
 	clone.data = this.data
 	clone.tr_id = this.tr_id

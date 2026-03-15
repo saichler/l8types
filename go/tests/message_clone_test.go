@@ -208,6 +208,12 @@ func TestMessageCloneFail(t *testing.T) {
 	if failClone.Action() != msg.Action() {
 		t.Errorf("CloneFail action mismatch: expected %v, got %v", msg.Action(), failClone.Action())
 	}
+	if !failClone.Reply() {
+		t.Errorf("CloneFail reply flag should be true")
+	}
+	if failClone.Request() {
+		t.Errorf("CloneFail request flag should be false")
+	}
 	if failClone.Sequence() != msg.Sequence() {
 		t.Errorf("CloneFail sequence mismatch: expected %d, got %d", msg.Sequence(), failClone.Sequence())
 	}
