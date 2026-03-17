@@ -177,13 +177,14 @@ message L8TFAVerify {
   // The TOTP code from the authenticator app
   string code = 2;
   // Bearer token from initial authentication
-  string bearer = 3;
+  string hash = 3;
 }
 
 // L8TFAVerifyR is the response to a TFA verification request.
 message L8TFAVerifyR {
   // True if the code was valid and verification succeeded
   bool ok = 1;
+  string token = 2;
 }
 
 // Captcha contains captcha challenge data for bot protection.
