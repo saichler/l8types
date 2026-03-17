@@ -111,6 +111,8 @@ message AuthUser {
   string pass = 2;
   // Captcha response token for bot protection
   string captcha = 3;
+  // Token hash for two phase authentication
+  string token_hash = 4;
 }
 
 // AuthToken is the response to an authentication request.
@@ -124,6 +126,8 @@ message AuthToken {
   bool setup_tfa = 3;
   // If true, user needs to provide TFA code to complete login
   bool need_tfa = 4;
+  // The token hash in case of two phase authentication.
+  string token_hash = 5;
 }
 
 // L8MetaData provides metadata and statistics about query results.
