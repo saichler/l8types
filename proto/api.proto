@@ -113,6 +113,8 @@ message AuthUser {
   string captcha = 3;
   // Token hash for two phase authentication
   string token_hash = 4;
+  // Code
+  string code = 5;
 }
 
 // AuthToken is the response to an authentication request.
