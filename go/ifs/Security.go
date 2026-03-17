@@ -25,7 +25,7 @@ import (
 type ISecurityProvider interface {
 	// Authenticate validates user credentials and returns a token.
 	// Returns: token, needsTFASetup, needsTFAVerify, error
-	Authenticate(string, string, IVNic) (string, bool, bool, error)
+	Authenticate(string, string, IVNic) (string, string, bool, bool, error)
 	// ValidateToken checks if a token is valid and returns the user ID.
 	ValidateToken(string, IVNic) (string, bool)
 

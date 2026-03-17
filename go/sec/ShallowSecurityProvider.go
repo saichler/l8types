@@ -88,8 +88,8 @@ func (this *ShallowSecurityProvider) ScopeView(o ifs.IElements, uuid string, tok
 }
 
 // Authenticate always succeeds with a dummy bearer token (testing only).
-func (this *ShallowSecurityProvider) Authenticate(user string, pass string, vnic ifs.IVNic) (string, bool, bool, error) {
-	return "bearer token", false, false, nil
+func (this *ShallowSecurityProvider) Authenticate(user string, pass string, vnic ifs.IVNic) (string, string, bool, bool, error) {
+	return "bearer token", "", false, false, nil
 }
 
 // ValidateToken always validates tokens successfully (permissive).
