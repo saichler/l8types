@@ -54,7 +54,8 @@ type IResources interface {
 
 // AddService registers a service in the system configuration.
 // Creates the service areas map if it doesn't exist.
-func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32) {
+// If modelName is provided, it is stored in the Models map for that area.
+func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceArea int32, modelName ...string) {
 	serviceMtx.Lock()
 	defer serviceMtx.Unlock()
 	if sysConfig == nil {
@@ -75,6 +76,12 @@ func AddService(sysConfig *l8sysconfig.L8SysConfig, serviceName string, serviceA
 		sysConfig.Services.ServiceToAreas[serviceName].Areas = make(map[int32]bool)
 	}
 	sysConfig.Services.ServiceToAreas[serviceName].Areas[serviceArea] = true
+	if len(modelName) > 0 && modelName[0] != "" {
+		if sysConfig.Services.ServiceToAreas[serviceName].Models == nil {
+			sysConfig.Services.ServiceToAreas[serviceName].Models = make(map[int32]string)
+		}
+		sysConfig.Services.ServiceToAreas[serviceName].Models[serviceArea] = modelName[0]
+	}
 }
 
 // RemoveService removes a service from the services registry.
@@ -113,12 +120,21 @@ func MergeServices(hp *l8health.L8Health, services *l8services.L8Services) {
 			hp.Services.ServiceToAreas[serviceName] = serviceAreas
 			continue
 		}
-		if hp.Services.ServiceToAreas[serviceName].Areas == nil {
-			hp.Services.ServiceToAreas[serviceName].Areas = serviceAreas.Areas
-			continue
+		existing := hp.Services.ServiceToAreas[serviceName]
+		if existing.Areas == nil {
+			existing.Areas = serviceAreas.Areas
+		} else {
+			for svArea, score := range serviceAreas.Areas {
+				existing.Areas[svArea] = score
+			}
 		}
-		for svArea, score := range serviceAreas.Areas {
-			hp.Services.ServiceToAreas[serviceName].Areas[svArea] = score
+		if serviceAreas.Models != nil {
+			if existing.Models == nil {
+				existing.Models = make(map[int32]string)
+			}
+			for svArea, model := range serviceAreas.Models {
+				existing.Models[svArea] = model
+			}
 		}
 	}
 }
