@@ -36,6 +36,7 @@ message L8Services {
 message L8ServiceAreas {
   // Map of area ID to availability flag (true = available)
   map<sint32, bool> areas = 1;
+  map<sint32,string> models = 2;
 }
 
 // L8ReplicationIndex tracks replication state for a service area.
