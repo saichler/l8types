@@ -4,7 +4,25 @@ A foundational library for Layer 8 distributed networking systems, providing Pro
 
 ## Recent Updates
 
-### Latest Features (v1.6.0)
+### Latest Features (v1.7.0)
+- **AI Agent Aggregation API**: SQL-style aggregation support for AI-powered analytics
+  - `L8AggregateFunction` message for parsed aggregate functions (`count`, `sum`, `avg`, `min`, `max`)
+  - `group_by` field on `L8Query` for grouping query results
+  - `having` clause on `L8Query` for filtering on aggregate results
+  - `aggregates` field for parsed SELECT-clause aggregate functions
+  - Anthropic API key integration via `ANTHROPIC_API_KEY` environment variable
+- **Two-Phase Authentication**: Enhanced login security with token hash verification
+  - `token_hash` and `code` fields on `AuthUser` for two-phase auth flow
+  - `token_hash` on `AuthToken` for secure session handoff
+  - Updated `L8TFAVerify` to use `hash` field and return `token` on success
+- **Service-to-Model Mapping**: Model name tracking per service area
+  - `models` map on `L8ServiceAreas` linking area IDs to protobuf model names
+  - `AddService()` now accepts an optional `modelName` parameter
+  - `MergeServices()` propagates model mappings during health merges
+- **Concurrency Safety**: Thread-safe service merging with mutex protection
+  - `MergeServices()` function for safely merging service registrations into health records
+
+### Previous Release (v1.6.0)
 - **Time-Series Database (TSDB) Support**: Built-in time-series data collection and querying
   - New `ITSDBService` interface with `AddTSDB()` and `GetTSDB()` methods
   - `L8TimeSeriesPoint` message for timestamped data points
@@ -68,6 +86,7 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **Protocol Buffer Schemas**: Comprehensive type definitions for distributed system components
 - **Virtual Network Interface (VNic)**: Advanced networking abstractions with leader election and cross-network support
 - **Service Discovery & Management**: Built-in service registration, discovery, and area-based routing
+- **AI Agent Analytics**: SQL-style aggregation with GROUP BY, HAVING, and aggregate functions for AI-powered queries
 - **Distributed Computing**: Map-Reduce framework for parallel data processing and aggregation
 - **Time-Series Database (TSDB)**: Built-in time-series data collection and querying for metrics and monitoring
 - **Data Import/Export**: ETL framework with templates, transforms, AI-assisted mapping, and CSV export
@@ -75,8 +94,7 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **Health Monitoring**: Real-time system health tracking with pprof profiling and Unix `top`-style output
 - **Transaction Management**: Distributed transaction support with state tracking
 - **Notification System**: Property change and time-series notifications with event propagation
-- **Security Framework**: Enhanced authentication with TFA, captcha, token validation, and encryption
-- **Multi-Language Support**: Go implementation with Zig bindings
+- **Security Framework**: Enhanced authentication with TFA, two-phase auth, captcha, token validation, and encryption
 
 ## Key Features
 
@@ -92,6 +110,7 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 
 ### Service Discovery & Management
 - **Service Areas**: Logical service grouping and area-based routing
+- **Service-to-Model Mapping**: Track protobuf model names per service area (v1.7.0)
 - **Service Groups**: Shared leader election across related services (v1.6.0)
 - **Health States**: Up, Down, Unreachable status tracking with statistics
 - **Performance Profiling**: Integrated pprof memory and CPU profiling in health data (v1.6.0)
@@ -99,6 +118,12 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **Dynamic Service Registration**: Runtime service addition and removal
 - **Map-Reduce Framework**: Distributed computation and aggregation across services (v1.4.0)
 - **Time-Series Database**: `ITSDBService` for collecting and querying time-series data (v1.6.0)
+
+### AI Agent Analytics (v1.7.0)
+- **Aggregate Functions**: `count(*)`, `sum(field)`, `avg(field)`, `min(field)`, `max(field)`
+- **GROUP BY**: Group query results by one or more fields
+- **HAVING Clause**: Filter on aggregate results using expression trees
+- **Anthropic Integration**: Built-in support for `ANTHROPIC_API_KEY` environment variable
 
 ### Data Import/Export (v1.6.0)
 - **Import Templates**: Column mappings with 10 transform types (date, enum, unit, trim, case, etc.)
@@ -112,10 +137,11 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **Dynamic Type Registry**: Runtime type registration and introspection
 - **RNode Reflection**: Advanced reflection system with decorators and table views
 - **Serialization Framework**: Pluggable serialization with multiple format support
-- **Query Engine**: Expression-based querying with comparators and conditions
+- **Query Engine**: Expression-based querying with comparators, conditions, and aggregation
 
 ### Security & Configuration
 - **Token Authentication**: Secure token-based authentication with validation and activation
+- **Two-Phase Authentication**: Token hash-based two-phase login flow (v1.7.0)
 - **Two-Factor Authentication**: TFA setup and verification for enhanced security (v1.5.0)
 - **Captcha Protection**: Bot protection with captcha challenge/response (v1.5.0)
 - **User Registration**: Secure user registration workflow (v1.5.0)
@@ -130,8 +156,8 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 ## Protocol Buffer Schemas
 
 ### Core Types
-- **`api.proto`**: Query expressions, conditions, comparators, time-series points, period model, data import/export framework, file upload/download, and CSV export
-- **`services.proto`**: Service discovery, areas, replication indices, and transactions
+- **`api.proto`**: Query expressions, conditions, comparators, aggregate functions, time-series points, period model, two-phase auth, data import/export framework, file upload/download, and CSV export
+- **`services.proto`**: Service discovery, areas, model mappings, replication indices, and transactions
 - **`health.proto`**: Health monitoring, statistics, pprof profiling data, and system status tracking
 - **`sysconfig.proto`**: System configuration, VNet settings, logs directory, and connection parameters
 - **`notification.proto`**: Property change notifications, TSDB notifications, and event propagation
@@ -140,7 +166,7 @@ Layer 8 Types serves as the core type system and interface library for Layer 8 n
 - **`system.proto`**: System messages and route tables
 
 ### Message Types
-- **Query**: Advanced search with criteria, sorting, pagination, and schema filtering
+- **Query**: Advanced search with criteria, sorting, pagination, schema filtering, and aggregate functions (GROUP BY, HAVING)
 - **TSDB**: Time-series data points and range-based queries (v1.6.0)
 - **Import/Export**: Templates, column mappings, transforms, AI mapping, file upload/download, CSV export (v1.6.0)
 - **Period**: Fiscal/business period modeling with yearly, quarterly, monthly support (v1.6.0)
@@ -175,25 +201,22 @@ l8types/
 │   │   ├── Security.go        # Security and authentication
 │   │   ├── Services.go        # Service management
 │   │   ├── Web.go             # Web service interfaces
+│   │   ├── Env.go             # Environment variable management (AI keys)
 │   │   └── ...                # Additional interfaces
 │   ├── types/                 # Generated Protocol Buffer types
 │   ├── nets/                  # Network protocol implementation
 │   ├── aes/                   # AES encryption utilities
+│   ├── sec/                   # Security provider loading and defaults
 │   ├── tests/                 # Test suite
 │   └── testtypes/             # Test-specific generated types
-└── zig/                       # Zig implementation (experimental)
-    ├── src/                   # Zig source files
-    └── build.zig              # Build configuration
 ```
 
 ## Getting Started
 
 ### Prerequisites
-- **Go 1.25.4+**: Core implementation language
+- **Go 1.26.1+**: Core implementation language
 - **Docker**: Required for Protocol Buffer code generation
 - **Protocol Buffers**: For schema compilation (handled via Docker)
-- **Zig** (optional): For Zig language bindings
-
 ### Installation
 
 ```bash
@@ -293,8 +316,8 @@ config := &types.SysConfig{
     RxQueueSize: 1000,
 }
 
-// Add services to configuration
-ifs.AddService(config, "user-service", 1)
+// Add services to configuration (optional model name for service-to-model mapping)
+ifs.AddService(config, "user-service", 1, "User")
 ifs.AddService(config, "auth-service", 2)
 
 // Create VNic for networking
@@ -359,21 +382,21 @@ localResponse := vnic.LocalRequest("local-service", 1, ifs.GET, query, timeout)
 
 ```go
 // Build complex query with expressions
-query := &types.Query{
+query := &l8api.L8Query{
     RootType: "User",
     Properties: []string{"name", "email", "status"},
-    Criteria: &types.Expression{
-        Condition: &types.Condition{
-            Comparator: &types.Comparator{
+    Criteria: &l8api.L8Expression{
+        Condition: &l8api.L8Condition{
+            Comparator: &l8api.L8Comparator{
                 Left: "status",
                 Oper: "==",
                 Right: "active",
             },
         },
         AndOr: "AND",
-        Next: &types.Expression{
-            Condition: &types.Condition{
-                Comparator: &types.Comparator{
+        Next: &l8api.L8Expression{
+            Condition: &l8api.L8Condition{
+                Comparator: &l8api.L8Comparator{
                     Left: "age",
                     Oper: ">",
                     Right: "18",
@@ -386,6 +409,23 @@ query := &types.Query{
     Limit: 100,
     Page: 1,
     MapReduce: true, // Enable distributed Map-Reduce processing (v1.4.0+)
+}
+
+// Aggregation query with GROUP BY and HAVING (v1.7.0+)
+aggQuery := &l8api.L8Query{
+    RootType: "Order",
+    GroupBy:  []string{"department"},
+    Aggregates: []*l8api.L8AggregateFunction{
+        {Function: "count", Field: "*", Alias: "orderCount"},
+        {Function: "sum", Field: "amount", Alias: "totalAmount"},
+    },
+    Having: &l8api.L8Expression{
+        Condition: &l8api.L8Condition{
+            Comparator: &l8api.L8Comparator{
+                Left: "count", Oper: ">", Right: "10",
+            },
+        },
+    },
 }
 ```
 
@@ -628,25 +668,6 @@ open coverage.html  # or cover.html
 - **Service Level Agreement**: SLA configuration and activation flows
 - **Registry Operations**: Dynamic type creation and registration
 
-## Documentation
-
-### Web Documentation
-The project includes an interactive web-based documentation site (`web.html`) featuring:
-- Interactive architecture visualizations
-- Live code examples
-- Feature showcase with animations
-- Quick start guide
-- API documentation links
-
-To view the documentation locally:
-```bash
-# Open the documentation website
-open web.html
-# Or serve it with a local web server
-python3 -m http.server 8000
-# Then navigate to http://localhost:8000/web.html
-```
-
 ## Dependencies
 
 ### Go Modules
@@ -659,7 +680,14 @@ python3 -m http.server 8000
 
 ## Changelog
 
-### Version 1.6.0 (Current)
+### Version 1.7.0 (Current)
+- **AI Agent Aggregation API** - `L8AggregateFunction` message, `group_by`, `having`, and `aggregates` on `L8Query`
+- **Two-Phase Authentication** - `token_hash` and `code` fields on `AuthUser`/`AuthToken`, updated TFA verify flow
+- **Service-to-Model Mapping** - `models` map on `L8ServiceAreas`, `AddService()` accepts optional model name
+- **Concurrency Safety** - Thread-safe `MergeServices()` for parallel service activation
+- **Anthropic Integration** - `ANTHROPIC_API_KEY` environment variable support for AI agent features
+
+### Version 1.6.0
 - **Time-Series Database (TSDB)** - `ITSDBService` interface, `L8TimeSeriesPoint`, `L8TSDBQuery`, and TSDB notifications
 - **Data Import/Export Framework** - Templates, column mappings, 10 transform types, AI-assisted mapping, execution with error reporting
 - **File Upload/Download** - Document storage with metadata, MIME types, and SHA-256 checksums
