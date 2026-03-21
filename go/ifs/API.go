@@ -20,6 +20,7 @@ limitations under the License.
 package ifs
 
 import (
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8reflect"
 )
 
@@ -97,6 +98,12 @@ type IQuery interface {
 	Hash() string
 	// ValueForParameter retrieves a parameter value by name.
 	ValueForParameter(string) string
+	// Aggregates returns the parsed aggregate functions (COUNT, SUM, AVG, MIN, MAX) from the SELECT clause.
+	Aggregates() []*l8api.L8AggregateFunction
+	// GroupBy returns the list of fields to group results by.
+	GroupBy() []string
+	// Having returns the filter expression applied to aggregated results.
+	Having() IExpression
 }
 
 // IProperty represents a property accessor for a type field.
