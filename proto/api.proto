@@ -144,7 +144,7 @@ message L8MetaData {
 // L8Count holds count statistics as a map of value to count.
 message L8Count {
   // Map of value string to occurrence count
-  map<string, int32> counts = 1;
+  map<string, double> counts = 1;
 }
 
 // L8TypeList contains a list of type names.
