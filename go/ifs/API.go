@@ -63,6 +63,8 @@ type IElements interface {
 	IsReplica() bool
 	// Replica returns the replica number (0 for primary).
 	Replica() byte
+	// Metadata returns the metadata associated with this collection.
+	Metadata() *l8api.L8MetaData
 }
 
 // IQuery represents a query for filtering and retrieving data elements.
