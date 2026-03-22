@@ -104,6 +104,13 @@ type IQuery interface {
 	GroupBy() []string
 	// Having returns the filter expression applied to aggregated results.
 	Having() IExpression
+	// IsAggregate returns true if this query has aggregate functions.
+	IsAggregate() bool
+	// Filter returns the subset of items matching the WHERE clause.
+	Filter([]interface{}, bool) []interface{}
+	// Aggregate groups items by GROUP BY fields and computes aggregate functions.
+	// Returns one map per group with aggregate alias keys and group-by field values.
+	Aggregate([]interface{}) []map[string]interface{}
 }
 
 // IProperty represents a property accessor for a type field.
