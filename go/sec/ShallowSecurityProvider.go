@@ -83,8 +83,13 @@ func (this *ShallowSecurityProvider) CanDoAction(vnic ifs.IVNic, action ifs.Acti
 }
 
 // ScopeView returns the original elements without filtering (permissive).
-func (this *ShallowSecurityProvider) ScopeView(o ifs.IElements, uuid string, token string, salts ...string) ifs.IElements {
+func (this *ShallowSecurityProvider) ScopeView(vnic ifs.IVNic, o ifs.IElements, uuid string, token string, salts ...string) ifs.IElements {
 	return o
+}
+
+// AllowedTypes returns nil (permissive - all types allowed).
+func (this *ShallowSecurityProvider) AllowedTypes(vnic ifs.IVNic, token string) []string {
+	return nil
 }
 
 // Authenticate always succeeds with a dummy bearer token (testing only).

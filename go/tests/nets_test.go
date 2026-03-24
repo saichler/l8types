@@ -48,7 +48,10 @@ func (m *MockSecurityProviderNets) ValidateConnection(net.Conn, *l8sysconfig.L8S
 func (m *MockSecurityProviderNets) CanDoAction(ifs.IVNic, ifs.Action, ifs.IElements, string, string, ...string) error {
 	return nil
 }
-func (m *MockSecurityProviderNets) ScopeView(ifs.IElements, string, string, ...string) ifs.IElements {
+func (m *MockSecurityProviderNets) ScopeView(ifs.IVNic, ifs.IElements, string, string, ...string) ifs.IElements {
+	return nil
+}
+func (m *MockSecurityProviderNets) AllowedTypes(ifs.IVNic, string) []string {
 	return nil
 }
 func (m *MockSecurityProviderNets) TFASetup(string, ifs.IVNic) (string, []byte, error) {

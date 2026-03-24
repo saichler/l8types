@@ -47,7 +47,8 @@ type ISecurityProvider interface {
 	// CanDoAction checks if an action is authorized for the given user/scope.
 	CanDoAction(IVNic, Action, IElements, string, string, ...string) error
 	// ScopeView filters elements based on user permissions.
-	ScopeView(IElements, string, string, ...string) IElements
+	ScopeView(IVNic, IElements, string, string, ...string) IElements
+	AllowedTypes(IVNic, string) []string
 
 	// TFASetup initiates two-factor authentication setup.
 	// Returns: secret, QR code bytes, error
