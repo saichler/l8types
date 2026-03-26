@@ -49,6 +49,8 @@ type ISecurityProvider interface {
 	// ScopeView filters elements based on user permissions.
 	ScopeView(IVNic, IElements, string, string, ...string) IElements
 	AllowedTypes(IVNic, string) []string
+	// AllowedActions returns a map of type_name → allowed action codes for the user.
+	AllowedActions(IVNic, string) map[string][]int32
 
 	// TFASetup initiates two-factor authentication setup.
 	// Returns: secret, QR code bytes, error
