@@ -54,6 +54,9 @@ func (m *MockSecurityProviderNets) ScopeView(ifs.IVNic, ifs.IElements, string, s
 func (m *MockSecurityProviderNets) AllowedTypes(ifs.IVNic, string) []string {
 	return nil
 }
+func (m *MockSecurityProviderNets) AllowedActions(ifs.IVNic, string) map[string][]int32 {
+	return nil
+}
 func (m *MockSecurityProviderNets) TFASetup(string, ifs.IVNic) (string, []byte, error) {
 	return "", nil, nil
 }

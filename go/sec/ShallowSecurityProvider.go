@@ -92,6 +92,11 @@ func (this *ShallowSecurityProvider) AllowedTypes(vnic ifs.IVNic, token string) 
 	return nil
 }
 
+// AllowedActions returns nil (permissive - all actions allowed).
+func (this *ShallowSecurityProvider) AllowedActions(vnic ifs.IVNic, token string) map[string][]int32 {
+	return nil
+}
+
 // Authenticate always succeeds with a dummy bearer token (testing only).
 func (this *ShallowSecurityProvider) Authenticate(user string, pass string, vnic ifs.IVNic) (string, string, bool, bool, error) {
 	return "bearer token", "", false, false, nil
