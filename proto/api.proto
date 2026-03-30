@@ -130,6 +130,8 @@ message AuthToken {
   bool need_tfa = 4;
   // The token hash in case of two phase authentication.
   string token_hash = 5;
+  // HTTP path suffix for post-login redirect (e.g. "app.html", "employee.html")
+  string portal = 6;
 }
 
 // L8MetaData provides metadata and statistics about query results.

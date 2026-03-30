@@ -24,8 +24,8 @@ import (
 // encryption, and connection validation in the Layer 8 system.
 type ISecurityProvider interface {
 	// Authenticate validates user credentials and returns a token.
-	// Returns: token, needsTFASetup, needsTFAVerify, error
-	Authenticate(string, string, IVNic) (string, string, bool, bool, error)
+	// Returns: token, hash, needsTFA, setupTFA, portal, error
+	Authenticate(string, string, IVNic) (string, string, bool, bool, string, error)
 	// ValidateToken checks if a token is valid and returns the user ID.
 	ValidateToken(string, IVNic) (string, bool)
 

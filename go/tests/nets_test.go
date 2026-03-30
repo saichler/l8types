@@ -35,8 +35,8 @@ type MockSecurityProviderNets struct {
 	decryptError bool
 }
 
-func (m *MockSecurityProviderNets) Authenticate(string, string, ifs.IVNic) (string, string, bool, bool, error) {
-	return "", "", false, false, nil
+func (m *MockSecurityProviderNets) Authenticate(string, string, ifs.IVNic) (string, string, bool, bool, string, error) {
+	return "", "", false, false, "", nil
 }
 func (m *MockSecurityProviderNets) ValidateToken(string, ifs.IVNic) (string, bool)      { return "", true }
 func (m *MockSecurityProviderNets) Message(string, ifs.IVNic) (*ifs.Message, error)     { return nil, nil }
