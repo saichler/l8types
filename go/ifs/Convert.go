@@ -44,21 +44,6 @@ func Long2Bytes(s int64) []byte {
 	}
 }
 
-// Bytes2Int converts 4 bytes to int32 (optimized with bitwise OR)
-func Bytes2Int(data []byte) int32 {
-	return int32(data[0])<<24 | int32(data[1])<<16 | int32(data[2])<<8 | int32(data[3])
-}
-
-// Int2Bytes converts int32 to 4 bytes (optimized with slice literal)
-func Int2Bytes(s int32) []byte {
-	return []byte{
-		byte(s >> 24),
-		byte(s >> 16),
-		byte(s >> 8),
-		byte(s),
-	}
-}
-
 // Bytes2UInt16 converts 2 bytes to uint16 (optimized with bitwise OR)
 func Bytes2UInt16(data []byte) uint16 {
 	return uint16(data[0])<<8 | uint16(data[1])
@@ -102,18 +87,6 @@ func BoolOf(b byte) (bool, bool) {
 		panic("Unexpected " + string(b+48))
 	}
 	return (b & 1) != 0, (b & 2) != 0
-}
-
-// actionStateToByte now returns action as a full byte (no packing)
-// Deprecated: Use byte(action) directly
-func actionStateToByte(action Action, trState TransactionState) byte {
-	return byte(action)
-}
-
-// ByteToActionState unpacks action and transaction state from two separate bytes
-// Deprecated: Read action and state as separate bytes directly
-func ByteToActionState(actionByte byte, stateByte byte) (Action, TransactionState) {
-	return Action(actionByte), TransactionState(stateByte)
 }
 
 func priorityMulticastModeToByte(priority Priority, multicastMode MulticastMode) byte {

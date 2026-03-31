@@ -51,34 +51,6 @@ func TestBytes2LongAndLong2Bytes(t *testing.T) {
 	}
 }
 
-func TestBytes2IntAndInt2Bytes(t *testing.T) {
-	testCases := []int32{
-		0,
-		1,
-		-1,
-		255,
-		256,
-		65535,
-		65536,
-		16777215,
-		16777216,
-		2147483647,  // max int32
-		-2147483648, // min int32
-	}
-
-	for _, original := range testCases {
-		bytes := ifs.Int2Bytes(original)
-		if len(bytes) != 4 {
-			t.Errorf("Int2Bytes should return 4 bytes, got %d for value %d", len(bytes), original)
-		}
-
-		result := ifs.Bytes2Int(bytes)
-		if result != original {
-			t.Errorf("Int roundtrip failed: expected %d, got %d", original, result)
-		}
-	}
-}
-
 func TestBytes2UInt16AndUInt162Bytes(t *testing.T) {
 	testCases := []uint16{
 		0,
@@ -161,38 +133,6 @@ func TestBoolOfPanic(t *testing.T) {
 	}()
 
 	ifs.BoolOf(4) // Should panic
-}
-
-func TestByteToActionState(t *testing.T) {
-	// Test ByteToActionState function with separate action and state bytes
-	testCases := []struct {
-		actionByte byte
-		stateByte  byte
-		action     ifs.Action
-		state      ifs.TransactionState
-	}{
-		{0, 0, ifs.Action(0), ifs.TransactionState(0)},
-		{1, 1, ifs.Action(1), ifs.TransactionState(1)},
-		{2, 3, ifs.Action(2), ifs.TransactionState(3)},
-		{4, 5, ifs.Action(4), ifs.TransactionState(5)},
-		{6, 7, ifs.Action(6), ifs.TransactionState(7)},
-		{8, 9, ifs.Action(8), ifs.TransactionState(9)},
-		{10, 11, ifs.Action(10), ifs.TransactionState(11)},
-		{12, 13, ifs.Action(12), ifs.TransactionState(13)},
-		{15, 15, ifs.Action(15), ifs.TransactionState(15)},
-		{19, 5, ifs.Action(19), ifs.TransactionState(5)}, // New Action values > 15
-	}
-
-	for _, tc := range testCases {
-		action, state := ifs.ByteToActionState(tc.actionByte, tc.stateByte)
-
-		if action != tc.action {
-			t.Errorf("Action decode failed for bytes (0x%02X, 0x%02X): expected %v, got %v", tc.actionByte, tc.stateByte, tc.action, action)
-		}
-		if state != tc.state {
-			t.Errorf("State decode failed for bytes (0x%02X, 0x%02X): expected %v, got %v", tc.actionByte, tc.stateByte, tc.state, state)
-		}
-	}
 }
 
 func TestActionStateBitManipulation(t *testing.T) {

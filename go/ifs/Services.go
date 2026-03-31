@@ -21,8 +21,6 @@ import (
 	"github.com/saichler/l8types/go/types/l8services"
 )
 
-var ServicePath IServicePath
-
 // IServices manages service registration, activation, and message routing.
 // It is the central service registry for the Layer 8 system.
 type IServices interface {
@@ -160,10 +158,6 @@ type ITransactionConfig interface {
 	KeyOf(IElements, IResources) string
 	// Voter returns true if this service participates in voting.
 	Voter() bool
-}
-
-type IServicePath interface {
-	Next(string, string) (string, byte)
 }
 
 type ITSDBService interface {

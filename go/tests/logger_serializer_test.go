@@ -42,50 +42,6 @@ func TestLogLevelString(t *testing.T) {
 	}
 }
 
-func TestIsNil(t *testing.T) {
-	// Test nil value
-	var nilPtr *string
-	if !ifs.IsNil(nilPtr) {
-		t.Error("Expected IsNil to return true for nil pointer")
-	}
-
-	// Test non-nil value
-	str := "test"
-	if ifs.IsNil(&str) {
-		t.Error("Expected IsNil to return false for non-nil pointer")
-	}
-
-	// Test nil interface
-	var nilInterface interface{}
-	if !ifs.IsNil(nilInterface) {
-		t.Error("Expected IsNil to return true for nil interface")
-	}
-
-	// Test nil slice
-	var nilSlice []string
-	if !ifs.IsNil(nilSlice) {
-		t.Error("Expected IsNil to return true for nil slice")
-	}
-
-	// Test non-nil slice
-	nonNilSlice := []string{"test"}
-	if ifs.IsNil(nonNilSlice) {
-		t.Error("Expected IsNil to return false for non-nil slice")
-	}
-
-	// Test nil map
-	var nilMap map[string]string
-	if !ifs.IsNil(nilMap) {
-		t.Error("Expected IsNil to return true for nil map")
-	}
-
-	// Test non-nil map
-	nonNilMap := make(map[string]string)
-	if ifs.IsNil(nonNilMap) {
-		t.Error("Expected IsNil to return false for non-nil map")
-	}
-}
-
 func TestSerializerModeConstants(t *testing.T) {
 	// Test that serializer mode constants are defined correctly
 	if ifs.BINARY != 1 {

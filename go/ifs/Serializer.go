@@ -15,8 +15,6 @@ limitations under the License.
 
 package ifs
 
-import "reflect"
-
 // SerializerMode defines the serialization format.
 type SerializerMode int
 
@@ -34,21 +32,6 @@ type ISerializer interface {
 	Marshal(interface{}, IResources) ([]byte, error)
 	// Unmarshal converts bytes back to an object.
 	Unmarshal([]byte, IResources) (interface{}, error)
-}
-
-// IsNil safely checks if an interface value is nil, handling pointer types.
-func IsNil(any interface{}) bool {
-	if any == nil {
-		return true
-	}
-	v := reflect.ValueOf(any)
-	isNil := v.IsNil()
-	if !isNil {
-		if v.Kind() == reflect.Func {
-			panic("Trying to check nil on a function!")
-		}
-	}
-	return isNil
 }
 
 // IStorage defines a key-value storage interface for persistent data.
