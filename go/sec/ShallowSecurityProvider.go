@@ -126,3 +126,17 @@ func (this *ShallowSecurityProvider) Register(userId, password, captcha string, 
 func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResources) (string, string, string, string, error) {
 	return "admin", "admin", "admin", "5432", nil
 }
+
+func (this *ShallowSecurityProvider) SystemConfig() *l8sysconfig.L8SysConfig {
+	conf := &l8sysconfig.L8SysConfig{MaxDataSize: 1024 * 1024 * 50,
+		RxQueueSize:              100000,
+		TxQueueSize:              100000,
+		VnetPort:                 uint32(10005),
+		KeepAliveIntervalSeconds: 30,
+		LogConfig:                &l8sysconfig.L8LogConfig{LogDirectory: "/data/logs/shallow", VnetPort: 10010},
+		DataStoreConfig:          &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admin"},
+		TimeSeriesStoreConfig:    &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admints"},
+		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "/web/"},
+	}
+	return conf
+}
