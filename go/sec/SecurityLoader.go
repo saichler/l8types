@@ -10,19 +10,17 @@ import (
 // This function uses Go's plugin system to dynamically load the security implementation.
 func LoadSecurityProvider(args ...interface{}) (ifs.ISecurityProvider, error) {
 	loaderFile, err := plugin.Open("/var/loader.so")
-	sp := NewShallowSecurityProvider()
 	if err != nil {
-		return sp, errors.New("Failed to load security provider #1: " + err.Error())
+		return nil, errors.New("Failed to load security provider #1: " + err.Error())
 	}
 	loader, err := loaderFile.Lookup("Loader")
 	if err != nil {
-		return sp, errors.New("Failed to load security provider #2: " + err.Error())
+		return nil, errors.New("Failed to load security provider #2: " + err.Error())
 	}
 	if loader == nil {
-		return sp, errors.New("Failed to load security provider #3: Nil Loader")
+		return nil, errors.New("Failed to load security provider #3: Nil Loader")
 	}
 	loaderInterface := *loader.(*ifs.ISecurityProviderLoader)
 	securityLoader := loaderInterface.(ifs.ISecurityProviderLoader).(ifs.ISecurityProviderLoader)
 	return securityLoader.LoadSecurityProvider(args...)
 }
-
