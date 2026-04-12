@@ -80,4 +80,5 @@ message L8DataStoreConfig {
 message L8WebAppConfig {
   uint32 web_port = 1;
   string end_point_prefix = 2;
+  string cert = 3;
 }

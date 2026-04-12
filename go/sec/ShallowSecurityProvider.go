@@ -136,7 +136,7 @@ func (this *ShallowSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig 
 		LogConfig:                &l8sysconfig.L8LogConfig{LogDirectory: "", VnetPort: 10010},
 		DataStoreConfig:          &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admin"},
 		TimeSeriesStoreConfig:    &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admints"},
-		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "/web/"},
+		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "/web/", Cert: "/data/webcert"},
 	}
 	return sysconfig
 }
