@@ -16,8 +16,9 @@ import (
 // ShallowSecurityProvider implements ISecurityProvider with basic AES encryption.
 // Uses a hardcoded secret for key derivation - suitable for testing only.
 type ShallowSecurityProvider struct {
-	secret string
-	key    string
+	secret    string
+	key       string
+	sysConfig *l8sysconfig.L8SysConfig
 }
 
 // NewShallowSecurityProvider creates a new provider with a hardcoded secret.
@@ -128,7 +129,10 @@ func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResourc
 }
 
 func (this *ShallowSecurityProvider) SystemConfig() *l8sysconfig.L8SysConfig {
-	conf := &l8sysconfig.L8SysConfig{MaxDataSize: 1024 * 1024 * 50,
+	if this.sysConfig != nil {
+		return this.sysConfig
+	}
+	this.sysConfig = &l8sysconfig.L8SysConfig{MaxDataSize: 1024 * 1024 * 50,
 		RxQueueSize:              100000,
 		TxQueueSize:              100000,
 		VnetPort:                 uint32(10005),
@@ -138,5 +142,5 @@ func (this *ShallowSecurityProvider) SystemConfig() *l8sysconfig.L8SysConfig {
 		TimeSeriesStoreConfig:    &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admints"},
 		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "/web/"},
 	}
-	return conf
+	return this.sysConfig
 }
