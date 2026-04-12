@@ -67,8 +67,8 @@ type ISecurityProvider interface {
 	// Returns: aside, zside, yside, name, error
 	Credential(string, string, IResources) (string, string, string, string, error)
 
-	// System Config
-	SystemConfig() *l8sysconfig.L8SysConfig
+	// New System Config
+	NewSystemConfig() *l8sysconfig.L8SysConfig
 }
 
 // ISecurityProviderLoader loads security provider plugins.

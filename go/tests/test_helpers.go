@@ -61,7 +61,7 @@ func (m *MockSecurityProvider) Register(string, string, string, ifs.IVNic) error
 func (m *MockSecurityProvider) Credential(string, string, ifs.IResources) (string, string, string, string, error) {
 	return "", "", "", "", nil
 }
-func (m *MockSecurityProvider) SystemConfig() *l8sysconfig.L8SysConfig {
+func (m *MockSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig {
 	return nil
 }
 
