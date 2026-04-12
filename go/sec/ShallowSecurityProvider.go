@@ -124,6 +124,20 @@ func (this *ShallowSecurityProvider) Register(userId, password, captcha string, 
 }
 
 func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResources) (string, string, string, string, error) {
+	if crId == "sim" {
+		if cId == "ssh" {
+			return "simadmin", "simadmin", "simadmin", "simadmin", nil
+		}
+		if cId == "snmp" {
+			return "public", "private", "", "", nil
+		}
+		if crId == "rest" {
+			return "admin", "admin", "", "", nil
+		}
+		if crId == "graph" {
+			return "admin", "admin", "", "", nil
+		}
+	}
 	return "admin", "admin", "admin", "5432", nil
 }
 
