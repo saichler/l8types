@@ -70,6 +70,7 @@ func (m *MockSecurityProviderNets) NewSystemConfig() *l8sysconfig.L8SysConfig {
 	return nil
 }
 
+func (m *MockSecurityProviderNets) AddAdjacent(ifs.ISecurityProvider) {}
 func (m *MockSecurityProviderNets) Encrypt(data []byte) (string, error) {
 	if m.encryptError {
 		return "", errors.New("encryption failed")

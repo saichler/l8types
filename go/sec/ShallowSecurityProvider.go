@@ -141,6 +141,8 @@ func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResourc
 	return "admin", "admin", "admin", "5432", nil
 }
 
+func (this *ShallowSecurityProvider) AddAdjacent(ifs.ISecurityProvider) {}
+
 func (this *ShallowSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig {
 	sysconfig := &l8sysconfig.L8SysConfig{MaxDataSize: 1024 * 1024 * 50,
 		RxQueueSize:              100000,

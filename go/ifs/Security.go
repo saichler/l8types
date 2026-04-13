@@ -29,6 +29,10 @@ type ISecurityProvider interface {
 	// ValidateToken checks if a token is valid and returns the user ID.
 	ValidateToken(string, IVNic) (string, bool)
 
+	// AddAdjacent registers an adjacent security provider so tokens
+	// are automatically propagated across VNICs.
+	AddAdjacent(ISecurityProvider)
+
 	// Message creates a message from an AAA ID for audit/tracking.
 	Message(string, IVNic) (*Message, error)
 
