@@ -9,6 +9,8 @@ import (
 	"github.com/saichler/l8types/go/nets"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"net"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -144,6 +146,12 @@ func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResourc
 func (this *ShallowSecurityProvider) AddAdjacent(ifs.ISecurityProvider) {}
 
 func (this *ShallowSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		homeDir = "."
+	}
+	dataDirectory := filepath.Join(homeDir, "data")
+	os.MkdirAll(dataDirectory, 0755)
 	sysconfig := &l8sysconfig.L8SysConfig{MaxDataSize: 1024 * 1024 * 50,
 		RxQueueSize:              100000,
 		TxQueueSize:              100000,
@@ -152,7 +160,8 @@ func (this *ShallowSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig 
 		LogConfig:                &l8sysconfig.L8LogConfig{LogDirectory: "", VnetPort: 10010},
 		DataStoreConfig:          &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admin"},
 		TimeSeriesStoreConfig:    &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admints"},
-		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "/web/", Cert: "/data/webcert"},
+		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "web", Cert: "webcert"},
+		DataDirectory:            dataDirectory,
 	}
 	return sysconfig
 }

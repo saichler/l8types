@@ -65,6 +65,8 @@ message L8SysConfig {
   L8DataStoreConfig time_series_store_config = 17;
   // Web application endpoint
   L8WebAppConfig web_config = 18;
+  // Mounted Directory
+  string data_directory = 19;
 }
 
 message L8LogConfig {
