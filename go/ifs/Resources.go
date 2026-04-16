@@ -50,6 +50,10 @@ type IResources interface {
 	Set(interface{})
 	// Copy copies resources from another IResources instance.
 	Copy(IResources)
+	// Return the Web Prefix
+	WebPrefix() string
+	// Data Directory
+	DataDirectory() string
 }
 
 // AddService registers a service in the system configuration.
