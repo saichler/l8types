@@ -54,6 +54,8 @@ type IResources interface {
 	WebPrefix() string
 	// Data Directory
 	DataDirectory() string
+	// Certs Location
+	Certs() string
 }
 
 // AddService registers a service in the system configuration.
