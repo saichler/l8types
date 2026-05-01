@@ -67,6 +67,8 @@ message L8SysConfig {
   L8WebAppConfig web_config = 18;
   // Mounted Directory
   string data_directory = 19;
+  // DNS hostname for peer discovery (e.g., a K8s headless Service name)
+  string discovery_dns_name = 20;
 }
 
 message L8LogConfig {
