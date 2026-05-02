@@ -54,14 +54,8 @@ type IResources interface {
 	WebPrefix() string
 	// Data Directory
 	DataDirectory() string
-	// CertDir Location
-	CertDir() string
-	// Cert Domain
-	CertDomain() string
-	// Cert Private Key
-	CertPrivate()
-	// Cert Public Key
-	CertPublic()
+	// Certificate
+	Certificate() (string, string, string)
 }
 
 // AddService registers a service in the system configuration.
