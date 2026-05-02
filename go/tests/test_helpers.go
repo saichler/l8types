@@ -97,6 +97,9 @@ func (m *MockResources) AddService(string, int32)                      {}
 func (m *MockResources) Set(interface{})                               {}
 func (m *MockResources) Copy(ifs.IResources)                           {}
 func (m *MockResources) DefaultUser() *l8api.AuthUser                  { return nil }
+func (m *MockResources) WebPrefix() string                             { return "" }
+func (m *MockResources) DataDirectory() string                         { return "" }
+func (m *MockResources) Certs() string                                 { return "" }
 
 func newMockResources() *MockResources {
 	return &MockResources{

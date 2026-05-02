@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8types/go/types/l8health"
 	"github.com/saichler/l8types/go/types/l8services"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
@@ -147,5 +148,98 @@ func TestNewUuid(t *testing.T) {
 		   len(parts[3]) != 4 || len(parts[4]) != 12 {
 			t.Errorf("UUID format incorrect: %s", uuid1)
 		}
+	}
+}
+
+func TestMergeServices_NilTargetServices(t *testing.T) {
+	hp := &l8health.L8Health{}
+	src := &l8services.L8Services{
+		ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+			"svcA": {Areas: map[int32]bool{1: true}},
+		},
+	}
+
+	ifs.MergeServices(hp, src)
+
+	if hp.Services != src {
+		t.Error("Expected hp.Services to be assigned to src when initially nil")
+	}
+}
+
+func TestMergeServices_NewServiceName(t *testing.T) {
+	hp := &l8health.L8Health{
+		Services: &l8services.L8Services{
+			ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+				"existing": {Areas: map[int32]bool{1: true}},
+			},
+		},
+	}
+	src := &l8services.L8Services{
+		ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+			"newSvc": {Areas: map[int32]bool{5: true}},
+		},
+	}
+
+	ifs.MergeServices(hp, src)
+
+	if _, ok := hp.Services.ServiceToAreas["existing"]; !ok {
+		t.Error("Expected 'existing' service to be preserved")
+	}
+	got, ok := hp.Services.ServiceToAreas["newSvc"]
+	if !ok {
+		t.Fatal("Expected 'newSvc' to be added")
+	}
+	if !got.Areas[5] {
+		t.Error("Expected 'newSvc' area 5 to be true")
+	}
+}
+
+func TestMergeServices_MergeAreasIntoExistingService(t *testing.T) {
+	hp := &l8health.L8Health{
+		Services: &l8services.L8Services{
+			ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+				"svcA": {Areas: map[int32]bool{1: true}},
+			},
+		},
+	}
+	src := &l8services.L8Services{
+		ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+			"svcA": {Areas: map[int32]bool{2: true, 3: true}},
+		},
+	}
+
+	ifs.MergeServices(hp, src)
+
+	areas := hp.Services.ServiceToAreas["svcA"].Areas
+	if !areas[1] || !areas[2] || !areas[3] {
+		t.Errorf("Expected areas {1,2,3} all present, got %v", areas)
+	}
+}
+
+func TestMergeServices_MergeModelsIntoExistingService(t *testing.T) {
+	hp := &l8health.L8Health{
+		Services: &l8services.L8Services{
+			ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+				"svcA": {
+					Areas:  map[int32]bool{1: true},
+					Models: map[int32]string{1: "ModelA"},
+				},
+			},
+		},
+	}
+	src := &l8services.L8Services{
+		ServiceToAreas: map[string]*l8services.L8ServiceAreas{
+			"svcA": {
+				Areas:  map[int32]bool{2: true},
+				Models: map[int32]string{2: "ModelB"},
+			},
+		},
+	}
+
+	ifs.MergeServices(hp, src)
+
+	models := hp.Services.ServiceToAreas["svcA"].Models
+	if models[1] != "ModelA" || models[2] != "ModelB" {
+		t.Errorf("Expected models {1:ModelA, 2:ModelB}, got %v", models)
 	}
 }

@@ -325,3 +325,84 @@ func createTestSLA() *ifs.ServiceLevelAgreement {
 		&mockSLAServiceCallback{},
 	)
 }
+
+func TestServiceLevelAgreement_ServiceGroupDefaultsToServiceName(t *testing.T) {
+	sla := createTestSLA()
+
+	if sla.ServiceGroup() != "testService" {
+		t.Errorf("Expected ServiceGroup to default to ServiceName 'testService', got %q", sla.ServiceGroup())
+	}
+
+	sla.SetServiceGroup("customGroup")
+	if sla.ServiceGroup() != "customGroup" {
+		t.Errorf("Expected ServiceGroup 'customGroup', got %q", sla.ServiceGroup())
+	}
+
+	sla.SetServiceGroup("")
+	if sla.ServiceGroup() != "testService" {
+		t.Errorf("Expected ServiceGroup to fall back to ServiceName when reset to empty, got %q", sla.ServiceGroup())
+	}
+}
+
+func TestServiceLevelAgreement_UniqueKeys(t *testing.T) {
+	sla := createTestSLA()
+
+	if len(sla.UniqueKeys()) != 0 {
+		t.Errorf("Expected default UniqueKeys to be empty, got %d entries", len(sla.UniqueKeys()))
+	}
+
+	keys := []string{"email", "username"}
+	sla.SetUniqueKeys(keys...)
+
+	got := sla.UniqueKeys()
+	if len(got) != len(keys) {
+		t.Errorf("Expected %d UniqueKeys, got %d", len(keys), len(got))
+	}
+	for i, k := range keys {
+		if got[i] != k {
+			t.Errorf("Expected UniqueKeys[%d]=%q, got %q", i, k, got[i])
+		}
+	}
+}
+
+func TestServiceLevelAgreement_NonUniqueKeys(t *testing.T) {
+	sla := createTestSLA()
+
+	if len(sla.NonUniqueKeys()) != 0 {
+		t.Errorf("Expected default NonUniqueKeys to be empty, got %d entries", len(sla.NonUniqueKeys()))
+	}
+
+	keys := []string{"departmentId", "status"}
+	sla.SetNonUniqueKeys(keys...)
+
+	got := sla.NonUniqueKeys()
+	if len(got) != len(keys) {
+		t.Errorf("Expected %d NonUniqueKeys, got %d", len(keys), len(got))
+	}
+	for i, k := range keys {
+		if got[i] != k {
+			t.Errorf("Expected NonUniqueKeys[%d]=%q, got %q", i, k, got[i])
+		}
+	}
+}
+
+func TestServiceLevelAgreement_AlwaysOverwrite(t *testing.T) {
+	sla := createTestSLA()
+
+	if len(sla.AlwaysOverwrite()) != 0 {
+		t.Errorf("Expected default AlwaysOverwrite to be empty, got %d entries", len(sla.AlwaysOverwrite()))
+	}
+
+	fields := []string{"updatedAt", "version"}
+	sla.SetAlwaysOverwrite(fields...)
+
+	got := sla.AlwaysOverwrite()
+	if len(got) != len(fields) {
+		t.Errorf("Expected %d AlwaysOverwrite fields, got %d", len(fields), len(got))
+	}
+	for i, f := range fields {
+		if got[i] != f {
+			t.Errorf("Expected AlwaysOverwrite[%d]=%q, got %q", i, f, got[i])
+		}
+	}
+}

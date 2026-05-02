@@ -160,8 +160,12 @@ func (this *ShallowSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig 
 		LogConfig:                &l8sysconfig.L8LogConfig{LogDirectory: "", VnetPort: 10010},
 		DataStoreConfig:          &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admin"},
 		TimeSeriesStoreConfig:    &l8sysconfig.L8DataStoreConfig{Type: "postgres", Name: "admints"},
-		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "web", Cert: "webcert"},
+		WebConfig:                &l8sysconfig.L8WebAppConfig{WebPort: 4443, EndPointPrefix: "web"},
 		DataDirectory:            dataDirectory,
 	}
+	domain, privat, public := CreateCertBundle()
+	sysconfig.WebConfig.DomainCertPem = domain
+	sysconfig.WebConfig.PrivateKeyPem = privat
+	sysconfig.WebConfig.PublicKeyPem = public
 	return sysconfig
 }
