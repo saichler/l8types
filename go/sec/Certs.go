@@ -75,7 +75,7 @@ func CreateCertBundle() (string, string, string) {
 			PostalCode:    []string{"95124"},
 		},
 		EmailAddresses: []string{"saichler@gmail.com"},
-		IPAddresses:    []net.IP{net.ParseIP("0.0.0.0")},
+		IPAddresses:    localIPs(),
 		NotBefore:      time.Now(),
 		NotAfter:       time.Now().AddDate(10, 0, 0),
 		SubjectKeyId:   []byte("Layer8Secret"),
@@ -110,4 +110,18 @@ func CreateCertBundle() (string, string, string) {
 	publicKey := base64.StdEncoding.EncodeToString(crtPEM.Bytes())
 
 	return domainCert, privateKey, publicKey
+}
+
+func localIPs() []net.IP {
+	ips := []net.IP{net.ParseIP("0.0.0.0"), net.ParseIP("127.0.0.1")}
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return ips
+	}
+	for _, addr := range addrs {
+		if ipNet, ok := addr.(*net.IPNet); ok && ipNet.IP.To4() != nil {
+			ips = append(ips, ipNet.IP)
+		}
+	}
+	return ips
 }
