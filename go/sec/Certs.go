@@ -105,9 +105,9 @@ func CreateCertBundle() (string, string, string) {
 		Bytes: x509.MarshalPKCS1PrivateKey(crtKey),
 	})
 
-	domainCert := base64.StdEncoding.EncodeToString(caPEM.Bytes())
+	domainCert := base64.StdEncoding.EncodeToString(crtPEM.Bytes())
 	privateKey := base64.StdEncoding.EncodeToString(crtKeyPEM.Bytes())
-	publicKey := base64.StdEncoding.EncodeToString(crtPEM.Bytes())
+	publicKey := base64.StdEncoding.EncodeToString(caPEM.Bytes())
 
 	return domainCert, privateKey, publicKey
 }
