@@ -88,4 +88,5 @@ message L8WebAppConfig {
   string domain_cert_pem = 3;
   string private_key_pem = 4;
   string public_key_pem = 5;
+  string cert_load_dir = 6;
 }
