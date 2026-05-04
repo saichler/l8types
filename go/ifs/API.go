@@ -113,6 +113,8 @@ type IQuery interface {
 	// Aggregate groups items by GROUP BY fields and computes aggregate functions.
 	// Returns one map per group with aggregate alias keys and group-by field values.
 	Aggregate([]interface{}) []map[string]interface{}
+	// Register returns true if the client opts into real-time change notifications.
+	Register() bool
 }
 
 // IProperty represents a property accessor for a type field.
