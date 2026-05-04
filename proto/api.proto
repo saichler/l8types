@@ -55,6 +55,8 @@ message L8Query {
   L8Expression having = 13;
   // Parsed aggregate functions from the SELECT clause
   repeated L8AggregateFunction aggregates = 14;
+  // If true, register for real-time change notifications on the result set
+  bool register = 15;
 }
 
 // L8AggregateFunction represents a parsed aggregate function from the SELECT clause.
