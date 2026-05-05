@@ -60,6 +60,8 @@ message L8NotificationSet {
   L8NotificationType type = 8;
   // List of individual property changes
   repeated L8Notification notification_list = 9;
+  // AAAIds of subscribed clients that should receive this notification
+  map<string, bool> aaa_ids = 10;
 }
 
 // L8Notification represents a single property change within an entity.
