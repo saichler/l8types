@@ -115,6 +115,10 @@ type IQuery interface {
 	Aggregate([]interface{}) []map[string]interface{}
 	// Register returns true if the client opts into real-time change notifications.
 	Register() bool
+	// AAAId returns the authenticated user's identity for this query.
+	AAAId() string
+	// SetAAAId sets the authenticated user's identity on this query.
+	SetAAAId(string)
 }
 
 // IProperty represents a property accessor for a type field.

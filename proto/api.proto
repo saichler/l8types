@@ -57,6 +57,8 @@ message L8Query {
   repeated L8AggregateFunction aggregates = 14;
   // If true, register for real-time change notifications on the result set
   bool register = 15;
+  // AAAId of the authenticated user making this query (set by REST handler)
+  string aaa_id = 16;
 }
 
 // L8AggregateFunction represents a parsed aggregate function from the SELECT clause.
