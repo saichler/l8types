@@ -48,10 +48,10 @@ func decodePEMCert(t *testing.T, b64 string) *x509.Certificate {
 }
 
 func TestCreateCertBundle(t *testing.T) {
-	caB64, keyB64, crtB64 := sec.CreateCertBundle()
+	crtB64, keyB64, caB64 := sec.CreateCertBundle()
 
 	if caB64 == "" || keyB64 == "" || crtB64 == "" {
-		t.Fatalf("CreateCertBundle returned empty string(s): ca=%d key=%d crt=%d", len(caB64), len(keyB64), len(crtB64))
+		t.Fatalf("CreateCertBundle returned empty string(s): crt=%d key=%d ca=%d", len(crtB64), len(keyB64), len(caB64))
 	}
 
 	caCert := decodePEMCert(t, caB64)
@@ -95,8 +95,8 @@ func TestCreateCertBundle(t *testing.T) {
 }
 
 func TestCreateCertBundle_UniqueAcrossCalls(t *testing.T) {
-	ca1, key1, crt1 := sec.CreateCertBundle()
-	ca2, key2, crt2 := sec.CreateCertBundle()
+	crt1, key1, ca1 := sec.CreateCertBundle()
+	crt2, key2, ca2 := sec.CreateCertBundle()
 
 	if ca1 == ca2 {
 		t.Error("expected distinct CA certs across calls")
