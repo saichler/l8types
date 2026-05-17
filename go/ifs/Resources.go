@@ -56,6 +56,8 @@ type IResources interface {
 	DataDirectory() string
 	// Certificate
 	Certificate() (string, string, string)
+	// Events Service
+	Events() IEvents
 }
 
 // AddService registers a service in the system configuration.
