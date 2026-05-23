@@ -59,4 +59,6 @@ type IEvents interface {
 	PostTopologyEvent(*l8events.TopologyEvent)
 	// PostAutomationEvent raises an automation workflow event (category=AUTOMATION).
 	PostAutomationEvent(*l8events.AutomationEvent)
+	// Set the VNIC
+	SetVNic(IVNic)
 }
