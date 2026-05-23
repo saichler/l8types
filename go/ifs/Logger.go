@@ -15,6 +15,8 @@ limitations under the License.
 
 package ifs
 
+import "bytes"
+
 // LogLevel defines the severity of log messages.
 type LogLevel int
 
@@ -61,4 +63,15 @@ type ILogger interface {
 	Fail(interface{}, ...interface{})
 	// SetLogLevel sets the minimum log level to output.
 	SetLogLevel(LogLevel)
+}
+
+func App(msg ...string) string {
+	if msg != nil {
+		buff := bytes.Buffer{}
+		for _, l := range msg {
+			buff.WriteString(l)
+		}
+		return buff.String()
+	}
+	return ""
 }
