@@ -1,0 +1,37 @@
+// © 2025 Sharon Aicler (saichler@gmail.com)
+//
+// Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+// You may obtain a copy of the License at:
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// api.proto defines the core API types for the Layer 8 distributed system.
+// This includes query DSL for data filtering, authentication and authorization,
+// two-factor authentication (TFA), captcha support, and credential management.
+
+syntax = "proto3";
+
+package l8business;
+
+import "api.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "L8Business";
+option java_package = "com.types.l8business";
+option go_package = "./types/l8business";
+
+message L8BusinessLabelList {
+  repeated L8BusinessLabel list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message L8BusinessLabel {
+  string label_id = 1;
+  string label_description = 2;
+}

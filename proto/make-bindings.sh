@@ -14,6 +14,7 @@ PROTOS=(
     system.proto
     l8events.proto
     l8events_categories.proto
+    business.proto
 )
 
 # Use the protoc image to run protoc.sh and generate Go + Rust bindings.
