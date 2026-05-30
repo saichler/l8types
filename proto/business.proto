@@ -35,3 +35,7 @@ message L8BusinessLabel {
   string label_id = 1;
   string label_description = 2;
 }
+
+message L8BusinessLabels {
+  map<string, bool> labels = 1;
+}
