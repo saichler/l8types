@@ -34,6 +34,14 @@ message L8BusinessLabelList {
 message L8BusinessLabel {
   string label_id = 1;
   string label_description = 2;
+  AuditInfo audit_info = 3;
+}
+
+message AuditInfo {
+  int64 created_at = 1;
+  string created_by = 2;
+  int64 modified_at = 3;
+  string modified_by = 4;
 }
 
 message L8BusinessLabels {
