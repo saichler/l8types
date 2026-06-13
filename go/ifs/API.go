@@ -97,7 +97,7 @@ type IQuery interface {
 	// Text returns the free-text search string.
 	Text() string
 	// Hash returns a unique hash for this query (for caching).
-	Hash() string
+	Hash() int32
 	// ValueForParameter retrieves a parameter value by name.
 	ValueForParameter(string) string
 	// Aggregates returns the parsed aggregate functions (COUNT, SUM, AVG, MIN, MAX) from the SELECT clause.
