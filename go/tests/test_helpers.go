@@ -46,6 +46,9 @@ func (m *MockSecurityProvider) CanDoAction(ifs.IVNic, ifs.Action, ifs.IElements,
 func (m *MockSecurityProvider) ScopeView(ifs.IVNic, ifs.IElements, string, string, ...string) ifs.IElements {
 	return nil
 }
+func (m *MockSecurityProvider) ScopeItem(ifs.IResources, interface{}, string, string, ...string) interface{} {
+	return nil
+}
 func (m *MockSecurityProvider) AllowedTypes(ifs.IVNic, string) []string {
 	return nil
 }

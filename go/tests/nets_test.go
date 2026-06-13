@@ -51,6 +51,9 @@ func (m *MockSecurityProviderNets) CanDoAction(ifs.IVNic, ifs.Action, ifs.IEleme
 func (m *MockSecurityProviderNets) ScopeView(ifs.IVNic, ifs.IElements, string, string, ...string) ifs.IElements {
 	return nil
 }
+func (m *MockSecurityProviderNets) ScopeItem(ifs.IResources, interface{}, string, string, ...string) interface{} {
+	return nil
+}
 func (m *MockSecurityProviderNets) AllowedTypes(ifs.IVNic, string) []string {
 	return nil
 }

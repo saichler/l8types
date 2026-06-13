@@ -89,6 +89,11 @@ func (this *ShallowSecurityProvider) ScopeView(vnic ifs.IVNic, o ifs.IElements, 
 	return o
 }
 
+// ScopeView returns the original interface without filtering (permissive).
+func (this *ShallowSecurityProvider) ScopeItem(r ifs.IResources, o interface{}, uuid string, token string, salts ...string) interface{} {
+	return o
+}
+
 // AllowedTypes returns nil (permissive - all types allowed).
 func (this *ShallowSecurityProvider) AllowedTypes(vnic ifs.IVNic, token string) []string {
 	return nil
