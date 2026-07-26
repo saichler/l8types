@@ -25,6 +25,7 @@ import (
 
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/nets"
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8services"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 )
@@ -35,8 +36,8 @@ type MockSecurityProviderNets struct {
 	decryptError bool
 }
 
-func (m *MockSecurityProviderNets) Authenticate(string, string, ifs.IVNic) (string, string, bool, bool, string, error) {
-	return "", "", false, false, "", nil
+func (m *MockSecurityProviderNets) Authenticate(string, string, ifs.IVNic) *l8api.AuthToken {
+	return &l8api.AuthToken{}
 }
 func (m *MockSecurityProviderNets) ValidateToken(string, ifs.IVNic) (string, bool)      { return "", true }
 func (m *MockSecurityProviderNets) Message(string, ifs.IVNic) (*ifs.Message, error)     { return nil, nil }

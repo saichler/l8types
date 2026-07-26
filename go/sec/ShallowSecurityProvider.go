@@ -7,6 +7,7 @@ import (
 	"github.com/saichler/l8types/go/aes"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/nets"
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"net"
 	"os"
@@ -105,8 +106,8 @@ func (this *ShallowSecurityProvider) AllowedActions(vnic ifs.IVNic, token string
 }
 
 // Authenticate always succeeds with a dummy bearer token (testing only).
-func (this *ShallowSecurityProvider) Authenticate(user string, pass string, vnic ifs.IVNic) (string, string, bool, bool, string, error) {
-	return "bearer token", "", false, false, "", nil
+func (this *ShallowSecurityProvider) Authenticate(user string, pass string, vnic ifs.IVNic) *l8api.AuthToken {
+	return &l8api.AuthToken{Token: "bearer token"}
 }
 
 // ValidateToken always validates tokens successfully (permissive).

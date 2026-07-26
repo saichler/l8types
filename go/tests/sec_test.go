@@ -179,12 +179,12 @@ func TestShallowSecurityProvider_PermissiveAuthorization(t *testing.T) {
 func TestShallowSecurityProvider_AuthenticateAndValidateToken(t *testing.T) {
 	p := sec.NewShallowSecurityProvider()
 
-	token, _, _, _, _, err := p.Authenticate("user", "pass", nil)
-	if err != nil {
-		t.Fatalf("Authenticate returned error: %v", err)
+	authToken := p.Authenticate("user", "pass", nil)
+	if authToken.Error != "" {
+		t.Fatalf("Authenticate returned error: %v", authToken.Error)
 	}
-	if token != "bearer token" {
-		t.Errorf("Authenticate: expected token 'bearer token', got %q", token)
+	if authToken.Token != "bearer token" {
+		t.Errorf("Authenticate: expected token 'bearer token', got %q", authToken.Token)
 	}
 
 	uuid, ok := p.ValidateToken("any-token", nil)
