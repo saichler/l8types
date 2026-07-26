@@ -16,6 +16,7 @@ limitations under the License.
 package ifs
 
 import (
+	"github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"net"
 )
@@ -25,7 +26,7 @@ import (
 type ISecurityProvider interface {
 	// Authenticate validates user credentials and returns a token.
 	// Returns: token, hash, needsTFA, setupTFA, portal, error
-	Authenticate(string, string, IVNic) (string, string, bool, bool, string, error)
+	Authenticate(string, string, IVNic) *l8api.AuthToken
 	// ValidateToken checks if a token is valid and returns the user ID.
 	ValidateToken(string, IVNic) (string, bool)
 
