@@ -140,6 +140,25 @@ message AuthToken {
   bool must_change_password = 7;
 }
 
+// L8PasswordResetRequest is the request to start a "forgot password" flow.
+message L8PasswordResetRequest {
+  // Username or email identifying the account
+  string user_id = 1;
+  // Captcha response token for bot protection
+  string captcha = 2;
+}
+
+// L8PasswordResetComplete is the request to complete a "forgot password" flow
+// using the one-time token from the emailed reset link.
+message L8PasswordResetComplete {
+  // Username or email identifying the account
+  string user_id = 1;
+  // One-time reset token from the emailed link
+  string token = 2;
+  // The new password to set
+  string new_password = 3;
+}
+
 // L8MetaData provides metadata and statistics about query results.
 // Used for aggregation and analysis of data distribution.
 message L8MetaData {

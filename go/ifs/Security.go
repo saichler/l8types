@@ -70,6 +70,14 @@ type ISecurityProvider interface {
 	// Register creates a new user account.
 	Register(string, string, string, IVNic) error
 
+	// RequestPasswordReset emails a one-time reset link if the account exists.
+	// resetBaseURL is the scheme+host+path to the reset-password page, derived
+	// by the caller (l8web) from the incoming request.
+	// Always returns nil on a well-formed request — existence is never revealed.
+	RequestPasswordReset(string, string, string, IVNic) error
+	// ResetPassword completes a reset using the token from the emailed link.
+	ResetPassword(string, string, string, IVNic) error
+
 	// Credential retrieves credential components by name and type.
 	// Returns: aside, zside, yside, name, error
 	Credential(string, string, IResources) (string, string, string, string, error)

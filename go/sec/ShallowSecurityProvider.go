@@ -131,6 +131,14 @@ func (this *ShallowSecurityProvider) Register(userId, password, captcha string, 
 	return nil
 }
 
+func (this *ShallowSecurityProvider) RequestPasswordReset(userIdOrEmail, captcha, resetBaseURL string, vnic ifs.IVNic) error {
+	return nil
+}
+
+func (this *ShallowSecurityProvider) ResetPassword(userId, token, newPassword string, vnic ifs.IVNic) error {
+	return nil
+}
+
 func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResources) (string, string, string, string, error) {
 	if crId == "sim" {
 		if cId == "ssh" {

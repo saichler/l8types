@@ -33,10 +33,10 @@ type MockSecurityProvider struct {
 func (m *MockSecurityProvider) Authenticate(string, string, ifs.IVNic) *l8api.AuthToken {
 	return &l8api.AuthToken{}
 }
-func (m *MockSecurityProvider) ValidateToken(string, ifs.IVNic) (string, bool)      { return "", true }
-func (m *MockSecurityProvider) Message(string, ifs.IVNic) (*ifs.Message, error)     { return nil, nil }
-func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error)            { return nil, nil }
-func (m *MockSecurityProvider) CanAccept(net.Conn) error                            { return nil }
+func (m *MockSecurityProvider) ValidateToken(string, ifs.IVNic) (string, bool)  { return "", true }
+func (m *MockSecurityProvider) Message(string, ifs.IVNic) (*ifs.Message, error) { return nil, nil }
+func (m *MockSecurityProvider) CanDial(string, uint32) (net.Conn, error)        { return nil, nil }
+func (m *MockSecurityProvider) CanAccept(net.Conn) error                        { return nil }
 func (m *MockSecurityProvider) ValidateConnection(net.Conn, *l8sysconfig.L8SysConfig) error {
 	return nil
 }
@@ -61,6 +61,10 @@ func (m *MockSecurityProvider) TFASetup(string, ifs.IVNic) (string, []byte, erro
 func (m *MockSecurityProvider) TFAVerify(string, string, string, ifs.IVNic) error { return nil }
 func (m *MockSecurityProvider) Captcha() []byte                                   { return nil }
 func (m *MockSecurityProvider) Register(string, string, string, ifs.IVNic) error  { return nil }
+func (m *MockSecurityProvider) RequestPasswordReset(string, string, string, ifs.IVNic) error {
+	return nil
+}
+func (m *MockSecurityProvider) ResetPassword(string, string, string, ifs.IVNic) error { return nil }
 func (m *MockSecurityProvider) Credential(string, string, ifs.IResources) (string, string, string, string, error) {
 	return "", "", "", "", nil
 }
