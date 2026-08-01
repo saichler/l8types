@@ -108,6 +108,8 @@ func (m *MockResources) WebPrefix() string                             { return 
 func (m *MockResources) DataDirectory() string                         { return "" }
 func (m *MockResources) Certificate() (string, string, string)         { return "", "", "" }
 func (m *MockResources) Events() ifs.IEvents                           { return nil }
+func (m *MockResources) Notify() ifs.INotify                           { return nil }
+func (m *MockResources) Integration() ifs.IIntegration                 { return nil }
 
 func newMockResources() *MockResources {
 	return &MockResources{

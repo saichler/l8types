@@ -58,6 +58,10 @@ type IResources interface {
 	Certificate() (string, string, string)
 	// Events Service
 	Events() IEvents
+	// Notify Service
+	Notify() INotify
+	// Integration Config lookup
+	Integration() IIntegration
 }
 
 // AddService registers a service in the system configuration.

@@ -1,0 +1,125 @@
+syntax = "proto3";
+package l8notifysvc;
+option go_package = "./types/l8notifysvc";
+import "api.proto";
+
+// ─── Enums ───
+enum NotifyChannel {
+  NOTIFY_CHANNEL_UNSPECIFIED = 0;
+  NOTIFY_CHANNEL_EMAIL = 1;
+  NOTIFY_CHANNEL_WEBHOOK = 2;
+  NOTIFY_CHANNEL_SLACK = 3;
+  NOTIFY_CHANNEL_PAGERDUTY = 4;
+  NOTIFY_CHANNEL_CUSTOM = 5;
+}
+enum DeliveryStatus {
+  DELIVERY_STATUS_UNSPECIFIED = 0;
+  DELIVERY_STATUS_PENDING = 1;
+  DELIVERY_STATUS_SENT = 2;
+  DELIVERY_STATUS_FAILED = 3;
+  DELIVERY_STATUS_RETRYING = 4;
+}
+
+// Replaces the separate "is this an SMTP config vs a webhook config" distinction
+// that used to be implicit in having two separate message types.
+enum IntegrationType {
+  INTEGRATION_TYPE_UNSPECIFIED = 0;
+  INTEGRATION_TYPE_SMTP = 1;
+  INTEGRATION_TYPE_WEBHOOK = 2;
+  INTEGRATION_TYPE_SLACK = 3;
+  INTEGRATION_TYPE_PAGERDUTY = 4;
+  INTEGRATION_TYPE_CUSTOM = 5;
+}
+
+// ─── Embedded/child types (NOT Prime Objects) ───
+message NotifyTarget {
+  string target_id = 1;
+  NotifyChannel channel = 2;
+  string endpoint = 3;
+  string template = 4;
+}
+message SmtpConfig {
+  string host = 1;
+  int32 port = 2;
+  string username = 3;
+  string password = 4;
+  bool use_tls = 5;
+  string from_address = 6;
+  string from_name = 7;
+}
+message WebhookConfig {
+  string url = 1;
+  string secret = 2;
+  int32 retry_count = 3;
+  int32 timeout_ms = 4;
+}
+message DeliveryResult {
+  DeliveryStatus status = 1;
+  int32 http_status = 2;
+  string error_message = 3;
+  int32 attempt = 4;
+  int64 sent_at = 5;
+}
+message EscalationStep {
+  string step_id = 1;
+  int32 step_order = 2;
+  int32 delay_minutes = 3;
+  NotifyChannel channel = 4;
+  string endpoint = 5;
+  string message_template = 6;
+}
+
+// ─── Prime Objects ───
+
+// Immutable delivery-log record. POST triggers real dispatch.
+message NotifyRecord {
+  string notify_id = 1;
+  NotifyChannel channel = 2;
+  string endpoint = 3;
+  string subject = 4;
+  string template = 5;
+  map<string, string> vars = 6;
+  string message = 7;
+  string source_id = 8;
+  string source_type = 9;
+  DeliveryStatus status = 10;
+  int32 http_status = 11;
+  string error_message = 12;
+  int32 attempt = 13;
+  int64 requested_at = 14;
+  int64 sent_at = 15;
+  map<string, string> attributes = 16;
+}
+
+// A single configured integration endpoint (SMTP server, webhook, Slack incoming webhook,
+// or a future type). Generalizes what used to be two separate config concepts. Editable —
+// unlike NotifyRecord, this is meant to be created/updated/deleted by an admin.
+// Non-secret fields only: the actual secret (SMTP password, webhook HMAC secret, API key)
+// is NEVER stored here — credential_key is a lookup key into the consumer's own security
+// config JSON `credentials` map, resolved at dispatch time via
+// ISecurityProvider.Credential(credential_key, ...).
+message IntegrationConfig {
+  string integration_id = 1;         // primary key, auto-generated
+  string name = 2;                   // logical/unique name, e.g. "smtp", "ops-alerts"
+  IntegrationType type = 3;
+  string host = 4;                   // SMTP host; empty for webhook/slack
+  int32 port = 5;                    // SMTP port
+  bool use_tls = 6;                  // SMTP TLS
+  string from_address = 7;           // SMTP from address
+  string from_name = 8;              // SMTP from display name
+  string url = 9;                    // webhook/slack URL
+  int32 retry_count = 10;            // webhook retry count
+  int32 timeout_ms = 11;             // webhook timeout
+  string credential_key = 12;        // key into the consumer's `credentials` map for the secret
+  map<string, string> attributes = 13;  // extensible bag for future integration-type-specific fields
+}
+
+// ─── List types ───
+message NotifyRecordList {
+  repeated NotifyRecord list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+message IntegrationConfigList {
+  repeated IntegrationConfig list = 1;
+  l8api.L8MetaData metadata = 2;
+}
