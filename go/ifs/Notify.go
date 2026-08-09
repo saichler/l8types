@@ -16,7 +16,7 @@ limitations under the License.
 package ifs
 
 import (
-	"github.com/saichler/l8types/go/types/l8notifysvc"
+	"github.com/saichler/l8types/go/types/l8notify"
 )
 
 // INotify provides the API for dispatching notifications across the Layer 8 system.
@@ -24,8 +24,8 @@ import (
 type INotify interface {
 	// Send posts a notification for dispatch (email/webhook/Slack/etc.) and returns the
 	// delivery outcome. attributes is forwarded onto the persisted NotifyRecord.
-	Send(channel l8notifysvc.NotifyChannel, endpoint, subject, message string,
-		attributes map[string]string) *l8notifysvc.DeliveryResult
+	Send(channel l8notify.NotifyChannel, endpoint, subject, message string,
+		attributes map[string]string) *l8notify.DeliveryResult
 	// Set the VNIC
 	SetVNic(IVNic)
 }

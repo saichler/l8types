@@ -1,5 +1,5 @@
 syntax = "proto3";
-package l8notifysvc;
+package l8notify;
 option go_package = "./types/l8notify";
 import "api.proto";
 

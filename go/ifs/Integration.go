@@ -16,16 +16,16 @@ limitations under the License.
 package ifs
 
 import (
-	"github.com/saichler/l8types/go/types/l8notifysvc"
+	"github.com/saichler/l8types/go/types/l8notify"
 )
 
 // IIntegration provides lookup of configured integration endpoints (SMTP, webhook, etc.).
 type IIntegration interface {
 	// GetIntegrationConfig retrieves a named integration configuration.
-	GetIntegrationConfig(name string) (*l8notifysvc.IntegrationConfig, error)
+	GetIntegrationConfig(name string) (*l8notify.IntegrationConfig, error)
 	// ListIntegrationConfigs retrieves all integrations of the given type
 	// (INTEGRATION_TYPE_UNSPECIFIED returns all types).
-	ListIntegrationConfigs(integrationType l8notifysvc.IntegrationType) ([]*l8notifysvc.IntegrationConfig, error)
+	ListIntegrationConfigs(integrationType l8notify.IntegrationType) ([]*l8notify.IntegrationConfig, error)
 	// Set the VNIC
 	SetVNic(IVNic)
 }
