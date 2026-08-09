@@ -1,6 +1,6 @@
 syntax = "proto3";
 package l8notifysvc;
-option go_package = "./types/l8notifysvc";
+option go_package = "./types/l8notify";
 import "api.proto";
 
 // ─── Enums ───
