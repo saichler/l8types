@@ -15,15 +15,6 @@ enum Severity {
   SEVERITY_CRITICAL = 5;
 }
 
-// Generic alarm lifecycle states.
-enum AlarmState {
-  ALARM_STATE_UNSPECIFIED = 0;
-  ALARM_STATE_ACTIVE = 1;
-  ALARM_STATE_ACKNOWLEDGED = 2;
-  ALARM_STATE_CLEARED = 3;
-  ALARM_STATE_SUPPRESSED = 4;
-}
-
 // Generic event processing states.
 enum EventState {
   EVENT_STATE_UNSPECIFIED = 0;
@@ -55,24 +46,6 @@ enum EventCategory {
   EVENT_CATEGORY_AUTOMATION = 17;   // Workflow execution, policy compliance
 }
 
-// Maintenance window status.
-enum MaintenanceStatus {
-  MAINTENANCE_STATUS_UNSPECIFIED = 0;
-  MAINTENANCE_STATUS_SCHEDULED = 1;
-  MAINTENANCE_STATUS_ACTIVE = 2;
-  MAINTENANCE_STATUS_COMPLETED = 3;
-  MAINTENANCE_STATUS_CANCELLED = 4;
-}
-
-// Maintenance recurrence type.
-enum RecurrenceType {
-  RECURRENCE_TYPE_UNSPECIFIED = 0;
-  RECURRENCE_TYPE_NONE = 1;
-  RECURRENCE_TYPE_DAILY = 2;
-  RECURRENCE_TYPE_WEEKLY = 3;
-  RECURRENCE_TYPE_MONTHLY = 4;
-}
-
 // ─── Shared Message Types ───
 
 // A generic event occurrence.
@@ -95,51 +68,7 @@ message EventRecord {
   string generated_alarm_id = 14;
 }
 
-// A note/comment attached to an alarm.
-message AlarmNote {
-  string note_id = 1;
-  string author = 2;
-  string text = 3;
-  int64 created_at = 4;
-}
 
-// A state transition record for alarm audit trail.
-message AlarmStateChange {
-  AlarmState from_state = 1;
-  AlarmState to_state = 2;
-  string changed_by = 3;
-  string reason = 4;
-  int64 changed_at = 5;
-}
-
-// A generic alarm instance — the core state machine.
-// Consumers embed this in their own alarm types or extend it.
-message AlarmRecord {
-  string alarm_id = 1;
-  string definition_id = 2;
-  string name = 3;
-  string description = 4;
-  AlarmState state = 5;
-  Severity severity = 6;
-  Severity original_severity = 7;
-  string source_id = 8;
-  string source_name = 9;
-  string source_type = 10;
-  int64 first_occurrence = 11;
-  int64 last_occurrence = 12;
-  int32 occurrence_count = 13;
-  string dedup_key = 14;
-  string event_id = 15;
-  string acknowledged_by = 16;
-  int64 acknowledged_at = 17;
-  string cleared_by = 18;
-  int64 cleared_at = 19;
-  bool is_suppressed = 20;
-  string suppressed_by = 21;
-  map<string, string> attributes = 22;
-  repeated AlarmNote notes = 23;
-  repeated AlarmStateChange state_history = 24;
-}
 
 // Archive metadata — added when an alarm or event is archived.
 message ArchiveInfo {
@@ -148,31 +77,9 @@ message ArchiveInfo {
   string archive_reason = 3;
 }
 
-// A maintenance window — period during which alarms/notifications are suppressed.
-// Consumers store this in their own service; l8events provides the type and evaluator.
-message MaintenanceWindow {
-  string window_id = 1;
-  string name = 2;
-  string description = 3;
-  MaintenanceStatus status = 4;
-  int64 start_time = 5;
-  int64 end_time = 6;
-  string created_by = 7;
-  int64 created_at = 8;
-  RecurrenceType recurrence = 9;
-  int32 recurrence_interval = 10;
-  repeated string scope_ids = 11;
-  repeated string scope_types = 12;
-}
-
 // ─── List Types ───
 
 message EventRecordList {
   repeated EventRecord list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-message MaintenanceWindowList {
-  repeated MaintenanceWindow list = 1;
   l8api.L8MetaData metadata = 2;
 }
