@@ -138,6 +138,11 @@ message AuthToken {
   string portal = 6;
   // Must change password
   bool must_change_password = 7;
+  // Tenant/customer id for multi-tenant-scoped users (L8User.customer),
+  // empty for users not scoped to a single customer (e.g. internal/admin
+  // roles). Lets a browser client learn its own trusted scoping id
+  // without a separate authenticated lookup.
+  string customer = 8;
 }
 
 // L8PasswordResetRequest is the request to start a "forgot password" flow.
