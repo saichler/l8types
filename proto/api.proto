@@ -55,10 +55,26 @@ message L8Query {
   L8Expression having = 13;
   // Parsed aggregate functions from the SELECT clause
   repeated L8AggregateFunction aggregates = 14;
-  // If true, register for real-time change notifications on the result set
-  bool register = 15;
+  // Registers or unregisters this query for real-time change notifications
+  // on its result set (see L8Register). Invalid means neither.
+  L8Register register = 15;
   // AAAId of the authenticated user making this query (set by REST handler)
   string aaa_id = 16;
+  // Identifies the client component that owns this registration. The server
+  // keys registrations by aaa_id + register_id, so one user can hold several
+  // (one per component) and an Unregister removes exactly that one.
+  string register_id = 17;
+}
+
+// L8Register is a query's registration action for real-time change
+// notifications.
+enum L8Register {
+  // Neither register nor unregister (a plain query)
+  L8_REGISTER_INVALID = 0;
+  // Register (or refresh) the query under its register_id
+  L8_REGISTER_REGISTER = 1;
+  // Remove the registration held under register_id
+  L8_REGISTER_UNREGISTER = 2;
 }
 
 // L8AggregateFunction represents a parsed aggregate function from the SELECT clause.

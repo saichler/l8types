@@ -113,8 +113,12 @@ type IQuery interface {
 	// Aggregate groups items by GROUP BY fields and computes aggregate functions.
 	// Returns one map per group with aggregate alias keys and group-by field values.
 	Aggregate([]interface{}) []map[string]interface{}
-	// Register returns true if the client opts into real-time change notifications.
-	Register() bool
+	// Register returns the query's registration action for real-time change
+	// notifications: register, unregister, or neither (L8_REGISTER_INVALID).
+	Register() l8api.L8Register
+	// RegisterId returns the id of the client component that owns the
+	// registration; registrations are keyed by AAAId + RegisterId.
+	RegisterId() string
 	// AAAId returns the authenticated user's identity for this query.
 	AAAId() string
 	// SetAAAId sets the authenticated user's identity on this query.
