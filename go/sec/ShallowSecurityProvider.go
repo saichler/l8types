@@ -159,6 +159,14 @@ func (this *ShallowSecurityProvider) Credential(crId, cId string, r ifs.IResourc
 
 func (this *ShallowSecurityProvider) AddAdjacent(ifs.ISecurityProvider) {}
 
+func (this *ShallowSecurityProvider) LlmProfile(string, ifs.IResources) (string, string, string, string, error) {
+	return "", "", "", "", errors.New("ShallowSecurityProvider does not provide LLM profiles")
+}
+
+func (this *ShallowSecurityProvider) UserInfo(string, ifs.IVNic) (string, string, error) {
+	return "", "", errors.New("ShallowSecurityProvider does not provide user info")
+}
+
 func (this *ShallowSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {

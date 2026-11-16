@@ -82,6 +82,14 @@ type ISecurityProvider interface {
 	// Returns: aside, zside, yside, name, error
 	Credential(string, string, IResources) (string, string, string, string, error)
 
+	// LlmProfile resolves an LLM profile. An empty profile id means the default profile.
+	// Returns: kind, baseURL, apiKey, model, error
+	LlmProfile(string, IResources) (string, string, string, string, error)
+
+	// UserInfo returns the user behind a validated aaaId.
+	// Returns: userId, fullName, error (unknown or expired aaaId)
+	UserInfo(string, IVNic) (string, string, error)
+
 	// New System Config
 	NewSystemConfig() *l8sysconfig.L8SysConfig
 }

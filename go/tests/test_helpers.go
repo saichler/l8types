@@ -68,6 +68,14 @@ func (m *MockSecurityProvider) ResetPassword(string, string, string, ifs.IVNic) 
 func (m *MockSecurityProvider) Credential(string, string, ifs.IResources) (string, string, string, string, error) {
 	return "", "", "", "", nil
 }
+func (m *MockSecurityProvider) LlmProfile(string, ifs.IResources) (string, string, string, string, error) {
+	return "", "", "", "", errors.New("MockSecurityProvider does not provide LLM profiles")
+}
+
+func (m *MockSecurityProvider) UserInfo(string, ifs.IVNic) (string, string, error) {
+	return "", "", errors.New("MockSecurityProvider does not provide user info")
+}
+
 func (m *MockSecurityProvider) NewSystemConfig() *l8sysconfig.L8SysConfig {
 	return nil
 }
