@@ -96,6 +96,23 @@ type IServiceHandlerCache interface {
 	Size() int
 }
 
+// IServiceHandlerAAA extends IServiceHandler for handlers that need the requester's aaaId.
+// When a handler implements it, the service manager calls the AAA variants with the
+// aaaId of the incoming message instead of the plain CRUD methods.
+type IServiceHandlerAAA interface {
+	IServiceHandler
+	// PostAAA handles POST requests on behalf of the given aaaId.
+	PostAAA(IElements, IVNic, string) IElements
+	// PutAAA handles PUT requests on behalf of the given aaaId.
+	PutAAA(IElements, IVNic, string) IElements
+	// PatchAAA handles PATCH requests on behalf of the given aaaId.
+	PatchAAA(IElements, IVNic, string) IElements
+	// DeleteAAA handles DELETE requests on behalf of the given aaaId.
+	DeleteAAA(IElements, IVNic, string) IElements
+	// GetAAA handles GET requests on behalf of the given aaaId.
+	GetAAA(IElements, IVNic, string) IElements
+}
+
 // IMapReduceService defines the interface for map-reduce operations.
 // Used to aggregate results from distributed queries.
 type IMapReduceService interface {
