@@ -96,21 +96,22 @@ type IServiceHandlerCache interface {
 	Size() int
 }
 
-// IServiceHandlerAAA extends IServiceHandler for handlers that need the requester's aaaId.
-// When a handler implements it, the service manager calls the AAA variants with the
-// aaaId of the incoming message instead of the plain CRUD methods.
-type IServiceHandlerAAA interface {
+// IServiceMessageHandler extends IServiceHandler for handlers that need the incoming
+// message, e.g. the requester's aaaId (msg.AAAId()) or the sending node (msg.Source()).
+// When a handler implements it, the service manager calls these methods instead of the
+// plain CRUD methods. The message is only valid for the duration of the call.
+type IServiceMessageHandler interface {
 	IServiceHandler
-	// PostAAA handles POST requests on behalf of the given aaaId.
-	PostAAA(IElements, IVNic, string) IElements
-	// PutAAA handles PUT requests on behalf of the given aaaId.
-	PutAAA(IElements, IVNic, string) IElements
-	// PatchAAA handles PATCH requests on behalf of the given aaaId.
-	PatchAAA(IElements, IVNic, string) IElements
-	// DeleteAAA handles DELETE requests on behalf of the given aaaId.
-	DeleteAAA(IElements, IVNic, string) IElements
-	// GetAAA handles GET requests on behalf of the given aaaId.
-	GetAAA(IElements, IVNic, string) IElements
+	// PostMessage handles POST requests with the incoming message.
+	PostMessage(IElements, IVNic, *Message) IElements
+	// PutMessage handles PUT requests with the incoming message.
+	PutMessage(IElements, IVNic, *Message) IElements
+	// PatchMessage handles PATCH requests with the incoming message.
+	PatchMessage(IElements, IVNic, *Message) IElements
+	// DeleteMessage handles DELETE requests with the incoming message.
+	DeleteMessage(IElements, IVNic, *Message) IElements
+	// GetMessage handles GET requests with the incoming message.
+	GetMessage(IElements, IVNic, *Message) IElements
 }
 
 // IMapReduceService defines the interface for map-reduce operations.
