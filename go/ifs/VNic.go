@@ -76,8 +76,8 @@ type IVNic interface {
 	SendMessage([]byte) error
 
 	// Unicast sends a message to a specific destination without expecting a response.
-	// Parameters: destination UUID, service name, service area, action, payload
-	Unicast(string, string, byte, Action, interface{}) error
+	// Parameters: destination UUID, service name, service area, action, payload, optional AAA ID
+	Unicast(string, string, byte, Action, interface{}, ...string) error
 	// Request sends a unicast message and waits for a response.
 	// Parameters: destination UUID, service name, service area, action, payload, timeout (ms), optional AAA ID
 	Request(string, string, byte, Action, interface{}, int, ...string) IElements
