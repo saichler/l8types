@@ -20,7 +20,7 @@ PROTOS=(
 
 # Use the protoc image to run protoc.sh and generate Go + Rust bindings.
 for p in "${PROTOS[@]}"; do
-    docker run --user "$(id -u):$(id -g)" -e PROTO="$p" --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+    docker run --user "$(id -u):$(id -g)" -e PROTO="$p" --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 done
 
 # --- Go bindings ---
