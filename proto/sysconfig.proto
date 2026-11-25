@@ -69,6 +69,8 @@ message L8SysConfig {
   string data_directory = 19;
   // DNS hostname for peer discovery (e.g., a K8s headless Service name)
   string discovery_dns_name = 20;
+  // Chat Datastore config
+  L8DataStoreConfig chat_store_config = 21;
 }
 
 message L8LogConfig {
